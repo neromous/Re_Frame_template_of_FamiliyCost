@@ -1,0 +1,25 @@
+(ns soul-talk.graphs.simple
+  (:require [reagent.core :as r]
+            [re-frame.core :as rf]
+            [cljsjs.react-beautiful-dnd :as dnd]
+            [re-frame.core :refer [subscribe]]))
+
+(defn simple-columns []
+  [{:title "id" }
+   {:title "姓名" :dataIndex "name", :key "name", :align "center"}
+   {:title "淘宝id" :dataIndex "taobaoId", :key "taobaoId", :align "center"}
+   {:title "地址" :dataIndex "address", :key "address", :align "center"}
+   {:title "所在地" :dataIndex "area", :key "area", :align "center"}
+   {:title "是否是供应商" :dataIndex "isSupplier", :key "isSupplier", :align "center"}])
+
+(defn simple-list []
+  (r/with-let [contacts (subscribe [:model/contact.data])]
+
+    [:>  js/antd.Table   {:dataSource (vals @contacts)
+                          :columns   (clj->js (simple-columns))
+                          :rowKey "id"}]))
+
+
+
+
+

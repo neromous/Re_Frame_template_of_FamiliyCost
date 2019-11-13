@@ -1,14 +1,10 @@
-pom.xml
-pom.xml.asc
-*.jar
-*.class
-/lib/
-/classes/
-/target/
-/checkouts/
-.lein-deps-sum
-.lein-repl-history
-.lein-plugins/
-.lein-failures
-.nrepl-port
+# Created by .ignore support plugin (hsz.mobi)
+dist
 .cpcache/
+.idea/
+out
+target
+.rebel_readline_history
+node_modules/
+package-lock.json
+yarn.lock

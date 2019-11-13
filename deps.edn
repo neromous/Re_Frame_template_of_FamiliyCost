@@ -1,0 +1,34 @@
+{:deps    {org.clojure/clojure             {:mvn/version "1.10.0"}
+
+           ;; client
+           org.clojure/clojurescript       {:mvn/version "1.10.520"}
+           com.andrewmcveigh/cljs-time {:mvn/version "0.5.2"}
+           reagent                         {:mvn/version "0.8.1"
+                                            :exclusions [cljsjs/react cljsjs/react-dom]}
+           re-frame                        {:mvn/version "0.10.6"}
+           venantius/accountant {:mvn/version "0.2.4"}
+           cljs-ajax {:mvn/version "0.8.0"}
+           clj-commons/secretary {:mvn/version "1.2.4"}
+           bouncer {:mvn/version "1.0.1"}
+           com.taoensso/timbre {:mvn/version "4.10.0"}
+           ;cljsjs/antd {:mvn/version "3.19.0-0"}
+           cider/cider-nrepl {:mvn/version  "0.21.1"}
+           org.clojure/tools.nrepl {:mvn/version "0.2.13"}
+           com.bhauman/figwheel-main {:mvn/version "0.2.0"}
+           com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
+           ;;cljsjs/react-beautiful-dnd {:mvn/version  "10.0.4-0"}
+           cljsjs/d3 {:mvn/version "5.12.0-0"}
+           cljsjs/chartjs {:mvn/version "2.9.1-0"}
+           re-frisk {:mvn/version "0.5.4.1"}}
+
+ :paths   ["src" "src-cljc" "resources" "target"  "env/dev"]
+ :aliases {:fig {:extra-deps {}
+                 :extra-paths ["target"]}
+           :dev {:main-opts ["-m" "figwheel.main" "-b" "dev" "-r"]
+                 :extra-paths ["env/dev"]}
+           :test {:extra-paths ["test"]}
+           :prod {:main-opts ["-m" "figwheel.main" "-bo" "prod"]
+                  :extra-paths ["env/prod"]}}
+ :plugins {cider/cider-nrepl {:mvn/version  "0.21.1"}}
+
+ }

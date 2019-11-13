@@ -1,0 +1,120 @@
+;; (ns soul-talk.pages.sample
+
+;;   (:require [reagent.core :as r]
+;;             [re-frame.core :as rf]
+;;             [soul-talk.layouts.skeleton :as skeleton]
+;;             [soul-talk.db :refer [unique-id]]
+;;             [soul-talk.components.global-header :as header]
+;;             [soul-talk.components.nav :as nav]
+;;             [soul-talk.components.siderbar :as side]
+;;             [soul-talk.components.itemlist :as itemlist]
+;;             [soul-talk.components.table :as table]
+;;             [soul-talk.components.global-footer :as footer]
+;;             [soul-talk.handler.model :refer [envs]]
+;;             [re-frame.core :refer [subscribe]]
+;;             [soul-talk.utils :as utils]))
+
+;; (def sample-data
+;;   {:formatter   {:columns ["客户id"
+;;                            "品种"
+;;                            "地区编码"
+;;                            "客户名称"
+;;                            "销售单价"
+;;                            "销售收入"
+;;                            "运输方式"
+;;                            "销量"]
+;;                  :axis ["时间"]
+;;                  :filters ["地区编码"
+;;                            "客户id"
+;;                            "运输方式"]
+;;                  :group ["地区编码"
+;;                          "客户id"
+;;                          "运输方式"
+;;                          "品种"]
+;;                  :calc [["销量" "吨"]
+;;                         ["销售收入" "元"]
+;;                         ["订单数量"  "个"]]}
+
+;;    :data   [{:客户id "001"
+;;              :品种  "r001"
+;;              :地区编码 "501"
+;;              :客户名称 "众富"
+;;              :子订单编号 "2019002"
+;;              :销售单价 7.2
+;;              :销售收入 1400
+;;              :运输方式 "火车"
+;;              :销量 "2000"
+;;              :时间 "2019-02-02"}
+;;             {:客户id "002"
+;;              :品种  "b003"
+;;              :地区编码 "729"
+;;              :客户名称 "众泰"
+;;              :子订单编号 "2019002"
+;;              :销售单价 7.2
+;;              :销售收入 1400
+;;              :运输方式 "汽车"
+;;              :销量 "2000"
+;;              :时间 "2019-02-02"}]})
+
+;; (defn fake-table-template
+;;   "输入数据的索引和数据的数据的columns"
+;;   [sample-data  columns]
+;;   (let [{:keys [data formatter]} sample-data]
+;;     (fn []
+;;       [:> js/antd.Table   {:dataSource data
+;;                            :columns   (clj->js (columns))
+;;                            :rowKey "id"}])))
+;; (defn make-fake-card
+;;   [sample-data card-key]
+;;   (let [{:keys [formatter data]}  sample-data
+;;         sample-values (map #((keyword card-key) %) data)]
+;;     (fn []
+;;       [:> js/antd.Row {:height "400px"}
+;;        [:> js/antd.Col {:span 11}
+;;         [:> js/antd.Card {:activeTabKey "infordetails"
+;;                           :title        (str card-key "分析表")
+;;                           :style        {:margin 5}
+;;                           :bordered     false
+;;                           :hoverable    true}
+;;          [:> js/antd.Select {:defaultValue (str "选择需要分析的" card-key)}
+;;           (doall
+;;            (for [y sample-values] ^{:key y} [:> js/antd.Select.Option {:value y} y]))]
+;;          ;;
+;;          ]]
+;;        [:> js/antd.Col {:span 11}
+;;         [:> js/antd.Card {:activeTabKey "infordetail2"
+;;                           :title        "页面明细信息汇总"
+;;                           :style        {:margin 5}
+;;                           :bordered     false
+;;                           :hoverable    true}
+;;         ;;
+;;          (for [x (:calc formatter)] ^{:key x} [:p [:b (get x 0)]  (str  " 的合计值为") [:b "1000 " (get x 1)]])]]])))
+
+;; (defn make-fake-compment-main
+;;   [sample-data]
+;;   (let [{:keys [formatter data]}  sample-data]
+;;     (fn []
+;;       [:> js/antd.Layout.Content
+;;        ;; (for [x (:group formatter)]
+;;        ;;   [:> js/antd.Button
+;;        ;;    {:href (str "/#/sales/chart/"  x)}
+;;        ;;    (str "查看" x "分析")])
+;;        ;;[:> js/antd.Button {:type "primary"} "生成透视报表"]
+;;        [fake-table-template sample-data (utils/columns-fake-maker sample-data)]])))
+
+;; (defn make-fake-compment-group
+;;   [sample-data word]
+;;   (let [{:keys [formatter data]}  sample-data]
+;;     (fn []
+;;       [:> js/antd.Layout.Content
+;;        [make-fake-card sample-data word]
+;;        [fake-table-template sample-data (utils/columns-fake-maker sample-data)]])))
+
+;; (def fake-table-客户id (make-fake-compment-group sample-data "客户id"))
+;; (def fake-table-地区编码 (make-fake-compment-group sample-data "地区编码"))
+
+;; (def fake-table-main (make-fake-compment-main sample-data))
+
+
+
+
