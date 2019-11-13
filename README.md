@@ -1,4 +1,10 @@
+# 本项目抄自jiesoul的 soul-talk 在其基础上做了部分修正  也不知道好还是不好
+
+有对象的时候觉得很烦, 但是没有对象的时候又想念对象. 恩.
+
+
 # soul-talk-web
+
 
 首先确保你安装了 java clojure nodejs yarn 
 

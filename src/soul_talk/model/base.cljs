@@ -8,12 +8,13 @@
 
 (defn map->method [object prototype-map]
   (doseq [[k v] prototype-map]
-    (defmethod object k [_ & x] v)))
+    (defmethod object k [_] v)))
 
-(defn model-init [object   model-map  prefix]
+(defn model-init [object   model-map]
   (let [model-name (:key model-map)
-        prefix prefix]
+        prefix (:root-path model-map)]
     (do
+      (map->method object model-map)
       (defmethod object :default [_ & x] (concat prefix x))
       (defmethod object :prototype [_] model-map)
       ;; 自省  查看自己有多少方法和属性 并且调用那些 基本上不推荐使用
@@ -63,19 +64,19 @@
               full-path (concat prefix-path ks)]
           [:db/get-in full-path]))
 
-
-
       (defmethod object :state.delete
         [_ & ks]
         [:db/dissoc-in  (apply  object (cons :db.states ks))])
 
       (defmethod object :states.copy
+        ;; state下不同k名之间的拷贝
         [_ pk-target pk-origin]
         (let [target (object :db.states pk-target)
               origin (object :db.states pk-origin)]
           [:paths/copy target origin]))
 
       (defmethod object :states.move
+        ;; state下不同k名之间的移动
         [_ subpk-target subpk-origin]
         (let [target (concat (object :db.states) subpk-target)
               origin (concat (object :db.states) subpk-origin)]

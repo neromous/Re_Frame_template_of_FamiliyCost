@@ -3,7 +3,6 @@
              [reagent.core :as r]
              [soul-talk.db :refer [api-uri]]
              [soul-talk.utils :refer [mapset2map]]
-             [soul-talk.model.account :refer [account]]
              [ajax.core :refer [POST
                                 GET
                                 DELETE
@@ -46,9 +45,9 @@
 (reg-event-fx
  :mdw/django-response-add-parser
  (fn [db [_ model response]]
-   (println response)
    (let [id (-> response :id str keyword)]
-     (dispatch [:db/assoc-in [model :datasets id] response]))))
+     (dispatch (model :data.new response))
+     )))
 
 (reg-event-fx
  :server/new

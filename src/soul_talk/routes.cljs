@@ -12,7 +12,6 @@
    [soul-talk.page.layout :as layout]
    [soul-talk.route.utils :refer [run-events run-events-admin logged-in? navigate!]]
    [soul-talk.components.home-page :as home-page]
-   [soul-talk.components.modal :as modal]
    [soul-talk.components.common :as c]
    )
 
@@ -30,6 +29,13 @@
    [[:set-active {:page :home
                   :view :test
                   :model :test}]]))
+
+(defroute  "/v/:page" [page ]
+  (run-events
+   [[:set-active {:page (keyword page)
+                  }]]))
+
+
 
 (defroute  "/v/:page/:view" [page view]
   (run-events
@@ -56,9 +62,9 @@
         [:div
          [c/success-modal]
          [c/error-modal]
-         [modal/account-input-modal]
-         [modal/account-show-modal]
-         [modal/account-edit-modal]
+         ;;[modal/account-input-modal]
+         ;;[modal/account-show-modal]
+         ;;[modal/account-edit-modal]
          ;;(pages-register @db-state)
          [layout/layout-hcfs-left
           {:header  home-page/header
