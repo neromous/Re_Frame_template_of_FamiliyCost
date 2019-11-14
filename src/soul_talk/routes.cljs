@@ -14,6 +14,7 @@
    [soul-talk.route.utils :refer [run-events run-events-admin logged-in? navigate!]]
    [soul-talk.components.home-page :as home-page]
    [soul-talk.components.common :as c]
+   [soul-talk.models :refer [preform-modals]]
    )
 
   (:import [goog History]
@@ -65,6 +66,7 @@
         [:div
          [c/success-modal]
          [c/error-modal]
+         (preform-modals)
          ;;[modal/account-input-modal]
          ;;[modal/account-show-modal]
          ;;[modal/account-edit-modal]
