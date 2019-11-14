@@ -2,7 +2,9 @@
   (:require
    [reagent.core :as reagent]
    [cljsjs.chartjs]
-   [cljsjs.d3]))
+   [cljsjs.d3]
+
+   ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Model

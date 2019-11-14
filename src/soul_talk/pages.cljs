@@ -4,4 +4,5 @@
    soul-talk.page.account
    soul-talk.page.record
    soul-talk.page.table-template
+   soul-talk.page.charts
    ))
