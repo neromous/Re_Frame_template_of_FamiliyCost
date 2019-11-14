@@ -5,9 +5,3 @@
             [re-frame.core :refer [dispatch dispatch-sync subscribe]]
             [soul-talk.components.home-page :refer [content header nav footer siderbar]]))
 
-(defmethod content
-  [:home :index nil]
-  [db]
-  [:div
-   "默认的首页"])
-

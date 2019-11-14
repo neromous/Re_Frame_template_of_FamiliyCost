@@ -10,6 +10,7 @@
    soul-talk.components.home-page
    soul-talk.pages
    [soul-talk.page.layout :as layout]
+   [soul-talk.model.account :refer [account]]
    [soul-talk.route.utils :refer [run-events run-events-admin logged-in? navigate!]]
    [soul-talk.components.home-page :as home-page]
    [soul-talk.components.common :as c]
@@ -17,6 +18,8 @@
 
   (:import [goog History]
            [goog.History EventType]))
+
+
 
 (defroute  "/" []
   (run-events
@@ -99,4 +102,7 @@
       (secretary/locate-route path))
     :reload-same-path? true})
   (accountant/dispatch-current!))
+
+
+
 

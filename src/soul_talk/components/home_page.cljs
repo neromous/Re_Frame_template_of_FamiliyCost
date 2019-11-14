@@ -106,7 +106,16 @@
        [:> js/antd.Menu.Item {:key      "account-table"
                               :icon     "user"
                               :on-click #(navigate! "#/v/table/index/account")}
-        "账户列表"]]
+        "账户列表"]
+       [:> js/antd.Menu.Item {:key      "record-table"
+                              :icon     "user"
+                              :on-click #(navigate! "#/v/table/index/record")}
+        "支出记录"]
+       [:> js/antd.Menu.Item {:key      "category-table"
+                              :icon     "user"
+                              :on-click #(navigate! "#/v/table/index/category")}
+        "账户类型管理"]
+       ]
 
       [:> js/antd.Menu.SubMenu {:key   "user"
                                 :title (r/as-element

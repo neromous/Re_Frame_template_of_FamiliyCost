@@ -5,7 +5,6 @@
 (def custom-formatter-date-time (formatter "yyyy-MM-dd HH:mm:ss"))
 (def custom-formatter-date (formatter "yyyy-MM-dd"))
 
-
 (defn to-date-time
   ([date]
    (to-date-time date custom-formatter-date-time))
@@ -20,3 +19,7 @@
 
 
 
+
+(defn antd-date-parse [date]
+  (-> date (.format "YYYY-MM-DD") )
+  )

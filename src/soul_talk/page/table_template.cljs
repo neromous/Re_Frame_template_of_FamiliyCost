@@ -5,6 +5,8 @@
             [soul-talk.components.common :as c]
             [soul-talk.route.utils :refer [run-events run-events-admin logged-in? navigate!]]
             (soul-talk.model.account :refer [account record category])
+            [soul-talk.date-utils :as du]
+            [soul-talk.components.table-fields :refer [field]]
             [soul-talk.components.home-page :refer [content header nav footer siderbar]]))
 
 (defn render-parts [prototype]
@@ -42,7 +44,7 @@
           [:> js/antd.Divider {:type "vertical"}]])))))
 
 (defn columns [prototype]
-  (concat (for [item (prototype :template.fields)]
+  (concat (for [[k item] (prototype :template)]
             {:title (:title item)
              :dataIndex (:dataIndex item)
              :key (:key item)
@@ -56,42 +58,33 @@
                 (dispatch (prototype :state.change :table/selection sk)))})
 
 (defn input-form [prototype]
-  [:> js/antd.Card
-   [:> js/antd.Form
-    (doall
+  [:> js/antd.Form
+   (doall
      ;; react 不支持惰性序列  所以说需要doall包住
-     (for [[k v] (-> (prototype :template.item) (dissoc :id))]
-       ^{:key k}
-       [:div
-        [:p (str "请输入:"  v)]
-        [:> js/antd.Input
-         {:on-change #(dispatch
-                       (prototype :state.change
-                                  :new-cache
-                                  k
-                                  (->  % .-target .-value)))}]
-        [:p]]))]])
+    (for [[k item] (-> (prototype :template) (dissoc :id))]
+      ^{:key k}
+      [field
+       (->  item
+            (assoc :prototype prototype)
+            (assoc :sotre-key :new-cache)
+            (assoc :cache-key :new-cache))]))])
 
 (defn edit-form [prototype cache]
-  [:> js/antd.Card
-   [:> js/antd.Form
-    (doall
-     (for [[k v] (-> (prototype :template.item) (dissoc :id))]
-       ^{:key k}
-       [:div
-        [:p (str "请输入" v)]
-        [:> js/antd.Input
-         {:on-change #(dispatch
-                       (prototype :state.change
-                                  :edit-cache
-                                  k
-                                  (->  % .-target .-value)))
-          :defaultValue (clj->js (k @cache))}] [:p]]))]])
+  [:> js/antd.Form
+   (doall
+    (for [[k item] (-> (prototype :template) (dissoc :id))]
+      ^{:key k}
+      [field
+       (->  item
+            (assoc :prototype prototype)
+            (assoc :store-key :edit-item)
+            (assoc :cache-key :edit-cache)
+            (assoc :vtype :edit))]))])
 
 (defn input-modal [prototype]
   (r/with-let [state (subscribe (prototype :state.get :new-vis))
                cache (subscribe (prototype :state.get :new-cache))
-               title "新建"
+               title (str "新建" (prototype :title))
                content (input-form prototype)
                success-fn #(run-events [[:server/new prototype @cache]
                                         (prototype :state.change :new-vis false)])
@@ -101,7 +94,7 @@
 (defn edit-modal [prototype]
   (r/with-let [state (subscribe (prototype :state.get :edit-vis))
                cache (subscribe (prototype :state.get :edit-cache))
-               title "修改"
+               title (str "修改" (prototype :title))
                content [edit-form prototype cache]
                success-fn #(run-events
                             [[:server/update  prototype (-> @cache :id str keyword)  @cache]
@@ -120,51 +113,104 @@
       :onCancel #(run-events [(prototype :state.change :show-vis false)])}
      [:> js/antd.Card
       (doall
-       (for [[k v] (-> (prototype :template.item) (dissoc :id))]
+       (for [[k item] (-> (prototype :template) (dissoc :id))]
          ^{:key k}
-         [:div
-          [:label v]
-          [:> js/antd.Divider {:type "vertical"}]
-          [:label (-> @item
-                      (get k)
-                      clj->js)]
-          [:p]]))]]))
+         [field
+          (->  item
+               (assoc :prototype prototype)
+               (assoc :store-key :show-item)
+               (assoc :cache-key :show-item)
+               (assoc :vtype :read))]))]]))
 
-(defn content-template
-  [prototype]
-  (r/with-let [_ (dispatch [:server/dataset-find-by prototype])
+;; (defn content-template
+;;   [prototype]
+;;   (r/with-let [_ (dispatch [:server/dataset-find-by prototype])
+;;                data-map   (subscribe (prototype :data.all))]
+;;     [:div
+;;      [show-modal prototype]
+;;      [input-modal prototype]
+;;      [edit-modal prototype]
+
+;;      [:br]
+;;      [:> js/antd.Button
+;;       {:on-click #(dispatch (prototype :state.change :new-vis true))
+;;        :type "primary"
+;;        :size "small"}
+;;       "新增"]
+;;      [:hr]
+;;      [:> js/antd.Table   {:rowSelection (selection prototype)
+;;                           :dataSource   (->> @data-map vals (sort-by :id))
+;;                           :columns   (clj->js  (columns prototype))
+;;                           :rowKey "id"}]]))
+
+(defmethod content
+  [:table :index :account]
+  [db]
+  (r/with-let [prototype account
+               _ (dispatch [:server/dataset-find-by prototype])
                data-map   (subscribe (prototype :data.all))]
-
     [:div
-     [show-modal prototype]
-     [input-modal prototype]
-     [edit-modal prototype]
      [:br]
      [:> js/antd.Button
       {:on-click #(dispatch (prototype :state.change :new-vis true))
        :type "primary"
        :size "small"}
-      "新增"]
+      "新增账户"]
      [:hr]
      [:> js/antd.Table   {:rowSelection (selection prototype)
                           :dataSource   (->> @data-map vals (sort-by :id))
                           :columns   (clj->js  (columns prototype))
-                          :rowKey "id"}]]))
-
-(defmethod content
-  [:table :index :test]
-  [db]
-  (content-template record))
-
-(defmethod content
-  [:table :index :account]
-  [db]
-  (content-template account))
+                          :rowKey "id"}]
+     ;; 注册modal 要在下面 避免出现出发不及时的状态 由于刷新是从上到下刷新的
+     [show-modal prototype]
+     [input-modal prototype]
+     [edit-modal prototype]]))
 
 (defmethod content
   [:table :index :record]
   [db]
-  (content-template record))
+  (r/with-let [prototype record
+               _ (dispatch [:server/dataset-find-by prototype])
+               data-map   (subscribe (prototype :data.all))]
+    [:div
+     [:br]
+     [:> js/antd.Button
+      {:on-click #(dispatch (prototype :state.change :new-vis true))
+       :type "primary"
+       :size "small"}
+      "新增记录"]
+     [:hr]
+     [:> js/antd.Table   {:rowSelection (selection prototype)
+                          :dataSource   (->> @data-map vals (sort-by :id))
+                          :columns   (clj->js  (columns prototype))
+                          :rowKey "id"}]
+     [show-modal prototype]
+     [input-modal prototype]
+     [edit-modal prototype]]))
+
+(defmethod content
+  [:table :index :category]
+  [db]
+  (r/with-let [prototype category
+               _ (dispatch [:server/dataset-find-by prototype])
+               data-map   (subscribe (prototype :data.all))]
+    [:div
+     [:br]
+     [:> js/antd.Button
+      {:on-click #(dispatch (prototype :state.change :new-vis true))
+       :type "primary"
+       :size "small"}
+      "新增账户类别"]
+     [:hr]
+     [:> js/antd.Table   {:rowSelection (selection prototype)
+                          :dataSource   (->> @data-map vals (sort-by :id))
+                          :columns   (clj->js  (columns prototype))
+                          :rowKey "id"}]
+
+     [show-modal prototype]
+     [input-modal prototype]
+     [edit-modal prototype]]))
+
 
 
 
