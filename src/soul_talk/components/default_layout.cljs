@@ -1,58 +1,14 @@
-(ns soul-talk.components.home-page
-  (:require             [reagent.core :as r]
-                        [re-frame.core :refer [dispatch dispatch-sync subscribe]]
-                        [soul-talk.components.common :as c]
-                        [soul-talk.route.utils :refer [logged-in?
-                                                       context-url
-                                                       href
-                                                       navigate!
-                                                       run-events
-                                                       run-events-admin]]))
-(defn router-parser [x]
-  (let    [page (get-in x [:active :page])
-           view (get-in x [:active :view])
-           model (get-in x [:active :model])]
-
-    (cond
-      (= page nil) :default
-      (= view nil) [page]
-      (= model nil) [page view]
-      :else [page view model])))
-
-(router-parser @(subscribe [:db-state]))
-
-(defmulti content router-parser)
-
-(defmulti header  router-parser)
-(defmulti nav router-parser)
-
-(defmulti footer router-parser)
-(defmulti siderbar router-parser)
-
-;; (defmulti content  (juxt
-;;                     #(get-in % [:active :page])
-;;                     #(get-in % [:active :view])
-;;                     #(get-in % [:active :model])))
-
-;; (defmulti header  (juxt
-;;                    #(get-in % [:active :page])
-;;                    #(get-in % [:active :view])
-;;                    #(get-in % [:active :model])))
-
-;; (defmulti nav (juxt
-;;                #(get-in % [:active :page])
-;;                #(get-in % [:active :view])
-;;                #(get-in % [:active :model])))
-
-;; (defmulti footer (juxt
-;;                   #(get-in % [:active :page])
-;;                   #(get-in % [:active :view])
-;;                   #(get-in % [:active :model])))
-
-;; (defmulti siderbar (juxt
-;;                     #(get-in % [:active :page])
-;;                     #(get-in % [:active :view])
-;;                     #(get-in % [:active :model])))
+(ns soul-talk.components.default-layout
+  (:require [reagent.core :as r]
+            [re-frame.core :refer [dispatch dispatch-sync subscribe]]
+            [soul-talk.components.common :as c]
+            [soul-talk.components.base-layout :refer [content header nav footer siderbar]]
+            [soul-talk.route.utils :refer [logged-in?
+                                           context-url
+                                           href
+                                           navigate!
+                                           run-events
+                                           run-events-admin]]))
 
 (defmethod header
   :default

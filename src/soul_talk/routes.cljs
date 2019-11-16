@@ -7,12 +7,13 @@
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
    [accountant.core :as accountant]
    soul-talk.handlers
-   soul-talk.components.home-page
+   soul-talk.components.base-layout
+   soul-talk.components.default-layout
    soul-talk.pages
    [soul-talk.page.layout :as layout]
    [soul-talk.model.account :refer [account]]
    [soul-talk.route.utils :refer [run-events run-events-admin logged-in? navigate!]]
-   [soul-talk.components.home-page :as home-page]
+   [soul-talk.components.base-layout :as home-page]
    [soul-talk.components.common :as c]
    (soul-talk.model.account :refer [account record category gears])
    [soul-talk.config :refer [source-pull source-new source-del source-update]]
@@ -28,7 +29,6 @@
   [source-pull record {:limit 100}]
   [source-pull category {:limit 100}]
   [source-pull gears {:limit 100}]
-
   ])
 
 (defroute  "/" []
@@ -57,15 +57,11 @@
                   :view (keyword view)
                   :model (keyword model)}]]))
 
-
-
-
 ;; 根据配置加载不同页面
-
 
 (defn main-page []
   (r/with-let [ready? (subscribe [:initialised?])
-               db-state (subscribe [:db-state])]
+               db-state (subscribe [:active])]
     (when @ready?
       (fn []
         [:div
@@ -78,7 +74,6 @@
            :content home-page/content
            :footer home-page/footer
            :sider home-page/siderbar}]]))))
-
 
 ;; 判断是否登录
 

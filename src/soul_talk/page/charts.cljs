@@ -8,7 +8,7 @@
             [soul-talk.date-utils :as du]
             [soul-talk.components.table-fields :refer [field]]
             [cljsjs.react-beautiful-dnd]
-            [soul-talk.components.home-page :refer [content header nav footer siderbar]]))
+            [soul-talk.components.base-layout :refer [content header nav footer siderbar]]))
 
 (defn render-data [node data]
   (js/Chart.

@@ -13,15 +13,15 @@
 
 (defn layout-hcfs-left [{:keys [header nav content footer sider ] :as item}]
 
-  (r/with-let [db-state (subscribe [:db-state])]
+  (r/with-let [active (subscribe [:active])]
     (fn []
       [:> js/antd.Layout
-       [header @db-state [nav @db-state]]
+       [header @active [nav @active]]
        [:> js/antd.Layout
-        [sider @db-state]
+        [sider @active]
         [:> js/antd.Layout.Content
-         [content @db-state]]]
-       [footer @db-state]]))
+         [content @active]]]
+       [footer @active]]))
 )
 (defn layout-hcfs-right [{:keys [header nav content footer sider]}]
   (fn []

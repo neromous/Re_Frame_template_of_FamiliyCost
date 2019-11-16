@@ -4,7 +4,22 @@
             [soul-talk.route.utils :refer [run-events run-events-admin logged-in? navigate!]]
             [re-frame.core :refer [inject-cofx dispatch dispatch-sync reg-event-db reg-event-fx subscribe reg-sub]]
             [soul-talk.components.modal :as md]
+            [soul-talk.page.table-template :refer [table-content-register]]
             [soul-talk.db :refer [Env]]))
+
+
+;; (table-content-register account :account)
+;; (table-content-register category :category)
+;; (table-content-register record :record)
+;; (table-content-register gears :gears)
+
+
+(doseq [[k v] @Env  ]
+  (table-content-register  v k)
+  )
+
+
+
 
 (defn preform-modals []
   (doall

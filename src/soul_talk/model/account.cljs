@@ -44,7 +44,8 @@
      })
   (defmulti account (fn [x _] x))
   (base/model-init account Account)
-  (swap! Env assoc :account account))
+  (swap! Env assoc :account account)
+  )
 
 (do
   (def Category
@@ -77,7 +78,44 @@
   (swap! Env assoc :category category)
   ;;
   )
-(defmulti gears_type (fn [x _] x))
+
+(do
+  (def Gears-type
+    {:name :gears
+     :root-path [:md/gears]
+     :url "http://localhost:8000/api/v1/Gears/"
+     :fake-dataset {:1 {:id 1
+                        :name "洗衣机"
+                        :uuid "98899dfasddu767ads"
+                        :price 9000}}
+     :template
+     {:id (dto-add {:name "商品id"
+                    :inner-key :id
+                    :dtype :text
+                    :vtype :read})
+
+      :name (dto-add {:name "商品名称"
+                      :inner-key :name
+                      :dtype :text
+                      :vtype :read})
+
+      :uuid (dto-add {:name "商品实体id"
+                      :inner-key :uuid
+                      :dtype :text
+                      :vtype :read})
+
+      :price (dto-add {:name "商品价格"
+                       :inner-key :price
+                       :dtype :text
+                       :vtype :read})}})
+
+  (defmulti gears-type (fn [x _] x))
+  (base/model-init gears-type Gears-type)
+  (swap! Env assoc :gears-type gears-type)
+  ;;
+  )
+
+
 
 (do
   (def Gears
@@ -113,6 +151,7 @@
   (base/model-init gears Gears)
   (swap! Env assoc :gears gears)
   ;;
+
   )
 
 (do
