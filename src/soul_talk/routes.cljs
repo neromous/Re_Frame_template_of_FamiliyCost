@@ -75,8 +75,6 @@
            :footer home-page/footer
            :sider home-page/siderbar}]]))))
 
-;; 判断是否登录
-
 ;; 首页
 ;; 无登录下把事件加入登录事件
 
