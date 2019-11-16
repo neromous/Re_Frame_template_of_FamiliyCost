@@ -14,19 +14,27 @@
    [soul-talk.route.utils :refer [run-events run-events-admin logged-in? navigate!]]
    [soul-talk.components.home-page :as home-page]
    [soul-talk.components.common :as c]
-   [soul-talk.models :refer [preform-modals]]
-   )
+   (soul-talk.model.account :refer [account record category gears])
+   [soul-talk.config :refer [source-pull source-new source-del source-update]]
+   [soul-talk.models :refer [preform-modals]])
 
   (:import [goog History]
            [goog.History EventType]))
 
 
+;; 初始化所有数据
+(run-events
+ [[source-pull account {:limit 100}]
+  [source-pull record {:limit 100}]
+  [source-pull category {:limit 100}]
+  [source-pull gears {:limit 100}]
+
+  ])
 
 (defroute  "/" []
   (run-events
    [[:set-active {:page :home
-                  :view :index
-                  }]]))
+                  :view :index}]]))
 
 (defroute  "/test" []
   (run-events
@@ -34,24 +42,21 @@
                   :view :test
                   :model :test}]]))
 
-(defroute  "/v/:page" [page ]
+(defroute  "/v/:page" [page]
   (run-events
-   [[:set-active {:page (keyword page)
-                  }]]))
-
-
+   [[:set-active {:page (keyword page)}]]))
 
 (defroute  "/v/:page/:view" [page view]
   (run-events
    [[:set-active {:page (keyword page)
-                  :view (keyword view)
-                  }]]))
+                  :view (keyword view)}]]))
 
 (defroute  "/v/:page/:view/:model" [page view model]
   (run-events
    [[:set-active {:page (keyword page)
                   :view (keyword view)
                   :model (keyword model)}]]))
+
 
 
 
@@ -67,10 +72,6 @@
          [c/success-modal]
          [c/error-modal]
          (preform-modals)
-         ;;[modal/account-input-modal]
-         ;;[modal/account-show-modal]
-         ;;[modal/account-edit-modal]
-         ;;(pages-register @db-state)
          [layout/layout-hcfs-left
           {:header  home-page/header
            :nav home-page/nav

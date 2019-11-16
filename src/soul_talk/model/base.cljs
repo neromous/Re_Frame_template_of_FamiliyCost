@@ -23,7 +23,7 @@
       ;; 路径管理 主要用于管理针对整体db的映射
       (defmethod object :db [_ & x] (concat prefix x))
       (defmethod object :db.datasets [_ & x] (concat prefix [:datasets] x))
-      (defmethod object :db.url [_ & x] (concat prefix [:url] x))
+      ;(defmethod object :db.url [_ & x] (concat prefix [:url] x))
       (defmethod object :db.states [_ & x] (concat prefix [:states] x))
       (defmethod object :db.modals [_ & x] (concat prefix [:modals] x))
       (defmethod object :db.cache [_ & x] (concat prefix [:cache] x))
@@ -49,6 +49,10 @@
       (defmethod object :data.all
         [_]
         [:db/get-in (object :db.datasets)])
+
+      (defmethod object :data.find-by
+        [_ query-map]
+        [:db/find-by (object :db.datasets) query-map])
 
       ;; 状态操作
       (defmethod object :state.change
@@ -84,38 +88,4 @@
       ;;
       )))
 
-
-
-;; (account :attrbs)
-;; (account :states.copy [:2] [:3])
-
-;; (dispatch (account :state.change :2 "dfasdfasd"))
-
-;; (dispatch (account :states.copy :3 :2 ))
-
-
-;; (defmulti path (fn [x _] x))
-
-;; (defmethod path :default [root & x] (cons root x))
-
-;; (defn path-register [model-key]
-;;   (let [model-name (name model-key)
-;;         mk (keyword (str "md" "/" model-name))
-;;         prefix (fn [method] (keyword (str model-name "/" method)))]
-;;     (do
-;;       (defmethod path model-key [_ & x] (cons mk x))
-;;       (defmethod path (prefix "datasets") [_] [mk :datasets])
-;;       (defmethod path (prefix "datasets-subkey") [_ id] [mk :datasets id])
-;;       (defmethod path (prefix "url") [_] [mk :url])
-;;       (defmethod path (prefix "states") [_] [mk :states])
-;;       (defmethod path (prefix "modals") [_] [mk :modals])
-;;       (defmethod path (prefix "cache") [_] [mk :cache])
-;;       (defmethod path (prefix "states-subkey") [_ subkey] [mk :states subkey])
-;;       (defmethod path (prefix "pagination") [_] [mk :pagination]))
-;;     ;;
-;;     ))
-
-;; (path-register :account)
-;; (path-register :record)
-;; (path-register :category)
 

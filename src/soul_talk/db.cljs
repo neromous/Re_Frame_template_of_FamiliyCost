@@ -10,11 +10,9 @@
   (->
    {:active {}
     :breadcrumb ["Home"]
-    :login-events []}
-   ;;(assoc :md/record Record)
-   ;;(assoc :md/account Account)
-   ;;注册account
-   ))
+    :login-events []}))
+
+(def Env (r/atom  (sorted-map)))
 
 (defonce unique-work (r/atom 0))
 (defn unique-id []

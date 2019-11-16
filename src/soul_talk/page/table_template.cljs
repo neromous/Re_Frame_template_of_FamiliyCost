@@ -7,6 +7,8 @@
             (soul-talk.model.account :refer [account record category])
             [soul-talk.date-utils :as du]
             [soul-talk.components.table-fields :refer [field]]
+            [soul-talk.utils :refer [url->id]]
+            [soul-talk.config :refer [source-pull source-new source-del source-update]]
             [soul-talk.components.home-page :refer [content header nav footer siderbar]]))
 
 (defn render-parts [prototype]
@@ -22,12 +24,13 @@
             :target "_blank"}
            "查看明细"]
           [:> js/antd.Divider {:type "vertical"}]
-          [:> js/antd.Button {:icon   "edit"
-                              :size   "small"
-                              :target "_blank"
-                              :on-click #(run-events [(prototype :state.change :edit-item clj-item)
-                                                      (prototype :state.change :edit-cache clj-item)
-                                                      (prototype :state.change :edit-vis true)])}
+          [:> js/antd.Button
+           {:icon   "edit"
+            :size   "small"
+            :target "_blank"
+            :on-click #(run-events [(prototype :state.change :edit-item clj-item)
+                                    (prototype :state.change :edit-cache clj-item)
+                                    (prototype :state.change :edit-vis true)])}
            "编辑"]
           [:> js/antd.Divider {:type "vertical"}]
           [:> js/antd.Button
@@ -39,7 +42,7 @@
                          (c/show-confirm
                           "删除"
                           (str "你确认要删除这个实体？")
-                          #(dispatch [:server/delete prototype (-> id str keyword)])
+                          #(dispatch [source-del prototype (-> id str keyword)])
                           #(js/console.log "cancel"))))}]
           [:> js/antd.Divider {:type "vertical"}]])))))
 
@@ -55,14 +58,12 @@
 
 (defn selection [prototype]
   {:on-change (fn [sk sr]
-                (dispatch (prototype :state.change :table/selection sk)))})
-
+                (dispatch (prototype :state.change :table-selection sk)))})
 
 (defmethod content
   [:table :index :account]
   [db]
   (r/with-let [prototype account
-               _ (dispatch [:server/dataset-find-by prototype])
                data-map   (subscribe (prototype :data.all))]
     [:div
      [:br]
@@ -75,14 +76,12 @@
      [:> js/antd.Table   {:rowSelection (selection prototype)
                           :dataSource   (->> @data-map vals (sort-by :id))
                           :columns   (clj->js  (columns prototype))
-                          :rowKey "id"}]
-     ]))
+                          :rowKey "id"}]]))
 
 (defmethod content
   [:table :index :record]
   [db]
   (r/with-let [prototype record
-               _ (dispatch [:server/dataset-find-by prototype])
                data-map   (subscribe (prototype :data.all))]
     [:div
      [:br]
@@ -101,7 +100,6 @@
   [:table :index :category]
   [db]
   (r/with-let [prototype category
-               _ (dispatch [:server/dataset-find-by prototype])
                data-map   (subscribe (prototype :data.all))]
     [:div
      [:br]
@@ -116,5 +114,32 @@
                           :columns   (clj->js  (columns prototype))
                           :rowKey "id"}]]))
 
+(defmethod content
+  [:test]
+  [db]
+  (r/with-let [prototype record
+               _ (dispatch [source-pull prototype {:limit 50}])
+               data-map   (subscribe (prototype :data.all))
+               select (subscribe (prototype :state.get :table-selection))]
+    [:div
+     [:br]
+     [:> js/antd.Button
+      {:on-click #(dispatch (prototype :state.change :new-vis true))
+       :type "primary"
+       :size "small"}
+      "新增账户类别"]
+
+     [:> js/antd.Button
+      {:on-click #(run-events [])
+
+       :type "primary"
+       :size "small"}
+      "新增账户类别"]
+
+     [:hr]
+     [:> js/antd.Table   {:rowSelection (selection prototype)
+                          :dataSource   (->> @data-map vals (sort-by :id))
+                          :columns   (clj->js  (columns prototype))
+                          :rowKey "id"}]]))
 
 

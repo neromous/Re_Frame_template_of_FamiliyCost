@@ -1,4 +1,4 @@
-(ns soul-talk.handler.data-model
+(ns soul-talk.handler.server
   (:require  [re-frame.core :refer [subscribe reg-event-db dispatch reg-sub reg-event-fx]]
              [reagent.core :as r]
              [soul-talk.db :refer [api-uri]]
@@ -13,35 +13,44 @@
                                 json-request-format
                                 json-response-format]]))
 
-;; (reg-event-fx
-;;  :mdw/django-response-parser
-;;  (fn [db [_ model response]]
-;;    (do
-;;      (dispatch (model :data.init  (-> response :results mapset2map)))
-;;      (dispatch (model :state.change :pagination (dissoc response :results))))))
-
-;; (reg-event-fx
-;;  :mdw/django-response-add-parser
-;;  (fn [db [_ model response]]
-;;    (let [id (-> response :id str keyword)]
-;;      (dispatch (model :data.new response)))))
-
-
-(reg-event-db
+(reg-event-fx
  :mdw/django-response-parser
  (fn [db [_ model response]]
-   (-> db
-       (assoc-in (model :db.datasets)   (-> response :results mapset2map))
-       (assoc-in (model :db.states  :pagination)   (dissoc response :results)))))
+   (do
+     (dispatch (model :data.init  (-> response :results mapset2map)))
+     (dispatch (model :state.change :pagination (dissoc response :results))))))
 
-(reg-event-db
+(reg-event-fx
+ :django/findy-by
+ (fn [_ [_  model args]]
+   {:http {:method        GET
+           :url           (model :url)
+           :ajax-map      {:params args
+                           :keywords? true
+                           :response-format :json}
+           :success-event [:mdw/django-response-parser model]}}))
+
+
+
+(reg-event-fx
+ :django/delete
+ (fn [_ [_ model id]]
+   {:http {:method   DELETE
+           :url      (str (model :url)  (name id))
+           :ajax-map       {;:params params
+                            :keywords? true
+                            :response-format :json}
+
+           :success-event (model :data.delete id)}}))
+
+(reg-event-fx
  :mdw/django-response-add-parser
  (fn [db [_ model response]]
    (let [id (-> response :id str keyword)]
-     (assoc-in db (model :db.datasets  id) response))))
+     (dispatch (model :data.new response)))))
 
 (reg-event-fx
- :server/new
+ :django/new
  (fn [_ [_ model item]]
    {:http {:method        POST
 
@@ -54,18 +63,7 @@
            :success-event [:mdw/django-response-add-parser model]}}))
 
 (reg-event-fx
- :server/delete
- (fn [_ [_ model id]]
-   {:http {:method   DELETE
-           :url      (str (model :url)  (name id))
-           :ajax-map       {;:params params
-                            :keywords? true
-                            :response-format :json}
-
-           :success-event (model :data.delete id)}}))
-
-(reg-event-fx
- :server/update
+ :django/update
  (fn [_ [_ model  id item]]
    {:http {:method        PUT
            :url      (str (model :url) (name id) "/")
@@ -76,13 +74,8 @@
 
            :success-event [:mdw/django-response-add-parser model]}}))
 
-(reg-event-fx
- :server/dataset-find-by
- (fn [_ [_  model args]]
-   {:http {:method        GET
-           :url           (model :url)
-           :ajax-map      {:params args
-                           :keywords? true
-                           :response-format :json}
-           :success-event [:mdw/django-response-parser model]}}))
+
+
+
+
 

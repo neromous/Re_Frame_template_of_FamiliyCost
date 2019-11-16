@@ -8,31 +8,51 @@
                                                        navigate!
                                                        run-events
                                                        run-events-admin]]))
+(defn router-parser [x]
+  (let    [page (get-in x [:active :page])
+           view (get-in x [:active :view])
+           model (get-in x [:active :model])]
 
-(defmulti content  (juxt
-                    #(get-in % [:active :page])
-                    #(get-in % [:active :view])
-                    #(get-in % [:active :model])))
+    (cond
+      (= page nil) :default
+      (= view nil) [page]
+      (= model nil) [page view]
+      :else [page view model])))
 
-(defmulti header  (juxt
-                   #(get-in % [:active :page])
-                   #(get-in % [:active :view])
-                   #(get-in % [:active :model])))
+(router-parser @(subscribe [:db-state]))
 
-(defmulti nav (juxt
-               #(get-in % [:active :page])
-               #(get-in % [:active :view])
-               #(get-in % [:active :model])))
+(defmulti content router-parser)
 
-(defmulti footer (juxt
-                  #(get-in % [:active :page])
-                  #(get-in % [:active :view])
-                  #(get-in % [:active :model])))
+(defmulti header  router-parser)
+(defmulti nav router-parser)
 
-(defmulti siderbar (juxt
-                    #(get-in % [:active :page])
-                    #(get-in % [:active :view])
-                    #(get-in % [:active :model])))
+(defmulti footer router-parser)
+(defmulti siderbar router-parser)
+
+;; (defmulti content  (juxt
+;;                     #(get-in % [:active :page])
+;;                     #(get-in % [:active :view])
+;;                     #(get-in % [:active :model])))
+
+;; (defmulti header  (juxt
+;;                    #(get-in % [:active :page])
+;;                    #(get-in % [:active :view])
+;;                    #(get-in % [:active :model])))
+
+;; (defmulti nav (juxt
+;;                #(get-in % [:active :page])
+;;                #(get-in % [:active :view])
+;;                #(get-in % [:active :model])))
+
+;; (defmulti footer (juxt
+;;                   #(get-in % [:active :page])
+;;                   #(get-in % [:active :view])
+;;                   #(get-in % [:active :model])))
+
+;; (defmulti siderbar (juxt
+;;                     #(get-in % [:active :page])
+;;                     #(get-in % [:active :view])
+;;                     #(get-in % [:active :model])))
 
 (defmethod header
   :default
@@ -114,8 +134,7 @@
        [:> js/antd.Menu.Item {:key      "category-table"
                               :icon     "user"
                               :on-click #(navigate! "#/v/table/index/category")}
-        "账户类型管理"]
-       ]
+        "账户类型管理"]]
 
       [:> js/antd.Menu.SubMenu {:key   "user"
                                 :title (r/as-element

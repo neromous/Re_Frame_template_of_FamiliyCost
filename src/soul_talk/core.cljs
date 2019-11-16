@@ -21,11 +21,6 @@
   (r/render [#'main-page]
             (js/document.getElementById "app")))
 
-;; ;; 挂载页面组件
-;; (defn mount-component []
-;;   (r/render [chart/chart-posts-by-votes chart/posts]
-;;             (js/document.getElementById "app")))
-;; 初始化方法
 
 (defn init! []
   (dispatch-sync [:initialize-db])

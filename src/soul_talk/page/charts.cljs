@@ -7,9 +7,8 @@
             (soul-talk.model.account :refer [account record category])
             [soul-talk.date-utils :as du]
             [soul-talk.components.table-fields :refer [field]]
+            [cljsjs.react-beautiful-dnd]
             [soul-talk.components.home-page :refer [content header nav footer siderbar]]))
-
-
 
 (defn render-data [node data]
   (js/Chart.
@@ -17,31 +16,25 @@
    (clj->js
     {:type    "bar"
      :data    {:labels   ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"]
-               :datasets [
-                          {
-                           :label "# of Votes"
+               :datasets [{:label "# of Votes"
                            :data [12 19 3 5 2 3]
-                           :backgroundColor [
-                                             "rgba(255, 99, 132, 0.2)"
+                           :backgroundColor ["rgba(255, 99, 132, 0.2)"
                                              "rgba(54, 162, 235, 0.2)"
                                              "rgba(255, 206, 86, 0.2)"
                                              "rgba(75, 192, 192, 0.2)"
                                              "rgba(153, 102, 255, 0.2)"
-                                             "rgba(255, 159, 64, 0.2)"
-                                             ]
-                           :borderColor [
-                                         "rgba(255, 99, 132, 1)"
+                                             "rgba(255, 159, 64, 0.2)"]
+                           :borderColor ["rgba(255, 99, 132, 1)"
                                          "rgba(54, 162, 235, 1)"
                                          "rgba(255, 206, 86, 1)"
                                          "rgba(75, 192, 192, 1)"
                                          "rgba(153, 102, 255, 1)"
-                                         "rgba(255, 159, 64, 1)"
-                                         ]
-                           }
-                           ]
+                                         "rgba(255, 159, 64, 1)"]}]}
 
-                          }
-     :options {:scales {:xAxes [{:display true}]}}})))
+     :options {:scales {:xAxes [{:display false :ticks {:suggestedMax 8
+                                                        :suggestedMin 1}}]
+                        :yAxex [{:ticks {:suggestedMax 8
+                                         :suggestedMin 1}}]}}})))
 
 (defn destroy-chart [chart]
   (when @chart
@@ -55,14 +48,14 @@
         (destroy-chart chart)
         (reset! chart (render-data node @data))))))
 
-
 (defn chart-posts-by-votes [data]
   (let [chart (r/atom nil)]
     (r/create-class
      {:component-did-mount  (render-chart chart data)
       :component-did-update (render-chart chart data)
       :component-will-unmount (fn [_] (destroy-chart chart))
-      :render               (fn [] (when @data [:canvas]))})))
+      :render               (fn [] (when @data
+                                     [:canvas]))})))
 
 
 
@@ -74,12 +67,9 @@
 
 
 (def data-temp
-  ( ->
-    [{:v 10 :c :Red} {:v 20 :c "Yello"}  {:v 30 :c "Blue"}]
-   r/atom
-   ))
-
-
+  (->
+   [{:v 10 :c :Red} {:v 20 :c "Yello"}  {:v 30 :c "Blue"}]
+   r/atom))
 
 (defn selection [prototype]
   {:on-change (fn [sk sr]
@@ -94,8 +84,6 @@
 
           []))
 
-
-
 (defmethod content
   [:table :test :test]
   [db]
@@ -103,19 +91,26 @@
                _ (dispatch [:server/dataset-find-by prototype])
                data-map   (subscribe (prototype :data.all))]
     [:div
+     [:> js/antd.Row
+      [:> js/antd.Col {:span 8}
+       [:> js/antd.Card {:title "分析表"}
+        ;;{:style {:width "100%"}}
+        [chart-posts-by-votes data-temp]]
+
+       [:> js/antd.Divider {:type "vertical"}]]
+
+      [:> js/antd.Col {:span 8}
+       [:> js/antd.Card {:title "分析表"}
+        ;;{:style {:width "100%"}}
+        [chart-posts-by-votes data-temp]]]
+
+      [:> js/antd.Col {:span 8}]]
      [:br]
-     [:> js/antd.Button
-      {:on-click #(dispatch (prototype :state.change :new-vis true))
-       :type "primary"
-       :size "small"}
-      "新增账户类别"]
-     [:hr]
-     [chart-posts-by-votes data-temp]
+     [:br]
      [:> js/antd.Table   {:rowSelection (selection prototype)
                           :dataSource   (->> @data-map vals (sort-by :id))
                           :columns   (clj->js  (columns prototype))
-                          :rowKey "id"}]
-     ]))
-    
+                          :rowKey "id"}]]))
+
 
 
