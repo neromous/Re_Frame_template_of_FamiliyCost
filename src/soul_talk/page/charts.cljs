@@ -93,8 +93,8 @@
     [:div
      [:> js/antd.Row
       [:> js/antd.Col {:span 8}
-       [:> js/antd.Card {:title "分析表"}
-        ;;{:style {:width "100%"}}
+       [:> js/antd.Card ;;{:title "分析表"}
+        {:style {:width "60%"}}
         [chart-posts-by-votes data-temp]]
 
        [:> js/antd.Divider {:type "vertical"}]]

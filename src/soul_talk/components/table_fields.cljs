@@ -12,11 +12,11 @@
 
 (defmulti field (juxt :dtype :vtype))
 
-(defmethod field :default [{:keys [prototype store-key] :as field}]
+(defmethod field :default [{:keys [prototype store-key] }]
   (let [k (:inner-key field)]
     [:label    (clj->js @(subscribe (prototype :state.get store-key k)))]))
 
-(defmethod field [:text :read] [{:keys [prototype store-key] :as field}]
+(defmethod field [:text :read] [{:keys [prototype store-key] }]
   (let [k (:inner-key field)]
     [:div
      [:label (:title field)]
@@ -24,7 +24,7 @@
      [:label    (clj->js @(subscribe (prototype :state.get store-key k)))]
      [:p]]))
 
-(defmethod field [:date :read] [{:keys [prototype store-key] :as field}]
+(defmethod field [:date :read] [{:keys [prototype store-key] }]
   (let [k (:inner-key field)
         default-time (subscribe (prototype :state.get store-key k))]
     [:div
@@ -36,7 +36,7 @@
        :defaultValue  (new js/moment  @default-time)}]
      [:p]]))
 
-(defmethod field [:select :read] [{:keys [prototype store-key] :as field}]
+(defmethod field [:select :read] [{:keys [prototype store-key] }]
   (let [k (:inner-key field)
         relation  (-> (prototype :template) k :relation)
         data (subscribe
@@ -51,7 +51,7 @@
      [:label    (clj->js    (:name @data))]
      [:p]]))
 
-(defmethod field [:text :new] [{:keys [prototype store-key] :as field}]
+(defmethod field [:text :new] [{:keys [prototype store-key] }]
   (let [k (:inner-key field)]
     [:div
      [:> js/antd.Input
@@ -60,7 +60,7 @@
        :placeholder (clj->js (str "请输入:" (:title field)))}]
      [:p]]))
 
-(defmethod field [:date :new] [{:keys [prototype store-key] :as field}]
+(defmethod field [:date :new] [{:keys [prototype store-key] }]
   (let [k (:inner-key field)]
     [:div
      [:label (:title field)]
@@ -71,7 +71,7 @@
                     (prototype :state.change store-key k (du/antd-date-parse %)))}]
      [:p]]))
 
-(defmethod field [:select :new] [{:keys [prototype store-key] :as field}]
+(defmethod field [:select :new] [{:keys [prototype store-key] }]
   (let [k (:inner-key field)
         data-map (subscribe (prototype :data.all))
         relation  (-> (prototype :template) k :relation)
@@ -88,7 +88,7 @@
        :on-change  #(dispatch  (prototype :state.change store-key k  (first %)))}]
      [:p]]))
 
-(defmethod field [:text :edit] [{:keys [prototype store-key cache-key] :as field}]
+(defmethod field [:text :edit] [{:keys [prototype store-key cache-key] }]
   (let [k (:inner-key field)
         store (subscribe (prototype :state.get store-key k))]
     [:> js/antd.Row
@@ -102,7 +102,7 @@
 
      [:p]]))
 
-(defmethod field [:date :edit] [{:keys [prototype store-key cache-key] :as field}]
+(defmethod field [:date :edit] [{:keys [prototype store-key cache-key] }]
   (let [k (:inner-key field)
         default-time (subscribe (prototype :state.get store-key k))]
     [:div
@@ -114,7 +114,7 @@
        :defaultValue  (new js/moment  @default-time)}]
      [:p]]))
 
-(defmethod field [:select :edit] [{:keys [prototype store-key cache-key] :as field}]
+(defmethod field [:select :edit] [{:keys [prototype store-key cache-key] }]
   (let [k (:inner-key field)
         relation  (-> (prototype :template) k :relation)
         relation-data (subscribe (relation :data.all))

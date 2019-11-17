@@ -55,6 +55,7 @@
      :url "http://localhost:8000/api/v1/Category/"
      :fake-dataset {:1 {:id 1
                         :topclass "测试账户"
+                        :url "http://localhost:8000/api/v1/Category/1/"
                         :name "再次测试账户"}}
 
      :template
@@ -116,7 +117,6 @@
   )
 
 
-
 (do
   (def Gears
     {:name :gears
@@ -151,7 +151,6 @@
   (base/model-init gears Gears)
   (swap! Env assoc :gears gears)
   ;;
-
   )
 
 (do

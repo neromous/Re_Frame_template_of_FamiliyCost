@@ -9,8 +9,8 @@
             [soul-talk.components.table-fields :refer [field]]
             [soul-talk.utils :refer [url->id]]
             [soul-talk.config :refer [source-pull source-new source-del source-update]]
-            [soul-talk.components.base-layout :refer [content header nav footer siderbar]]
-            ))
+            [soul-talk.pages.dash :refer [dash-page]]
+            [soul-talk.components.base-layout :refer [content header nav footer siderbar]]))
 
 (defn render-parts [prototype]
   (r/with-let []
@@ -63,105 +63,20 @@
 
 (defn table-content-register [prototype  subkey]
 
-
   (do
     (defmethod content
       [:table :index subkey]
       [x]
-        [:div
-         [:br]
-         [:> js/antd.Button
-          {:on-click #(dispatch (prototype :state.change :new-vis true))
-           :type "primary"
-           :size "small"}
-          "新增账户"]
-         [:hr]
-         [:> js/antd.Table   {:rowSelection (selection prototype)
-                              :dataSource   (->> @(subscribe (prototype :data.all)) vals (sort-by :id))
-                              :columns   (clj->js  (columns prototype))
-                              :rowKey "id"}]])))
-
-
-
-;; (defmethod content
-;;   [:table :index :account]
-;;   [x]
-;;   (r/with-let [prototype account
-;;                data-map   (subscribe (prototype :data.all))]
-;;     [:div
-;;      [:br]
-;;      [:> js/antd.Button
-;;       {:on-click #(dispatch (prototype :state.change :new-vis true))
-;;        :type "primary"
-;;        :size "small"}
-;;       "新增账户"]
-;;      [:hr]
-;;      [:> js/antd.Table   {:rowSelection (selection prototype)
-;;                           :dataSource   (->> @data-map vals (sort-by :id))
-;;                           :columns   (clj->js  (columns prototype))
-;;                           :rowKey "id"}]]))
-
-;; (defmethod content
-;;   [:table :index :record]
-;;   [db]
-;;   (r/with-let [prototype record
-;;                data-map   (subscribe (prototype :data.all))]
-;;     [:div
-;;      [:br]
-;;      [:> js/antd.Button
-;;       {:on-click #(dispatch (prototype :state.change :new-vis true))
-;;        :type "primary"
-;;        :size "small"}
-;;       "新增记录"]
-;;      [:hr]
-;;      [:> js/antd.Table   {:rowSelection (selection prototype)
-;;                           :dataSource   (->> @data-map vals (sort-by :id))
-;;                           :columns   (clj->js  (columns prototype))
-;;                           :rowKey "id"}]]))
-
-;; (defmethod content
-;;   [:table :index :category]
-;;   [db]
-;;   (r/with-let [prototype category
-;;                data-map   (subscribe (prototype :data.all))]
-;;     [:div
-;;      [:br]
-;;      [:> js/antd.Button
-;;       {:on-click #(dispatch (prototype :state.change :new-vis true))
-;;        :type "primary"
-;;        :size "small"}
-;;       "新增账户类别"]
-;;      [:hr]
-;;      [:> js/antd.Table   {:rowSelection (selection prototype)
-;;                           :dataSource   (->> @data-map vals (sort-by :id))
-;;                           :columns   (clj->js  (columns prototype))
-;;                           :rowKey "id"}]]))
-
-;; (defmethod content
-;;   [:test]
-;;   [db]
-;;   (r/with-let [prototype record
-;;                data-map   (subscribe (prototype :data.all))
-;;                select (subscribe (prototype :state.get :table-selection))]
-;;     [:div
-;;      [:br]
-;;      [:> js/antd.Button
-;;       {:on-click #(dispatch (prototype :state.change :new-vis true))
-;;        :type "primary"
-;;        :size "small"}
-;;       "新增账户类别"]
-
-;;      [:> js/antd.Button
-;;       {:on-click #(run-events [])
-
-;;        :type "primary"
-;;        :size "small"}
-;;       "新增账户类别"]
-
-;;      [:hr]
-;;      [:> js/antd.Table   {:rowSelection (selection prototype)
-;;                           :dataSource   (->> @data-map vals (sort-by :id))
-;;                           :columns   (clj->js  (columns prototype))
-;;                           :rowKey "id"}]]))
-
+      [:div
+       [:br]
+       [:> js/antd.Button
+        {:on-click #(dispatch (prototype :state.change :new-vis true))
+         :type "primary"
+         :size "small"}
+        "新增账户"]
+       [:hr]
+       [:> js/antd.Table   {:rowSelection (selection prototype)
+                            :dataSource   (->> @(subscribe (prototype :data.all)) vals (sort-by :id))
+                            :columns   (clj->js  (columns prototype))
+                            :rowKey "id"}]])))
 

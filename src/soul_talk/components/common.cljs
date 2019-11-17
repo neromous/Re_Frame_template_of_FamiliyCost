@@ -16,6 +16,14 @@
         [:> js/antd.antd.Spin {:tip  "加载中。。。。"
                                :size "large"}]))))
 
+(defn input-default [store ek tag parser]
+  [:> tag  {:on-change #(swap! store assoc-in [:cache ek]   (parser %))
+            :defaultValue (-> @store (get-in  [:cache ek])  str clj->js)}])
+
+(defn input-placeholder [store ek tag parser]
+  [:> tag  {:on-change #(swap! store assoc-in [:store ek]   (parser %))
+            :defaultValue (-> @store  (get-in  [:store ek])  str clj->js)}])
+
 (defn spin-loading []
   (r/with-let [loading? (subscribe [:loading?])]
     (when @loading?
