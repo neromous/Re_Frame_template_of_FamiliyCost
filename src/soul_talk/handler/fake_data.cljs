@@ -12,6 +12,11 @@
                                 url-request-format
                                 json-request-format
                                 json-response-format]]))
+
+(defonce unique-work (r/atom 0))
+(defn unique-id []
+  (swap! unique-work inc))
+
 (reg-event-fx
  :fake/sync-pull
  (fn [cofx [_ model args]]
@@ -20,7 +25,9 @@
 (reg-event-fx
  :fake/new
  (fn [cofx [_  model item]]
-   {:db (assoc-in (:db cofx) (model :db.datasets  (-> item :id str keyword)) item)}))
+
+   (let [id (unique-id)]
+     {:db (assoc-in (:db cofx) (model :db.datasets  (-> id str keyword)  ) (assoc item :id id))})))
 
 (reg-event-fx
  :fake/delete

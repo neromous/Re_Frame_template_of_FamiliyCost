@@ -78,5 +78,8 @@
        [:> js/antd.Table   {:rowSelection (selection prototype)
                             :dataSource   (->> @(subscribe (prototype :data.all)) vals (sort-by :id))
                             :columns   (clj->js  (columns prototype))
-                            :rowKey "id"}]])))
+                            :rowKey "id"}]
+
+
+       ])))
 

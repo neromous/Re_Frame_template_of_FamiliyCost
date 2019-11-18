@@ -42,8 +42,11 @@
                              :vtype :new})}
      ;;
      })
+  ;; 注册多重方法
   (defmulti account (fn [x _] x))
+  ;; 批量注册子方法
   (base/model-init account Account)
+  ;; 注册模型属性
   (swap! Env assoc :account account)
   )
 
