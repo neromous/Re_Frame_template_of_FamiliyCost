@@ -27,7 +27,7 @@
  (fn [cofx [_  model item]]
 
    (let [id (unique-id)]
-     {:db (assoc-in (:db cofx) (model :db.datasets  (-> id str keyword)  ) (assoc item :id id))})))
+     {:db (assoc-in (:db cofx) (model :db.datasets  (get item :url)  ) (assoc item :id id))})))
 
 (reg-event-fx
  :fake/delete

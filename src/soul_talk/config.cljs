@@ -17,5 +17,5 @@
 
 ;; 外键链接方案
 
-(def foreign-key  :item/foreignkey)
-
+(def  one2many  :item/one2many)
+(def  one2one  :item/one2one)

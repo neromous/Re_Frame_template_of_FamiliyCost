@@ -15,10 +15,11 @@
      :title "账户"
      :root-path [:md/account]
      :url "http://localhost:8000/api/v1/Account/"
-     :fake-dataset {:1 {:id 1
-                        :name "测试账户"
-                        :quota  10000
-                        :accountType 0}}
+     :fake-dataset {"http://localhost:8000/api/v1/Account/" {:id 1
+                                                             :name "测试账户"
+                                                             :quota  10000
+                                                             :url "http://localhost:8000/api/v1/Account/"
+                                                             :accountType 0}}
 
      :template
      {:id (dto-add {:name "账户id"
@@ -47,8 +48,7 @@
   ;; 批量注册子方法
   (base/model-init account Account)
   ;; 注册模型属性
-  (swap! Env assoc :account account)
-  )
+  (swap! Env assoc :account account))
 
 (do
   (def Category
@@ -56,10 +56,10 @@
      :title "类别"
      :root-path [:md/category]
      :url "http://localhost:8000/api/v1/Category/"
-     :fake-dataset {:1 {:id 1
-                        :topclass "测试账户"
-                        :url "http://localhost:8000/api/v1/Category/1/"
-                        :name "再次测试账户"}}
+     :fake-dataset {"http://localhost:8000/api/v1/Category/1/" {:id 1
+                                                                :topclass "测试账户"
+                                                                :url "http://localhost:8000/api/v1/Category/1/"
+                                                                :name "再次测试账户"}}
 
      :template
      {:id (dto-add {:name "账户id"
@@ -91,6 +91,7 @@
      :fake-dataset {:1 {:id 1
                         :name "洗衣机"
                         :uuid "98899dfasddu767ads"
+                        :url "http://localhost:8000/api/v1/Gears/"
                         :price 9000}}
      :template
      {:id (dto-add {:name "商品id"
@@ -119,7 +120,6 @@
   ;;
   )
 
-
 (do
   (def Gears
     {:name :gears
@@ -128,6 +128,7 @@
      :fake-dataset {:1 {:id 1
                         :name "洗衣机"
                         :uuid "98899dfasddu767ads"
+                        :url "http://localhost:8000/api/v1/Gears/"
                         :price 9000}}
      :template
      {:id (dto-add {:name "商品id"
@@ -162,12 +163,15 @@
      :title "账单记录"
      :root-path [:md/record]
      :url "http://localhost:8000/api/v1/CostRecord/"
-     :fake-dataset  {:1 {:id 1
-                         :name "测试记录"
-                         :costValue 9000
-                         :category "http://localhost:8000/api/v1/Category/1/"
-                         :gears  "http://localhost:8000/api/v1/Gears/1/"
-                         :billTime "2019-05-03"}}
+     :fake-dataset
+     {"http://localhost:8000/api/v1/CostRecord/1/"
+      {:id 1
+       :name "测试记录"
+       :costValue 9000
+       :url "http://localhost:8000/api/v1/CostRecord/1/"
+       :category "http://localhost:8000/api/v1/Category/1/"
+       :gears  "http://localhost:8000/api/v1/Gears/1/"
+       :billTime "2019-05-03"}}
      :template
      {:id (dto-add {:name "账户id"
                     :inner-key :id
@@ -206,4 +210,5 @@
   (swap! Env assoc :record record)
   ;;
   )
+
 

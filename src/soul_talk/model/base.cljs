@@ -38,6 +38,22 @@
         [_ id]
         [:db/dissoc-in  (object :db.datasets id)])
 
+      (defmethod object :field
+        [_ & kpath]
+        (get-in (object :template)  kpath))
+
+      (defmethod object :field.relation
+        [_  field-key]
+        (get-in (object :template)  [field-key :relation]))
+
+      (defmethod object :field.dtype
+        [_  field-key]
+        (get-in (object :template)  [field-key :dtype]))
+
+      (defmethod object :field.title
+        [_  field-key]
+        (get-in (object :template)  [field-key :title]))
+
       (defmethod object :data.new
         [_ item]
         [:db/assoc-in  (object :db.datasets (item->id item)) item])
@@ -45,6 +61,10 @@
       (defmethod object :data.update
         [_ id item]
         [:db/merge-in  (object :db.datasets  id) item])
+
+      (defmethod object :data.replace
+        [_ id item]
+        [:db/assoc-in  (object :db.datasets  id) item])
 
       (defmethod object :data.all
         [_]
@@ -54,7 +74,37 @@
         [_ query-map]
         [:db/find-by (object :db.datasets) query-map])
 
-      ;; 状态操作
+      (defmethod object :relate.relate-value
+        [_ item  relate-field target-field]
+        [:item/relate-value
+         (object :db.datasets  (get item :url))
+         ((object :field.relation relate-field)  :db.datasets)
+         relate-field
+         target-field])
+
+      (defmethod object :relate.one2one
+        [_ item  relation-field]
+        [:item/one2one
+         (object :db.datasets  (get item :url))
+         ((object :field.relation relation-field)  :db.datasets)
+         relation-field])
+
+      (defmethod object :_relate.relate-value
+        [_ target  item  field-tag  target-field]
+        [:item/relate-value
+         (object :db.datasets  (get item :url))
+         (target :db.datasets)
+         field-tag
+         target-field])
+
+      (defmethod object :_relate.one2one
+        [_ target  item  field-tag]
+        [:item/one2one (object :db.datasets  (get item :url))  (target :db.datasets)  field-tag])
+
+      (defmethod object :relate.one2many
+        [_ target item field-tag]
+        [:item/one2many   (object :db.datasets  (get item :url))  (target :db.datasets)  field-tag])
+
       (defmethod object :state.change
         [_  & kv]
         (let [prefix-path (object :db.states)
@@ -87,5 +137,8 @@
           [:paths/move target origin]))
       ;;
       )))
+
+
+
 
 

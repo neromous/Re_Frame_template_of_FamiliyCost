@@ -8,7 +8,8 @@
             [soul-talk.components.table-fields :refer [field]]))
 
 (defn show-modal [prototype]
-  (r/with-let [item (subscribe (prototype :state.get :show-item))
+  (r/with-let [
+               ;;item (subscribe (prototype :state.get :show-item))
                modal-state (subscribe (prototype :state.get :show-vis))]
 
     [:> js/antd.Modal
@@ -72,7 +73,7 @@
                title (str "修改: " (prototype :title))
                content [edit-form prototype cache]
                success-fn #(run-events
-                            [[source-update  prototype (-> @cache :id str keyword)  @cache]
+                            [[source-update  prototype (-> @cache :url)  @cache]
                              (prototype :state.change :edit-vis false)])
                cancel-fn #(run-events [(prototype :state.change :edit-vis false)])]
     (c/form-modal title content state success-fn cancel-fn)))

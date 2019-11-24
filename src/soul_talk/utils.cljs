@@ -26,6 +26,11 @@
 
 (defn mapset2map [mapset] (into {} (for [x mapset] (hash-map  (-> x :id str keyword) x))))
 
+
+(defn mapset2map-url [mapset] (into {} (for [x mapset] (hash-map  (-> x :url str) x))))
+
+
+
 (defn query_filter [model-map query]
   (filter #(= query (select-keys % (keys query))) (vals model-map)))
 

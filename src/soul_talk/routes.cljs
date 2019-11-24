@@ -23,6 +23,7 @@
            [goog.History EventType]))
 
 
+
 ;; 初始化所有数据
 (run-events
  [[source-pull account {:limit 100}]

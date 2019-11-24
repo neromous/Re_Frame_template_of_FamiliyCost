@@ -3,4 +3,5 @@
    soul-talk.page.table-template
    soul-talk.page.charts
    soul-talk.page.home-page
+   soul-talk.page.todo
    ))

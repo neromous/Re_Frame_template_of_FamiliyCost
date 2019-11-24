@@ -16,7 +16,7 @@
   (r/with-let []
     (fn [_ item]
       (r/as-element
-       (let [{:keys [id] :as clj-item} (js->clj item :keywordize-keys true)]
+       (let [{:keys [url] :as clj-item} (js->clj item :keywordize-keys true)]
          [:div
           [:> js/antd.Button
            {:size   "small"
@@ -43,7 +43,7 @@
                          (c/show-confirm
                           "删除"
                           (str "你确认要删除这个实体？")
-                          #(dispatch [source-del prototype (-> id str keyword)])
+                          #(dispatch [source-del prototype url])
                           #(js/console.log "cancel"))))}]
           [:> js/antd.Divider {:type "vertical"}]])))))
 

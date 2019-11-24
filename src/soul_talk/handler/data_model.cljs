@@ -2,7 +2,7 @@
   (:require  [re-frame.core :refer [subscribe reg-event-db dispatch reg-sub reg-event-fx]]
              [reagent.core :as r]
              [soul-talk.db :refer [api-uri]]
-             [soul-talk.utils :refer [mapset2map]]
+             [soul-talk.utils :refer [mapset2map-url]]
              [soul-talk.route.utils :refer [run-events run-events-admin logged-in? navigate!]]
              [ajax.core :refer [POST
                                 GET
@@ -31,14 +31,14 @@
  :mdw/django-response-parser
  (fn [db [_ model response]]
    (-> db
-       (assoc-in (model :db.datasets)   (-> response :results mapset2map))
+       (assoc-in (model :db.datasets)   (-> response :results mapset2map-url))
        (assoc-in (model :db.states  :pagination)   (dissoc response :results)))))
 
 (reg-event-db
  :mdw/django-response-add-parser
  (fn [db [_ model response]]
-   (let [id (-> response :id str keyword)]
-     (assoc-in db (model :db.datasets  id) response))))
+   (let [url (-> response :url)]
+     (assoc-in db (model :db.datasets  url) response))))
 
 (reg-event-fx
  :server/new
@@ -55,20 +55,23 @@
 
 (reg-event-fx
  :server/delete
- (fn [_ [_ model id]]
+ (fn [_ [_ model url]]
    {:http {:method   DELETE
-           :url      (str (model :url)  (name id))
+           :url  url
+
+           ;;(str (model :url)  (name id))
            :ajax-map       {;:params params
                             :keywords? true
                             :response-format :json}
 
-           :success-event (model :data.delete id)}}))
+           :success-event (model :data.delete url)}}))
 
 (reg-event-fx
  :server/update
- (fn [_ [_ model  id item]]
+ (fn [_ [_ model  url item]]
    {:http {:method        PUT
-           :url      (str (model :url) (name id) "/")
+           :url  url
+          ;; (str (model :url) (name id) "/")
            :ajax-map       {:params (dissoc item :id)
                             :keywords? true
                             :format (json-request-format)
