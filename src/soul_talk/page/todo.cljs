@@ -2,7 +2,9 @@
   (:require [soul-talk.page.layout :as layout]
             [reagent.core :as r]
             [re-frame.core :refer [dispatch dispatch-sync subscribe]]
+            [soul-talk.components.common :as c]
             [soul-talk.components.base-layout :refer [content header nav footer siderbar]]
+            [soul-talk.components.fields :as fields]
             ))
 
 
@@ -77,7 +79,7 @@
                          (c/show-confirm
                           "删除"
                           (str "你确认要删除这个实体？")
-                          #(dispatch [source-del prototype (-> id str keyword)])
+                          #(dispatch [ prototype (-> id str keyword)])
                           #(js/console.log "cancel"))))}]
           [:> js/antd.Divider {:type "vertical"}]])))))
 

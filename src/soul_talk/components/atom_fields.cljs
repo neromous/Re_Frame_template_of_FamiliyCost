@@ -20,6 +20,8 @@
      :placeholder (clj->js (str "请输入:" title))}]
    [:p]])
 
+
+
 (defn text-edit  [pk store title]
   [:div
    [:label  (clj->js title)]

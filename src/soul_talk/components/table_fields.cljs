@@ -57,7 +57,7 @@
      [:> js/antd.Input
       {:on-change #(dispatch
                     (prototype :state.change  store-key k (->  % .-target .-value)))
-       :placeholder (clj->js (str "请输入:" (:title obj)))}]
+       :placeholder (clj->js (str "请输入:" (:name obj)))}]
      [:p]]))
 
 (defmethod field [:date :new] [{:keys [prototype store-key] :as obj }]
@@ -76,6 +76,7 @@
         data-map (subscribe (prototype :data.all))
         relation  (-> (prototype :template) k :relation)
         relation-data (subscribe (relation :data.all))
+
         ]
     [:div
      [:label (:title obj)]
@@ -100,7 +101,6 @@
        {:on-change #(dispatch
                      (prototype :state.change  cache-key k  (->  % .-target .-value)))
         :defaultValue (clj->js @store)}]]
-
      [:p]]))
 
 (defmethod field [:date :edit] [{:keys [prototype store-key cache-key] :as obj }]

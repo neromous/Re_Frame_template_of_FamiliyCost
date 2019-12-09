@@ -15,7 +15,7 @@
    [soul-talk.route.utils :refer [run-events run-events-admin logged-in? navigate!]]
    [soul-talk.components.base-layout :as home-page]
    [soul-talk.components.common :as c]
-   (soul-talk.model.account :refer [account record category gears])
+   (soul-talk.model.account :refer [account record category gears todo])
    [soul-talk.config :refer [source-pull source-new source-del source-update]]
    [soul-talk.models :refer [preform-modals]])
 
@@ -30,6 +30,7 @@
   [source-pull record {:limit 100}]
   [source-pull category {:limit 100}]
   [source-pull gears {:limit 100}]
+  [source-pull todo {:limit 100}]
   ])
 
 (defroute  "/" []

@@ -15,32 +15,25 @@
      :title "账户"
      :root-path [:md/account]
      :url "http://localhost:8000/api/v1/Account/"
-     :fake-dataset {"http://localhost:8000/api/v1/Account/" {:id 1
-                                                             :name "测试账户"
-                                                             :quota  10000
-                                                             :url "http://localhost:8000/api/v1/Account/"
-                                                             :accountType 0}}
+     :fake-dataset
+     {"http://localhost:8000/api/v1/Account/"
+      {:id 1
+       :name "测试账户"
+       :quota  10000
+       :url "http://localhost:8000/api/v1/Account/"
+       :accountType 0}}
 
-     :template
-     {:id (dto-add {:name "账户id"
-                    :inner-key :id
-                    :dtype :text
-                    :vtype :read})
+     :template  {:id  {:name "账户id"
+                       :dtype :text}
 
-      :name (dto-add {:name "账户名称"
-                      :inner-key :name
-                      :dtype :text
-                      :vtype :new})
+                 :name  {:name "账户名称"
+                         :dtype :text}
 
-      :quota (dto-add {:name "账单额度"
-                       :inner-key :quota
-                       :dtype :text
-                       :vtype :new})
+                 :quota  {:name "账单额度"
+                          :dtype :text}
 
-      :accountType (dto-add {:name "账户类型"
-                             :inner-key :accountType
-                             :dtype :text
-                             :vtype :new})}
+                 :accountType {:name "账户类型"
+                               :dtype :text}}
      ;;
      })
   ;; 注册多重方法
@@ -56,26 +49,21 @@
      :title "类别"
      :root-path [:md/category]
      :url "http://localhost:8000/api/v1/Category/"
-     :fake-dataset {"http://localhost:8000/api/v1/Category/1/" {:id 1
-                                                                :topclass "测试账户"
-                                                                :url "http://localhost:8000/api/v1/Category/1/"
-                                                                :name "再次测试账户"}}
+     :fake-dataset
+     {"http://localhost:8000/api/v1/Category/1/"
+      {:id 1
+       :topclass "测试账户"
+       :url "http://localhost:8000/api/v1/Category/1/"
+       :name "再次测试账户"}}
 
-     :template
-     {:id (dto-add {:name "账户id"
-                    :inner-key :id
-                    :dtype :text
-                    :vtype :read})
+     :template {:id {:name "账户id"
+                     :dtype :text}
 
-      :topclass (dto-add {:name "上级分类"
-                          :inner-key :topclass
-                          :dtype :text
-                          :vtype :new})
+                :topclass {:name "上级分类"
+                           :dtype :text}
 
-      :name (dto-add {:name "分类名称"
-                      :inner-key :name
-                      :dtype :text
-                      :vtype :new})}})
+                :name {:name "分类名称"
+                       :dtype :text}}})
 
   (defmulti category (fn [x _] x))
   (base/model-init category Category)
@@ -88,31 +76,25 @@
     {:name :gears
      :root-path [:md/gears]
      :url "http://localhost:8000/api/v1/Gears/"
-     :fake-dataset {:1 {:id 1
-                        :name "洗衣机"
-                        :uuid "98899dfasddu767ads"
-                        :url "http://localhost:8000/api/v1/Gears/"
-                        :price 9000}}
+     :fake-dataset
+     {"http://localhost:8000/api/v1/Gears/"
+      {:id 1
+       :name "洗衣机"
+       :uuid "98899dfasddu767ads"
+       :url "http://localhost:8000/api/v1/Gears/"
+       :price 9000}}
      :template
-     {:id (dto-add {:name "商品id"
-                    :inner-key :id
-                    :dtype :text
-                    :vtype :read})
+     {:id  {:name "商品id"
+            :dtype :text}
 
-      :name (dto-add {:name "商品名称"
-                      :inner-key :name
-                      :dtype :text
-                      :vtype :read})
+      :name  {:name "商品名称"
+              :dtype :text}
 
-      :uuid (dto-add {:name "商品实体id"
-                      :inner-key :uuid
-                      :dtype :text
-                      :vtype :read})
+      :uuid  {:name "商品实体id"
+              :dtype :text}
 
-      :price (dto-add {:name "商品价格"
-                       :inner-key :price
-                       :dtype :text
-                       :vtype :read})}})
+      :price  {:name "商品价格"
+               :dtype :text}}})
 
   (defmulti gears-type (fn [x _] x))
   (base/model-init gears-type Gears-type)
@@ -125,31 +107,25 @@
     {:name :gears
      :root-path [:md/gears]
      :url "http://localhost:8000/api/v1/Gears/"
-     :fake-dataset {:1 {:id 1
-                        :name "洗衣机"
-                        :uuid "98899dfasddu767ads"
-                        :url "http://localhost:8000/api/v1/Gears/"
-                        :price 9000}}
+     :fake-dataset
+     {:1
+      {:id 1
+       :name "洗衣机"
+       :uuid "98899dfasddu767ads"
+       :url "http://localhost:8000/api/v1/Gears/"
+       :price 9000}}
      :template
-     {:id (dto-add {:name "商品id"
-                    :inner-key :id
-                    :dtype :text
-                    :vtype :read})
+     {:id  {:name "商品id"
+            :dtype :text}
 
-      :name (dto-add {:name "商品名称"
-                      :inner-key :name
-                      :dtype :text
-                      :vtype :read})
+      :name  {:name "商品名称"
+              :dtype :text}
 
-      :uuid (dto-add {:name "商品实体id"
-                      :inner-key :uuid
-                      :dtype :text
-                      :vtype :read})
+      :uuid  {:name "商品实体id"
+              :dtype :text}
 
-      :price (dto-add {:name "商品价格"
-                       :inner-key :price
-                       :dtype :text
-                       :vtype :read})}})
+      :price  {:name "商品价格"
+               :dtype :text}}})
 
   (defmulti gears (fn [x _] x))
   (base/model-init gears Gears)
@@ -173,35 +149,23 @@
        :gears  "http://localhost:8000/api/v1/Gears/1/"
        :billTime "2019-05-03"}}
      :template
-     {:id (dto-add {:name "账户id"
-                    :inner-key :id
-                    :dtype :text
-                    :vtype :read})
+     {:id {:name "账户id"
+           :dtype :text}
 
-      :name (dto-add {:name "账户名称"
-                      :inner-key :name
-                      :dtype :text
-                      :vtype :new})
+      :name  {:name "账户名称"
+              :dtype :text}
 
-      :costValue (dto-add {:name "交易额"
-                           :inner-key :costValue
-                           :dtype :text
-                           :vtype :new})
-      :category (dto-add {:name "交易类型"
-                          :inner-key :category
-                          :dtype :select
-                          :vtype :new
-                          :relation  category})
-      :gears (dto-add {:name "关联商品"
-                       :inner-key :gears
-                       :dtype :select
-                       :vtype :read
-                       :relation gears})
+      :costValue  {:name "交易额"
+                   :dtype :text}
+      :category {:name "交易类型"
+                 :dtype :select
+                 :relation  category}
+      :gears {:name "关联商品"
+              :dtype :select
+              :relation gears}
 
-      :billTime (dto-add {:name "账单时间"
-                          :inner-key :billTime
-                          :dtype :date
-                          :vtype :new})}
+      :billTime {:name "账单时间"
+                 :dtype :date}}
    ;;
      })
 
@@ -210,5 +174,59 @@
   (swap! Env assoc :record record)
   ;;
   )
+
+(do
+  (def Todo
+    {:name :todo
+     :title "账单记录"
+     :root-path [:md/todo]
+     :url "http://localhost:8000/api/v1/CostTodo/"
+     :fake-dataset
+     {"http://localhost:8000/api/v1/CostTodo/1/"
+      {:是否完成 false
+       :名称 "空"
+       :优先级 0
+       :紧急程度 0
+       :实际发生日期 "1900-01-01"
+       :计划发生日期 "1900-01-01"
+       :循环类型 false
+       :实际花费 0
+       :计划花费 0
+       :url "http://localhost:8000/api/v1/CostTodo/1/"
+       :实际结束日期 "1900-01-01"}}
+
+     :template
+
+     {:是否完成 {:title "是否完成"
+             :dtype :bool}
+      :名称 {:title "名称"
+           :dtype :text}
+      :优先级 {:title "优先级"
+            :dtype :int}
+      :紧急程度 {:title "紧急程度"
+             :dtype :int}
+      :实际发生日期 {:title "实际发生日期"
+               :dtype :date}
+      :计划发生日期 {:title "计划发生日期"
+               :dtype :date}
+      :循环类型 {:title "循环类型"
+             :dtype :text}
+      :实际花费 {:title "实际花费"
+             :dtype :float}
+      :计划花费 {:title "计划花费"
+             :dtype :float}
+      :实际结束日期 {:title "实际结束日期"
+               :dtype :date}
+      :url {:title "url"
+            :dtype :text}}
+   ;;
+     })
+
+  (defmulti todo (fn [x _] x))
+  (base/model-init todo Todo)
+  (swap! Env assoc :todo todo)
+  ;;
+  )
+
 
 

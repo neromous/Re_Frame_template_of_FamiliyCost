@@ -74,13 +74,9 @@
         [_ query-map]
         [:db/find-by (object :db.datasets) query-map])
 
-      (defmethod object :relate.relate-value
-        [_ item  relate-field target-field]
-        [:item/relate-value
-         (object :db.datasets  (get item :url))
-         ((object :field.relation relate-field)  :db.datasets)
-         relate-field
-         target-field])
+      (defmethod object :relate.all
+        [_ field-key]
+        ((object :field field-key :relation ) :data.all))
 
       (defmethod object :relate.one2one
         [_ item  relation-field]

@@ -49,9 +49,9 @@
 
 (defn columns [prototype]
   (concat (for [[k item] (prototype :template)]
-            {:title (:title item)
-             :dataIndex (:dataIndex item)
-             :key (:key item)
+            {:title (:name item)
+             :dataIndex (name k)
+             :key (name k)
              :aligh "center"})
 
           [{:title "操作" :dataIndex "actions" :key "actions" :align "center"
