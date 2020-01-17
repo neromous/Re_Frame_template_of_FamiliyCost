@@ -22,7 +22,7 @@
            cljsjs/chartjs {:mvn/version "2.9.1-0"}
            re-frisk {:mvn/version "0.5.4.1"}}
 
- :paths   ["src" "src-cljc" "resources" "target"  "env/dev"]
+ :paths   [ "src" "src-cljc" "resources" "target"  "env/dev"]
  :aliases {:fig {:extra-deps {}
                  :extra-paths ["target"]}
            :dev {:main-opts ["-m" "figwheel.main" "-b" "dev" "-r"]

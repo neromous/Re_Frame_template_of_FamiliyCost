@@ -5,17 +5,19 @@
    [soul-talk.local-storage :as storage]
    [soul-talk.utils :refer [url->id]]
    soul-talk.ajax
-   soul-talk.effects
-   soul-talk.handler.errors
-   soul-talk.handler.auth
    soul-talk.handler.admin
-   soul-talk.handler.users
-   soul-talk.handler.category
+   soul-talk.handler.auth
+   soul-talk.handler.errors
    soul-talk.handler.files
-   soul-talk.handler.fake-data
-   soul-talk.handler.data-model))
+   soul-talk.handler.server
+   soul-talk.handler.users
+   soul-talk.handler.table-fields
+   soul-talk.handler.order-list
+   ))
 
 ;; 初始化
+
+
 (reg-event-fx
  :initialize-db
  [(inject-cofx :local-store storage/login-user-key)
@@ -82,21 +84,26 @@
                         (dissoc :error))}))
 
 ;; 通用db深度操作方法
-
 (reg-sub
  :db/get-in
  (fn [db [_  ks]]
    (get-in db ks)))
 
 (reg-sub
+ :db/group-by
+ (fn [db [_ ks group-func]]
+   (group-by  group-func  (get-in db ks))))
+
+(reg-sub
  :db/select-keys
  (fn [db [_  ks selector]]
-   (select-keys   (get-in db ks)  selector)))
+   (select-keys (get-in db ks)  selector)))
 
 (reg-sub
  :db/find-by
  (fn [db [_ ks query]]
    (filter #(=  query (select-keys % (keys query)))
+           ;; (-> db (get-in ks) vals))))
            (-> db (get-in ks) vals))))
 
 (reg-event-db
@@ -195,3 +202,5 @@
  :db/dissoc
  (fn [db [_ k]]
    (dissoc db k)))
+
+

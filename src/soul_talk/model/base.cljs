@@ -29,7 +29,6 @@
       (defmethod object :db.cache [_ & x] (concat prefix [:cache] x))
       ;; 数据操作
       ;;;; 主要用于数据层面的操作
-
       (defmethod object :data.init
         [_ new-map]
         [:db/assoc-in  (object :db.datasets) new-map])
@@ -138,3 +137,12 @@
 
 
 
+
+;; (-> uu-test
+;;     (defmethod  :data.all
+;;       [_]
+;;       [:db/get-in  :db.datasets])
+;;     (defmethod :default [_] "dddd" )
+;;     (defmethod :haha  [_] [:ddd "dad"])
+;;     )
+;; (uu-test :haha)

@@ -1,124 +1,91 @@
 (ns soul-talk.components.fields
-  (:require [re-frame.core :as rf :refer [dispatch subscribe]]
-            [soul-talk.date-utils :as du]
-            [soul-talk.route.utils :refer [run-events run-events-admin logged-in? navigate!]]
-            [soul-talk.config :refer [source-pull source-new source-del source-update]]
-            [soul-talk.model.account :refer  [category record]]
-            [soul-talk.utils :refer [url->id]]
-            [reagent.core :as r]))
-;; input
-(def store (r/atom {:title "dddd"}))
+  (:require [reagent.core :as r]
+            [soul-talk.date-utils :as du]))
 
-(def samples {:vtype :new
-              :prototype category
-              :field-key :name
-              :store store})
+(defn text-read [store-value config]
+  (let [default-value  {}
+        field-value (merge default-value config)]
+    [:label  field-value  @store-value]))
 
-(defmulti fields (juxt #((:prototype %) :field (:field-key %) :dtype)   #(get % :vtype)))
+(defn text-input [store-value config]
+  (let [default-value {:on-change #(reset! store-value (->  % .-target .-value))}
+        field-value (merge default-value config)]
+    [:> js/antd.Input field-value]))
 
-(defmethod fields :default [_]   _)
+(defn text-change [store-value  origin-value config]
+  (let [default-value {:on-change #(reset! store-value (->  % .-target .-value))
+                       :defaultValue (-> @origin-value clj->js)}
+        field-value (merge default-value config)]
+    [:> js/antd.Input field-value]))
 
-(defmethod fields [:text :read-only]
-  [{:keys [prototype field-key  store] :as item}]
-  (let [template (prototype :field field-key)]
-    [:label (->  @store (get-in [field-key])  str clj->js)]))
+(defn number-read [store-value config]
+  (let [default-value {:disabled true
+                       :defaultValue 0}
+        field-value (merge default-value config)]
+    [:> js/antd.InputNumber field-value]))
 
-(defmethod fields [:text :new]
-  [{:keys [prototype field-key  store] :as item}]
-  (let [template (prototype :field field-key)]
-    [:div
-     [:> js/antd.Input
-      {:on-change #(swap! store assoc  field-key (->  % .-target .-value))
-       :placeholder (clj->js (str "请输入:" (:title template)))}]
-     [:p]]))
+(defn number-input [store-value config]
+  (let [default-value {:on-change #(reset! store-value  %)
+                       :defaultValue 0}
+        field-value (merge default-value config)]
+    [:> js/antd.InputNumber field-value]))
 
-(defmethod fields [:text :edit]
-  [{:keys [prototype field-key  store] :as item}]
-  (let [template (prototype :field field-key)]
-    [:div
-     [:> js/antd.Input
-      {:on-change #(swap! store assoc  field-key (->  % .-target .-value))
-       :defaultValue (-> @store (get field-key) clj->js)}]
-     [:p]]))
+(defn number-change [store-value origin-value config]
+  (let [default-value {:on-change #(reset! store-value %)
+                       :defaultValue @origin-value}
+        field-value (merge default-value config)]
+    [:> js/antd.InputNumber field-value]))
 
-(defmethod fields [:date :read-only]
-  [{:keys [prototype field-key  store] :as item}]
-  (let [template (prototype :field field-key)]
-    [:div
-     [:label (clj->js (:title template))]
-     [:> js/antd.Divider {:type "vertical"}]
-     [:> js/antd.DatePicker
-      {:defaultValue  (new js/moment  (get-in @store  [:store field-key]))
-       :disabled true}]
-     [:p]]))
+(defn date-read [store-value  config]
+  (let [default-value {:disabled true
+                       :defaultValue (new js/moment @store-value)}
+        field-value (merge default-value config)]
+    [:> js/antd.DatePicker field-value]))
 
-(defmethod fields [:date :edit]
-  [{:keys [prototype field-key  store] :as item}]
-  (let [template (prototype :field field-key)]
-    [:div
-     [:label (clj->js (:title template))]
-     [:> js/antd.Divider {:type "vertical"}]
-     [:> js/antd.DatePicker
-      {:on-change #(swap! store assoc-in [field-key]  (du/antd-date-parse %))
-       :showToday true
-       :defaultValue  (new js/moment  (get-in @store  [field-key]))}]
-     [:p]]))
+(defn date-change [store-value origin-value  config]
+  (let [default-value {:on-change #(reset! store-value  (du/antd-date-parse %))
+                       :showToday true
+                       :defaultValue  (new js/moment  @origin-value)}
+        field-value (merge default-value config)]
+    [:> js/antd.DatePicker field-value]))
 
-(defmethod fields [:date :new]
-  [{:keys [prototype field-key  store] :as item}]
-  (let [template (prototype :field field-key)]
-    [:div
-     [:label (clj->js (:title template))]
-     [:> js/antd.Divider {:type "vertical"}]
-     [:> js/antd.DatePicker
-      {:on-change #(swap! store assoc-in [field-key]  (du/antd-date-parse %))
-       :showToday true
-       :disabled true}]
-     [:p]]))
+(defn date-input [new-value  config]
+  (let [default-value {:on-change #(reset! new-value  (du/antd-date-parse %))
+                       :showToday true
+                       :defaultValue  (new js/moment)}
+        field-value (merge default-value  config)]
+    [:> js/antd.DatePicker field-value]))
 
-(defmethod fields [:select :read-only]
-  [{:keys [prototype field-key  store] :as item}]
-  (let [template (prototype :field field-key)
-        selection  (subscribe  (prototype :relate.all field-key))]
-    [:div
-     [:label (-> template :title str clj->js)]
-     [:> js/antd.Divider {:type "vertical"}]
-     [:> js/antd.Cascader
-      {:options (map #(-> {}
-                          (assoc :label  (:title %))
-                          (assoc :value  (:url %)))
-                     (into #{}  (vals @selection)))
-       :defaultValue (clj->js [(get-in @store [field-key])])
-       }]
-     [:p]]))
+(defn bool-read [store-value config]
+  (let [default-value {:checked  @store-value
+                       :disabled true}
+        field-value (merge default-value  config)]
+    [:> js/antd.Switch  field-value]))
 
-(defmethod fields [:select :new]
-  [{:keys [prototype field-key  store] :as item}]
-  (let [template (prototype :field field-key)
-        selection  (subscribe  (prototype :relate.all field-key))]
-    [:div
-     [:label (-> template :title str clj->js)]
-     [:> js/antd.Divider {:type "vertical"}]
-     [:> js/antd.Cascader
-      {:options (map #(-> {}
-                          (assoc :label  (:title %))
-                          (assoc :value  (:url %)))
-                     (into #{}  (vals @selection)))
-       :on-change  #(swap! store assoc-in [field-key] (-> % js->clj first))}]
-     [:p]]))
+(defn bool-change [store-value config]
+  (let [default-value {:checked  @store-value
+                       :on-change #(reset!
+                                    store-value
+                                    (if (contains?  #{nil false} @store-value)
+                                      true
+                                      false))}
+        field-value (merge default-value  config)]
+    [:> js/antd.Switch  field-value]))
 
-(defmethod fields [:select :edit]
-  [{:keys [prototype field-key  store] :as item}]
-  (let [template (prototype :field field-key)
-        selection  (subscribe  (prototype :relate.all field-key))]
-    [:div
-     [:label (-> template :title str clj->js)]
-     [:> js/antd.Divider {:type "vertical"}]
-     [:> js/antd.Cascader
-      {:options (map #(-> {}
-                          (assoc :label  (:title %))
-                          (assoc :value  (:url %)))
-                     (into #{}  (vals @selection)))
-       :defaultValue (clj->js [(get-in @store [field-key])])
-       :on-change  #(swap! store assoc-in [field-key] (-> % js->clj first))}]
-     [:p]]))
+;; (defn category-read [store-value options config]
+;;   (let [default-config {:options (map #(-> {}
+;;                                            (assoc :label  (:title %))
+;;                                            (assoc :value  (:url %)))
+;;                                       (into #{}  (vals @selection)))
+;;                         :on-change  #(swap! store assoc-in [field-key]
+;;                                             (-> % js->clj first))}
+
+;;         field-config (merge default-config config)]
+
+;;     [:> js/antd.Cascader field-config]))
+
+(defn category-input [])
+
+(defn category-change [])
+
+

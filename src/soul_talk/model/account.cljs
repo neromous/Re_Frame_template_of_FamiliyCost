@@ -1,6 +1,7 @@
 (ns soul-talk.model.account
   (:require [soul-talk.model.base :as base]
-            [soul-talk.db :refer [Env]]))
+            [soul-talk.db :refer [Env]]
+            ))
 
 (defn dto-add [origin]
   (-> origin
