@@ -4,6 +4,7 @@
             [soul-talk.components.common :as c]
             [soul-talk.components.base-layout :refer [content header nav footer siderbar]]
             [soul-talk.components.fields :as fields]
+            [soul-talk.components.tables :as tables]
             [soul-talk.components.columns :as columns]
             [soul-talk.date-utils :as du]
             [soul-talk.utils :as utils]
@@ -17,14 +18,26 @@
 ;; 第一件事  定义字段
 ;; 第二件事  定义关系
 
-(defonce page-state
-  (r/atom {:select-table  nil
-           :filters-work []
-           :table-filter ""
-           :relation-store []}))
+(def uuid-key (r/atom 1000))
+(defn get-uuid-key []
+  (swap! uuid-key inc))
 
-(def select-table (r/cursor page-state [:select-table]))
-(def table-filter (r/cursor page-state [:table-filter]))
+(def page-state (r/atom {:attrib_list #{}
+                         :cache-table " "}))
+(def attrib_list (r/cursor page-state [:attrib_list]))
+
+(def cache-table (r/cursor page-state [:cache-table]))
+(def attrib-input (r/cursor page-state [:attrib-input]))
+
+(def selected-table (r/cursor page-state [:selected-table]))
+(def selected-field (r/cursor page-state [:selected-field]))
+(def tb-attr-cache (r/cursor page-state [:cache :table-kv]))
+(def tb-attr-cache-k (r/cursor page-state [:cache :table-kv :k]))
+(def tb-attr-cache-v (r/cursor page-state [:cache :table-kv :v]))
+
+(def fd-attr-cache (r/cursor page-state [:cache :field-kv]))
+(def fd-attr-cache-k (r/cursor page-state [:cache :field-kv :k]))
+(def fd-attr-cache-v (r/cursor page-state [:cache :field-kv :v]))
 
 (defmethod header
   [:table :config]
@@ -92,96 +105,122 @@
        [:span
         [:> js/antd.Icon {:type "area-chart"}]
         [:span "Dash"]]]
-      [:> js/antd.Input  {:on-change #(reset! table-filter  (-> % .-target .-value))}]
-      (when @table-filter
+      [:> js/antd.Input  {:on-change #(reset! cache-table  (-> % .-target .-value))}]
+      (when @cache-table
         (doall
-         (for [k (filter #(utils/word-filter % @table-filter) @table-names)]
+         (for [k (filter #(utils/word-filter % @cache-table) @table-names)]
            ^{:key (str "table_seris" "_" k)}
-           [:> js/antd.Menu.Item {:key      k
-                                  :icon     "user"
-                                  :on-click #(reset! select-table  (keyword k))}
-            k])))]]))
+           [:> js/antd.Menu.Item
+            {:key      k
+             :icon     "user"
+             :on-click #(reset! selected-table k)}
+            k]))
+
+        ;;
+        )]]))
 
 (def data-types
   ["数字" "类别" "主键" "时间" "时间戳" "字符串" "外键"])
 
-(def columns
-  [{:key "table_name"
-    :dataIndex "table_name"
-    :title "table_name"}
-   {:key "column_name"
-    :dataIndex "column_name"
-    :title "column_name"}
-   {:key "data_type"
-    :dataIndex "data_type"
-    :title "data_type"}
-   {:key "column_commet"
-    :dataIndex "column_commet"
-    :title "column_commet"}])
+(defn table-head-input-form []
+  (let [edit-table-head (-> {:attrib ""
+                             :value ""}
+                            r/atom)
+        attrib (r/cursor edit-table-head [:attrib])
+        attrib-value (r/cursor edit-table-head [:value])
+        table-head-input-fn  (fn []
+                               (dispatch [:table/table.table-heads
+                                          (keyword  @selected-table)
+                                          @attrib
+                                          @attrib-value]))]
+    [:div
+     [:p "请输入属性名"]
+     [fields/text-input attrib {}]
+     [:p "请输入属性值"]
+     [fields/text-input attrib-value {}]
+     [:p]
+     [:> js/antd.Button  {:on-click table-head-input-fn
+                          :type "primary"}  "输入表属性"]]))
+
+(defn field-attrib-input-form []
+  (let [edit-table-head (-> {:attrib ""
+                             :value ""}
+                            r/atom)
+        attrib (r/cursor edit-table-head [:attrib])
+        attrib-value (r/cursor edit-table-head [:value])]
+    [:div
+     [:p "请输入字段属性名"]
+     [fields/text-input attrib {}]
+     [:p "请输入字段属性值"]
+     [fields/text-input attrib-value {}]
+     [:> js/antd.Button  {:on-click #(println edit-table-head)}]]))
+
+(defn table-field-tables  [table-data]
+  (let [columns  [{:key "attrib"
+                   :dataIndex "attrib"
+                   :title "attrib"}
+                  {:key "value"
+                   :dataIndex "value"
+                   :title "value"}]
+        click-input #(dispatch [:table/attrib_name.cache [@attrib-input]])
+        attrib-store (r/cursor page-state [:attrib-store])
+        attrib_names (subscribe [:table/attrib_name.cache])
+        table-head-input-fn  (fn []
+                               (dispatch [:table/table.table-heads
+                                          (keyword  @selected-table)
+                                          @tb-attr-cache-k
+                                          @tb-attr-cache-v]))]
+    [:div
+     [:p]
+
+     [:div
+      [:> js/antd.Table
+       {:dataSource  @table-data
+        :columns columns
+        :pagination {:defaultPageSize 8}}]
+      ;;
+      ]]))
+
+(defn field-list [table-data]
+
+  (let [columns [{:key "column_name"
+                  :dataIndex "column_name"
+                  :title "column_name"}
+                 {:key "table_name"
+                  :dataIndex "table_name"
+                  :title "table_name"}
+                 {:key "data_type"
+                  :dataIndex "data_type"
+                  :title "data_type"}]]
+
+    [:> js/antd.Table {:columns columns
+                       :dataSource @table-data
+                       :pagination {:defaultPageSize 5}}]))
+
+(defn field-relation-form [field-data]
+  (let []
+
+
+    ))
 
 (defmethod  content
   [:table :config]
   [db]
-
-  (let [data (subscribe [:table/filter-by-table_name select-table])]
+  (let [table-data (fn [x]  (subscribe [:table/table.table-fields (keyword x)]))
+        data (fn [x]  (subscribe [:table/table.table-heads (keyword x)]))
+        field-detail (fn [x y]
+                       (subscribe [:table/field.table-field (keyword x) (keyword y)]))]
 
     (fn []
-
       [:> js/antd.Layout.Content
-       [:> js/antd.Card
-        [:> js/antd.Row {:gutter [16 {:xs 8, :sm 16, :md 24, :lg 32}]}
-         [:h2 @select-table]
-         [:> js/antd.Col {:span 12}
-          
+       [:> js/antd.Row
+        [:> js/antd.Col {:span 11}
+         [table-head-input-form]
+         [:> js/antd.Row
+          [:> js/antd.Col  [table-field-tables (data @selected-table)]]]
+         [:p]
+         [:> js/antd.Row
+          [:> js/antd.Col [field-list (table-data  @selected-table)]]]]
+        [:> js/antd.Col {:span 11}]]])))
 
 
-
-          ]
-
-         [:> js/antd.Col {:span 12}
-          [:> js/antd.Table  {:dataSource @data
-                              :columns columns}]]]]
-
-       ;;
-       ]
-      ;;
-      )))
-
-
-
-;; (doall
-;;         (when @select-table
-;;           (for [{:keys [table_name
-;;                         column_name
-;;                         column_type
-;;                         data_type
-;;                         column_comment] :as field}   @data]
-
-;;             ^{:key (str table_name "_" column_name)}
-;;             [:div
-;;              [:div
-;;               [:> js/antd.Row
-;;                [:> js/antd.Col {:span 3}
-;;                 [:> js/antd.Input  {:defaultValue column_name}]]
-
-;;                [:> js/antd.Col {:span 2}
-;;                 [:> js/antd.Input  {:defaultValue data_type}]]
-;;                [:> js/antd.Col {:span 3}
-;;                 [:> js/antd.Select
-;;                  {:placeholder "选择数据类型"
-;;                   :defaultValue @(subscribe [:table/get-field-attrb table_name column_name :field_type])
-;;                   :on-change #(dispatch [:table/add-field-attrb table_name column_name :field_type %])
-;;                   :style {:width 160}}
-;;                  [:> js/antd.Select.Option  {:value ""}  "选择分类"]
-;;                  (doall
-;;                   (for [data-type data-types]
-;;                     ^{:key  (str table_name "_" column_name "_" data-type )  }
-;;                     [:> js/antd.Select.Option  {:value data-type} data-type]))]]
-;;                [:> js/antd.Col {:span 2}
-;;                 [:> js/antd.Input  {:defaultValue column_comment}]]
-;;                [:> js/antd.Col  {:span 1}
-;;                 [:> js/antd.Icon {:type "form"}]]]]]
-
-
-;;             )
-;;           ))

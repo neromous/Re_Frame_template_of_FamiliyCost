@@ -11,7 +11,6 @@
    soul-talk.effects
    soul-talk.components.base-layout
    soul-talk.components.default-layout
-   soul-talk.page.test-page
    soul-talk.pages
    [soul-talk.page.layout :as layout]
    [soul-talk.route.utils :refer [run-events run-events-admin logged-in? navigate!]]
@@ -22,29 +21,13 @@
   (:import [goog History]
            [goog.History EventType]))
 
-;;(dispatch [:server/find-by :company {}])
-
-(dispatch [:server/query "organization" {:$find {} :$fields []   :$sort {}
-                                         :$pagination {:page 1 :per-page 100}}])
-
-;;(dispatch [:server/query-document  "order_track" {}])
-(dispatch [:server/query-table])
-
-(dispatch [:db/assoc :showing :done] )
-
-
-
-
-;; (dispatch [:server/new :organization {:name "测试"}])
-
-;;(dispatch [:server/del :organization ["5e0da421bbce3824d621da08"] ])
-
-;;(dispatch [:server/update :organization ["5e0daaa8bbce3824d621da0f"] {:name "更新测试的东西"} ])
+(dispatch [:table/server.pull])
 
 
 
 ;; 初始化所有数据
 
+(dispatch [:table/table.table-heads :erp_goods :ttt "dddd" ])
 
 (run-events
  [])

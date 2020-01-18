@@ -12,7 +12,6 @@
    soul-talk.handler.server
    soul-talk.handler.users
    soul-talk.handler.table-fields
-   soul-talk.handler.order-list
    ))
 
 ;; 初始化

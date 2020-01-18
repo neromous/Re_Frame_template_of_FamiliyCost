@@ -4,7 +4,6 @@
              [soul-talk.db :refer [api-uri]]
              [soul-talk.utils :refer [mapset2map]]
              [soul-talk.route.utils :refer [run-events run-events-admin logged-in? navigate!]]
-             [soul-talk.model.sample :refer [meta-data]]
              [ajax.core :refer [POST
                                 GET
                                 DELETE
@@ -114,7 +113,6 @@
                             :format (json-request-format)
                             :response-format :json}
            :success-event [:mdw/ring-update model-key]}}))
-
 
 
 

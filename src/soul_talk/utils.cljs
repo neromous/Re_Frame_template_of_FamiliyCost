@@ -42,6 +42,10 @@
 (defn query_filter [model-map query]
   (filter #(= query (select-keys % (keys query))) (vals model-map)))
 
+
+
+
+
 ;; (defn columns-make-filter [key-name text-name model data]
 ;;   {:title text-name
 ;;    :dataIndex (name key-name)

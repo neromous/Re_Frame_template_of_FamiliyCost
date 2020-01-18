@@ -72,20 +72,20 @@
         field-value (merge default-value  config)]
     [:> js/antd.Switch  field-value]))
 
-;; (defn category-read [store-value options config]
-;;   (let [default-config {:options (map #(-> {}
-;;                                            (assoc :label  (:title %))
-;;                                            (assoc :value  (:url %)))
-;;                                       (into #{}  (vals @selection)))
-;;                         :on-change  #(swap! store assoc-in [field-key]
-;;                                             (-> % js->clj first))}
+(defn category-input  [store-value relate-values key-seeds  config]
+  (let [default-value  {:onChange #(reset! store-value %)
+                        }
+        field-config (merge default-value config)]
+    [:> js/antd.Select  field-config
+     (doall
+      (for [option-config relate-values]
+        ^{:key (str (get option-config :value) "_"  key-seeds)}
+        [:> js/antd.Select.Option
+         {:value (:value option-config)}
+         (:label option-config)]))
+     ;;
+     ]))
 
-;;         field-config (merge default-config config)]
 
-;;     [:> js/antd.Cascader field-config]))
-
-(defn category-input [])
-
-(defn category-change [])
 
 
