@@ -115,7 +115,6 @@
              :icon     "user"
              :on-click #(reset! selected-table k)}
             k]))
-
         ;;
         )]]))
 

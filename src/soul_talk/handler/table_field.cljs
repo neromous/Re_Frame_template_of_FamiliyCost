@@ -54,28 +54,6 @@
  (fn [db _]
    (get-in db view-path)))
 
-(reg-event-db
- :table/view.selected-table
- (fn [db [_ table-name]]
-   (assoc-in db (concat view-path [:selected-table]) table-name)))
-
-(reg-sub
- :table/view.selected-table
- :<- [:table/view.all]
- (fn [views [_]]
-   (get-in views [:selected-table])))
-
-(reg-event-db
- :table/view.selected-field
- (fn [db [_ field-name]]
-   (assoc-in db (concat view-path [:selected-field]) field-name)))
-
-(reg-sub
- :table/view.selected-field
- :<- [:table/view.all]
- (fn [views [_]]
-   (get-in views [:selected-field])))
-
 (reg-sub
  :table/dataset.all
  (fn [db _]
@@ -88,7 +66,7 @@
    (get-in all-data [table-name])))
 
 (reg-sub
- :table/view.table-fields
+ :table/view.tables
  :<- [:table/dataset.all]
  (fn [all-data [_ table-name]]
    [;; vec1
@@ -96,8 +74,17 @@
     ;; vec2
     (-> all-data
         (get-in [table-name  :columns])
-        vals)
-    ]))
+        vals)]))
+
+(reg-sub
+ :table/view.tables-fields
+ :<- [:table/dataset.all]
+ (fn [all-data [_ table-name field-name]]
+   [;; vec1
+    (keys all-data)
+    ;; vec2
+    (-> all-data
+        (get-in [table-name  :columns field-name]))]))
 
 (reg-sub
  :table/field.table-field
