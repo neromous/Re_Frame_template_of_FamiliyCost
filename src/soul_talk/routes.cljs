@@ -23,15 +23,6 @@
 
 (dispatch [:table/server.pull])
 
-
-
-;; 初始化所有数据
-
-(dispatch [:table/table.table-heads :erp_goods :ttt "dddd" ])
-
-(run-events
- [])
-
 (defroute  "/" []
   (run-events
    [[:set-active {:page :home
@@ -52,11 +43,11 @@
    [[:set-active {:page (keyword page)
                   :view (keyword view)}]]))
 
-(defroute  "/v/:page/:view/:model" [page view model]
-  (run-events
-   [[:set-active {:page (keyword page)
-                  :view (keyword view)
-                  :model (keyword model)}]]))
+;; (defroute  "/v/:page/:view/:model" [page view model]
+;;   (run-events
+;;    [[:set-active {:page (keyword page)
+;;                   :view (keyword view)
+;;                   :model (keyword model)}]]))
 
 ;; 根据配置加载不同页面
 

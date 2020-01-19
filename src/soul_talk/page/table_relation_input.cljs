@@ -40,7 +40,7 @@
 (def fd-attr-cache-v (r/cursor page-state [:cache :field-kv :v]))
 
 (defmethod header
-  [:table :config]
+  [:table :config-back]
   [db nav]
   (fn []
     (r/with-let [active-page (subscribe [:active])]
@@ -56,7 +56,7 @@
          nav]]])))
 
 (defmethod nav
-  [:table :config]
+  [:table :config-back]
   [db]
   (fn []
     (r/with-let [active-page (subscribe [:active])]
@@ -71,7 +71,7 @@
         "首页"]])))
 
 (defmethod footer
-  [:table :config]
+  [:table :config-back]
   [db]
   (fn []
     (r/with-let [active-page (subscribe [:active])]
@@ -89,7 +89,7 @@
          " and JIESOUL "]]])))
 
 (defmethod siderbar
-  [:table :config]
+  [:table :config-back]
   [db]
   (r/with-let [table-names (subscribe [:table/table-names])]
 
@@ -118,8 +118,6 @@
         ;;
         )]]))
 
-(def data-types
-  ["数字" "类别" "主键" "时间" "时间戳" "字符串" "外键"])
 
 (defn table-head-input-form []
   (let [edit-table-head (-> {:attrib ""
@@ -203,7 +201,7 @@
     ))
 
 (defmethod  content
-  [:table :config]
+  [:table :config-back]
   [db]
   (let [table-data (fn [x]  (subscribe [:table/table.table-fields (keyword x)]))
         data (fn [x]  (subscribe [:table/table.table-heads (keyword x)]))

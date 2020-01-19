@@ -16,9 +16,16 @@
 (defn build-table-field-map [origin target]
   (assoc-in origin [(get target :table_name)  (get target :column_name)] target))
 
-(def dataset-path [:data :table :dataset])
-(def view-path [:data :table :views])
-(def dataset-state-path [:data :table :dataset-state])
+(defn dataset-path
+  [& args]
+
+  (concat [:data :table :dataset] args))
+(defn  view-path
+  [& args]
+  (concat [:data :table :views] args))
+(defn dataset-state-path
+  [& args]
+  (concat [:data :table :dataset-state] args))
 
 (reg-event-db
  :table/mdw.dto
@@ -26,8 +33,8 @@
    (let [dataset  (get-in response [:result])
          state  (get response :query)]
      (-> db
-         (assoc-in  dataset-path dataset)
-         (assoc-in  dataset-state-path   state)))))
+         (assoc-in  (dataset-path) dataset)
+         (assoc-in  (dataset-state-path)   state)))))
 
 (reg-event-fx
  :table/server.pull
@@ -52,57 +59,48 @@
 (reg-sub
  :table/view.all
  (fn [db _]
-   (get-in db view-path)))
+   (get-in db (view-path))))
 
 (reg-sub
  :table/dataset.all
  (fn [db _]
-   (get-in db dataset-path)))
+   (get-in db (dataset-path))))
 
 (reg-sub
- :table/table.table
- :<- [:table/dataset.all]
- (fn [all-data [_ table-name]]
-   (get-in all-data [table-name])))
+ :table/page-state
+ (fn [db [_  & args]]
+   (get-in db (concat (view-path :page-state) args))))
+
+(reg-event-db
+ :table/page-state
+ (fn [db [_  form]]
+   (let  []
+     (update-in db (view-path :page-state) merge form))))
 
 (reg-sub
- :table/view.tables
+ :table/selected-table
+ :<- [:table/page-state]
  :<- [:table/dataset.all]
- (fn [all-data [_ table-name]]
-   [;; vec1
-    (keys all-data)
-    ;; vec2
-    (-> all-data
-        (get-in [table-name  :columns])
-        vals)]))
+ (fn [[page-state all-data] [_]]
+   (let [table-name (get page-state :selected-table "")
+         selected-table  (cond
+                           (keyword? table-name) table-name
+                           (string? table-name)  (keyword table-name)
+                           (map? table-name) (get table-name :table_name "")
+                           :default "")]
+     [selected-table
+      (get-in all-data [selected-table :columns ] {})])))
 
 (reg-sub
- :table/view.tables-fields
- :<- [:table/dataset.all]
- (fn [all-data [_ table-name field-name]]
-   [;; vec1
-    (keys all-data)
-    ;; vec2
-    (-> all-data
-        (get-in [table-name  :columns field-name]))]))
+ :table/selected-field
+ :<- [:table/page-state]
+ (fn [page-state [_]]
+   (get page-state :selected-field "")))
 
-(reg-sub
- :table/field.table-field
- :<- [:table/dataset.all]
- (fn [all-data [_ table-name field-name]]
-   (get-in all-data [table-name :columns field-name])))
 
-(reg-sub
- :table/data.sample-one
- :<- [:table/dataset.all]
- (fn [all-data _]
-   (first all-data)))
 
-(reg-sub
- :table/count
- :<- [:table/dataset.all]
- (fn [table  [event-head & args]]
-   (count table)))
+;;=================
+
 
 (reg-sub
  :table/table-names
@@ -114,46 +112,59 @@
         sort
         (map name))))
 
-(reg-sub
- :table/field-names
- :<- [:table/dataset.all]
- (fn [all-data [_ table_name]]
-   (->> (filter #(-> % key :table_name (= (name table_name))) all-data)
-        vals
-        (map :column_name)
-        set
-        sort)))
+
+;;=================
+
 
 (reg-sub
- :table/table.table-fields
+ :table/table.table
  :<- [:table/dataset.all]
- (fn [all-data  [_  table_name]]
-   (->
-    (get-in all-data [table_name  :columns])
-    vals)))
+ (fn [all-data [_ table-name]]
+   (get-in all-data [table-name])))
 
 (reg-sub
- :table/table.table-heads
+ :table/table.all-field
  :<- [:table/dataset.all]
- (fn [all-data   [_  table_name]]
-   (->
-    (get-in all-data [table_name])
-    (dissoc :columns)
-    (->> (map (fn [x] {:attrib (key x)
-                       :value (val x)}))))))
+ (fn [all-data [_ table-name]]
+   (-> (get-in all-data [table-name :columns])
+       vals)))
 
 (reg-event-db
- :table/table.table-heads
+ :table/table.table
  (fn [db [_ table-name attrib-key attrib-value]]
-   (assoc-in db (concat dataset-path [table-name attrib-key])  attrib-value)))
-
-(reg-event-db
- :table/attrib_name.cache
- (fn [db [_ attrib-names]]
-   (update-in db (concat view-path [:attrib_names]) concat attrib-names)))
+   (assoc-in db  (dataset-path table-name attrib-key)  attrib-value)))
 
 (reg-sub
- :table/attrib_name.cache
- (fn [db [_]]
-   (get-in db (concat view-path [:attrib_names]))))
+ :table/table.relation
+ :<- [:table/dataset.all]
+ (fn [all-data [_ table-name]]
+   (get-in all-data [table-name  :relation])))
 
+(reg-event-db
+ :table/table.relation
+ (fn [db [_ table-name relation]]
+   (update-in db   (dataset-path table-name :relation) conj relation)))
+
+(reg-sub
+ :table/table.fields
+ :<- [:table/dataset.all]
+ (fn [all-data [_ table-name field-name]]
+   (get-in all-data [table-name :columns field-name])))
+
+(reg-event-db
+ :table/table.fields
+ (fn [db [_ table-name field-name form]]
+   (update-in  db
+               (dataset-path table-name :columns field-name)
+               merge form)))
+
+(reg-sub
+ :table/view.tables
+ :<- [:table/dataset.all]
+ (fn [all-data [_ table-name]]
+   [;; vec1
+    (keys all-data)
+    ;; vec2
+    (-> all-data
+        (get-in [table-name  :columns])
+        vals)]))
