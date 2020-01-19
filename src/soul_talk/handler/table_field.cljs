@@ -93,9 +93,18 @@
 
 (reg-sub
  :table/selected-field
+ :<- [:table/selected-table]
  :<- [:table/page-state]
- (fn [page-state [_]]
-   (get page-state :selected-field "")))
+ (fn [[selected-table page-state  ] [_]]
+   (let [[table-name table-data]   selected-table
+         field-name (:selected-field page-state  )
+         ]
+     [table-name
+      field-name
+      (get table-data field-name {})
+      ]
+     )
+   ))
 
 
 

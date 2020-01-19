@@ -22,22 +22,22 @@
 (defn get-uuid-key []
   (swap! uuid-key inc))
 
-
 (defn list-item-field-tips [item]
   [:> js/antd.Card
    [:> js/antd.Row
-    [:> js/antd.Col {:span 6}
+    [:> js/antd.Col {:span 3}
      [:label (:column_name item)]]
-    [:> js/antd.Col {:span 6}
+    [:> js/antd.Col {:span 3}
      [:label (:data_type item)]]
-    [:> js/antd.Col {:span 6}
-     [:a  {:href "#/v/test/detail" } "dddddddddddddddd"]
-     [:> js/antd.Button
-      {:type "primary"
-       :on-click #(dispatch  [:set-active {:page :test
-                                           :view :detail
-                                           } ])}
-      "配置"]]]
+    [:> js/antd.Col {:span 3}
+     [:div  {:on-click #(do
+                          (dispatch  [:table/page-state {:selected-table (keyword (:table_name item))
+                                                         :selected-field (keyword (:column_name item))}])
+                          (navigate!  "#/v/test/test1"))}
+
+      [:> js/antd.Icon  {:type "setting"
+                         :theme "filled"
+                         :size "big"}]]]]
 
    [:p]
    [:> js/antd.Row
@@ -72,9 +72,6 @@
             [field-list @page-state  (second @select-table)]]
            [:p]]]]))))
 
-
-
-
 (defn table-home-page
   []
   (r/with-let  []
@@ -86,6 +83,7 @@
          home-layout/table-side-bar
          table-content
          ;;home-layout/table-content
-         home-layout/table-foot
-         ]))))
+         home-layout/table-foot]))))
 
+
+(subscribe [:table/selected-field] )
