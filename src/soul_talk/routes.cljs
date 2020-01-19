@@ -9,12 +9,12 @@
    soul-talk.handlers
    soul-talk.pages
    soul-talk.effects
-   soul-talk.components.base-layout
-   soul-talk.components.default-layout
+   ;;soul-talk.components.base-layout
+   ;;soul-talk.components.default-layout
    soul-talk.pages
-   [soul-talk.page.layout :as layout]
+   ;;[soul-talk.page.layout :as layout]
    [soul-talk.route.utils :refer [run-events run-events-admin logged-in? navigate!]]
-   [soul-talk.components.base-layout :as home-page]
+   ;;[soul-talk.components.base-layout :as home-page]
    [soul-talk.components.common :as c]
    [soul-talk.config :refer [source-pull source-new source-del source-update]])
 
@@ -51,18 +51,18 @@
 
 ;; 根据配置加载不同页面
 
-(defn main-page []
-  (r/with-let [ready? (subscribe [:initialised?])
-               db-state (subscribe [:active])]
-    (when @ready?
-      (fn []
-        [:div
-         [layout/layout-hcfs-left
-          {:header  home-page/header
-           :nav home-page/nav
-           :content home-page/content
-           :footer home-page/footer
-           :sider home-page/siderbar}]]))))
+;; (defn main-page []
+;;   (r/with-let [ready? (subscribe [:initialised?])
+;;                db-state (subscribe [:active])]
+;;     (when @ready?
+;;       (fn []
+;;         [:div
+;;          [layout/layout-hcfs-left
+;;           {:header  home-page/header
+;;            :nav home-page/nav
+;;            :content home-page/content
+;;            :footer home-page/footer
+;;            :sider home-page/siderbar}]]))))
 
 ;; 首页
 ;; 无登录下把事件加入登录事件

@@ -13,7 +13,7 @@
             [soul-talk.ajax :refer [load-interceptors!]]
             [soul-talk.route.utils :refer [logged-in? navigate!]]
             [soul-talk.routes :refer [hook-browser-navigation!]]
-            [soul-talk.routes :refer [main-page]]))
+            [soul-talk.views :refer [main-page]]))
 
 ;; 挂载页面组件
 (defn mount-component []

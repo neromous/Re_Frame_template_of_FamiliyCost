@@ -24,7 +24,10 @@
        [:h1 "测试管理系统"]]
       [:> js/antd.Col {:xs 24 :sm 24 :md 16 :lg 16
                        :style {:text-align "right"}}
-       nav]]]))
+       nav]]]
+
+
+))
 
 (defmethod nav
   :default
@@ -38,7 +41,10 @@
                       :selectedKeys      [(key->js active-page)]}
      [:> js/antd.Menu.Item {:key      "home"
                             :on-click #(navigate! "#/")}
-      "首页"]]))
+      "首页"]]
+
+
+))
 
 (defmethod footer
   :default
@@ -55,7 +61,10 @@
          :href   "https://ant.design"
          :target "_blank"}
         "Ant Design"]
-       " and JIESOUL "]]]))
+       " and JIESOUL "]]]
+
+
+))
 
 (defmethod siderbar
   :default
