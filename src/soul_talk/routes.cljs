@@ -21,7 +21,25 @@
   (:import [goog History]
            [goog.History EventType]))
 
-(dispatch [:table/server.pull])
+;; (dispatch [:table/server.pull])
+
+;; (dispatch [:order-track/server.pull  {} ]  )
+
+;; (dispatch [:org/server.pull {}])
+
+;; (subscribe [:org/data.all])
+
+;; (subscribe [:org/children-by-id 12 ])
+
+(run-events [[:org/server.pull {"limit" 5}]
+             [:cost.human/server.pull {"limit" 5}]
+             [:cost.material-craft/server.pull {"limit" 5}]
+             [:cost.material-raw/server.pull {"limit" 5}]
+             [:product.output/server.pull {"limit" 5}]
+             ]
+ )
+
+
 
 (defroute  "/" []
   (run-events
@@ -43,11 +61,11 @@
    [[:set-active {:page (keyword page)
                   :view (keyword view)}]]))
 
-;; (defroute  "/v/:page/:view/:model" [page view model]
-;;   (run-events
-;;    [[:set-active {:page (keyword page)
-;;                   :view (keyword view)
-;;                   :model (keyword model)}]]))
+(defroute  "/v/:page/:view/:model" [page view model]
+  (run-events
+   [[:set-active {:page (keyword page)
+                  :view (keyword view)
+                  :model (keyword model)}]]))
 
 ;; 根据配置加载不同页面
 

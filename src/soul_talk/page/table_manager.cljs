@@ -33,7 +33,7 @@
      [:div  {:on-click #(do
                           (dispatch  [:table/page-state {:selected-table (keyword (:table_name item))
                                                          :selected-field (keyword (:column_name item))}])
-                          (navigate!  "#/v/test/test1"))}
+                          (navigate!  "#/v/table/field-detail"))}
 
       [:> js/antd.Icon  {:type "setting"
                          :theme "filled"
@@ -60,30 +60,27 @@
                page-state (subscribe [:table/page-state])
                select-table (subscribe [:table/selected-table])]
 
-    (fn []
-      (let []
-        [:div
-         [:h1 (first @select-table)]
+    (let []
+      [:div
+       [:h1 (first @select-table)]
          ;; [:p (str @(table-fields (keyword @selected-table)  ))]
-         [:p]
-         [:> js/antd.Row {:gutter 10}
-          [:> js/antd.Col
-           [:> js/antd.Card
-            [field-list @page-state  (second @select-table)]]
-           [:p]]]]))))
+       [:p]
+       [:> js/antd.Row {:gutter 10}
+        [:> js/antd.Col
+         [:> js/antd.Card
+          [field-list @page-state  (second @select-table)]]
+         [:p]]]])))
 
 (defn table-home-page
   []
   (r/with-let  []
-    (fn []
-      (let []
-        [home-layout/table-home-page
-         home-layout/table-top-head
-         home-layout/table-top-nav
-         home-layout/table-side-bar
-         table-content
+    
+    (let []
+      [home-layout/table-home-page
+       home-layout/table-top-head
+       home-layout/table-top-nav
+       home-layout/table-side-bar
+       table-content
          ;;home-layout/table-content
-         home-layout/table-foot]))))
+       home-layout/table-foot])))
 
-
-(subscribe [:table/selected-field] )

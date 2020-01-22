@@ -12,6 +12,9 @@
    soul-talk.handler.server
    soul-talk.handler.users
    soul-talk.handler.table-fields
+   soul-talk.handler.order-track
+   soul-talk.handler.org
+   soul-talk.handler.cost
    ))
 
 ;; 初始化
