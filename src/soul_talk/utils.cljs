@@ -9,14 +9,11 @@
 (defn word-filter [words word-filter]
   (let [word-filter (clojure.string/trim word-filter)
         fs (re-pattern  word-filter)
-        result  (re-find fs words)
-        ]
+        result  (re-find fs words)]
     (cond
       (= word-filter "") true
       (= word-filter nil) true
-      :default result
-      )
-    ))
+      :default result)))
 
 
 ;; route 的工具函数
@@ -42,7 +39,6 @@
 (defn query_filter [model-map query]
   (filter #(= query (select-keys % (keys query))) (vals model-map)))
 
-
-
-
-
+(defn round-number
+  [f]
+  (/ (.round js/Math (* 100 f)) 100))

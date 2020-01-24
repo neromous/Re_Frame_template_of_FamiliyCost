@@ -31,15 +31,28 @@
 
 ;; (subscribe [:org/children-by-id 12 ])
 
-(run-events [[:org/server.pull {"limit" 5}]
-             [:cost.human/server.pull {"limit" 5}]
-             [:cost.material-craft/server.pull {"limit" 5}]
-             [:cost.material-raw/server.pull {"limit" 5}]
-             [:product.output/server.pull {"limit" 5}]
+(run-events [[:base.org/server.pull {"limit" 500}]
+             [:base.customer/server.pull {"limit" 500}]
+             [:cost.material-raw/server.pull {"limit" 115000}]
+             [:product.output/server.pull {"limit" 115000}]
+             [:sell-order/server.pull {"limit" 115000}]
+             [:product-order/server.pull {"limit" 5000}]
+             [:product-task/server.pull {"limit" 5000}]
+             [:order-distribution/server.pull {"limit" 5000}]
+             [:energy.oa_report/server.pull {"limit" 5000}]
              ]
- )
+            )
 
 
+;; [:cost.human/server.pull {"limit" 5000  }]
+;; [:cost.material-craft/server.pull {"limit" 115000}]
+
+;; (subscribe [:cost/order-track 5])
+
+;; (first @(subscribe  [:cost.material-craft/all]))
+
+;; (first @ (subscribe [:sell-order/all])
+;; )
 
 (defroute  "/" []
   (run-events

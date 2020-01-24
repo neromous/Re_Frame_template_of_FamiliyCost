@@ -32,12 +32,12 @@
 
       [:> js/antd.Layout.Header
        [:> js/antd.Row
-        [:> js/antd.Col {:xs 24 :sm 24 :md 8 :lg 8
+        [:> js/antd.Col {:xs 24 :sm 24 :md 2 :lg 2
                          :on-click #(navigate! "#/")}
 
          [:h1 "测试管理系统"]]
         [:> js/antd.Col {:xs 24 :sm 24 :md 16 :lg 16
-                         :style {:text-align "right"}}
+                         :style {:text-align "left"}}
          nav]]])
 
 (defn nav []
@@ -45,16 +45,23 @@
                           :mode              "horizontal"
                           :theme "dark"
                           :defaultSelectKeys ["home"]
-                          :selectedKeys      [(key->js active-page)]}
+                          :selectedKeys      []}
          [:> js/antd.Menu.Item {:key      "home"
                                 :on-click #(navigate! "#/")}
           "首页"]
          [:> js/antd.Menu.Item {:key      "order-track"
                                 :on-click #(navigate! "#/v/order/track")}
           "订单追踪"]
+         [:> js/antd.Menu.Item {:key      "order-track"
+                                :on-click #(navigate! "#/v/order/track")}
+          "客户需求"]
+
          [:> js/antd.Menu.Item {:key      "cost"
-                                :on-click #(navigate! "#/")}
-          "成本追踪"]])
+                                :on-click #(navigate! "#/v/cost/index")}
+          "集团成本"]
+
+
+         ])
 
 (defn content []
       [:p])

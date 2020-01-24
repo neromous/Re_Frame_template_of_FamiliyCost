@@ -15,6 +15,7 @@
    soul-talk.handler.order-track
    soul-talk.handler.org
    soul-talk.handler.cost
+   soul-talk.handler.customer
    ))
 
 ;; 初始化

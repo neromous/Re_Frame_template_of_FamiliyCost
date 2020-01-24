@@ -1,4 +1,4 @@
-(ns soul-talk.layouts.order-track
+(ns soul-talk.layout.order-track
   (:require
    [soul-talk.route.utils :refer [run-events run-events-admin logged-in? navigate!]]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
