@@ -1,6 +1,11 @@
 (ns soul-talk.handlers
   (:require
-   [re-frame.core :refer [inject-cofx dispatch dispatch-sync reg-event-db reg-event-fx subscribe reg-sub]]
+   [re-frame.core :refer [inject-cofx
+                          dispatch
+                          dispatch-sync
+                          reg-event-db
+                          reg-event-fx
+                          subscribe reg-sub]]
    [soul-talk.db :refer [default-db]]
    [soul-talk.local-storage :as storage]
    [soul-talk.utils :refer [url->id]]
@@ -11,15 +16,21 @@
    soul-talk.handler.files
    soul-talk.handler.server
    soul-talk.handler.users
-   soul-talk.handler.table-fields
-   soul-talk.handler.order-track
-   soul-talk.handler.org
-   soul-talk.handler.cost
-   soul-talk.handler.customer
+   ;;
+   soul-talk.handler.base-org
+   soul-talk.handler.cost-orders
+   soul-talk.handler.cost-customer
+   soul-talk.handler.cost-human
+   soul-talk.handler.cost-energy
+   soul-talk.handler.cost-material
+   soul-talk.handler.detail-view
+   soul-talk.handler.index-view
+   soul-talk.handler.product-order
+   soul-talk.handler.product-task
+   soul-talk.handler.sell-order
    ))
 
 ;; 初始化
-
 
 (reg-event-fx
  :initialize-db

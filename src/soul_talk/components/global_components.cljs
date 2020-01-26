@@ -17,15 +17,6 @@
                          :default-select-keys ["user"]
                          :default-open-keys   ["account" "user"]
                          :selected-keys       ["sales-area"]}
-        [:> js/antd.Menu.Item {:key      "admin"
-                               :on-click
-                               #(dispatch [:table/page-state {:tb-cache ""}])}
-         [:span
-          [:> js/antd.Icon {:type "area-chart"}]
-
-          [:span
-           "Dash"]]]
-
         [:div]]])
 
 (defn head [nav]
@@ -35,7 +26,7 @@
         [:> js/antd.Col {:xs 24 :sm 24 :md 2 :lg 2
                          :on-click #(navigate! "#/")}
 
-         [:h1 "测试管理系统"]]
+         [:h1 "康平纳成本管理系统"]]
         [:> js/antd.Col {:xs 24 :sm 24 :md 16 :lg 16
                          :style {:text-align "left"}}
          nav]]])
@@ -46,19 +37,26 @@
                           :theme "dark"
                           :defaultSelectKeys ["home"]
                           :selectedKeys      []}
-         [:> js/antd.Menu.Item {:key      "home"
-                                :on-click #(navigate! "#/")}
-          "首页"]
-         [:> js/antd.Menu.Item {:key      "order-track"
-                                :on-click #(navigate! "#/v/order/track")}
-          "订单追踪"]
-         [:> js/antd.Menu.Item {:key      "order-track"
-                                :on-click #(navigate! "#/v/order/track")}
-          "客户需求"]
 
          [:> js/antd.Menu.Item {:key      "cost"
                                 :on-click #(navigate! "#/v/cost/index")}
-          "集团成本"]
+          "集团 1+N "]
+
+
+
+         [:> js/antd.Menu.Item {:key      "order-track"
+                                :on-click #(navigate! "#/v/order/track")}
+          "客户信息"]
+         [:> js/antd.Menu.Item {:key      "order-track"
+                                :on-click #(navigate! "#/v/order/track")}
+          "物料信息"]
+         [:> js/antd.Menu.Item {:key      "order-track"
+                                :on-click #(navigate! "#/v/order/track")}
+          "供应商信息"]
+         [:> js/antd.Menu.Item {:key      "order-track"
+                                :on-click #(navigate! "#/v/cost/detail")}
+          "订单明细"]
+
 
 
          ])

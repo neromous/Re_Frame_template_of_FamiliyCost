@@ -4,7 +4,10 @@
             [soul-talk.page.table-manager :as table-manager]
             [soul-talk.page.field-detail :as field-detail]
             [soul-talk.page.order-track :as order-track]
-            [soul-talk.page.cost :as order-cost]))
+            [soul-talk.page.cost :as order-cost]
+            [soul-talk.page.cost-detail  :as cost-detail]
+
+            ))
 
 (defn router-parser [x]
   (let    [page (get-in x [:page])
@@ -30,7 +33,7 @@
 (defmethod pages [:cost :index]  [_]  [order-cost/home-page])
 (defmethod pages [:cost :factory]  [_]  [:p "分工厂首页"])
 (defmethod pages [:cost :workshop]  [_]  [:p "车间首页"])
-(defmethod pages [:cost :order-detail]  [_] [:p "订单明细"])
+(defmethod pages [:cost :detail]  [_]  [cost-detail/home-page])
 
 (defn main-page []
   (r/with-let [ready? (subscribe [:initialised?])

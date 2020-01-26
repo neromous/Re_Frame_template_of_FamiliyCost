@@ -114,7 +114,129 @@
                             :response-format :json}
            :success-event [:mdw/ring-update model-key]}}))
 
+;; 成本模块数据来源
+
+(reg-event-db
+ :cost/mdw.dto
+ (fn [db [_ d-name  response]]
+   (let [dataset  (get-in response [:result])
+         state  (get response :query)]
+     (-> db
+         (assoc-in [d-name :datasets]   dataset)
+         (assoc-in  [d-name :state]   state)))))
+
+(reg-event-fx
+ :cost.human/server.pull
+ (fn [_ [_ query]]
+   {:http {:method  POST
+           :url   "http://0.0.0.0:3000/cost/human"
+           :ajax-map       {:keywords? true
+                            :params query
+                            :format (json-request-format)
+                            :response-format :json}
+           :success-event [:cost/mdw.dto :cost.human]}}))
+
+(reg-event-fx
+ :energy.oa_report/server.pull
+ (fn [_ [_ query]]
+   {:http {:method  POST
+           :url   "http://0.0.0.0:3000/cost/energy/oa_report"
+           :ajax-map       {:keywords? true
+                            :params query
+                            :format (json-request-format)
+                            :response-format :json}
+           :success-event [:cost/mdw.dto :energy.oa_report]}}))
+
+(reg-event-fx
+ :cost.material-craft/server.pull
+ (fn [_ [_ query]]
+   {:http {:method  POST
+           :url   "http://0.0.0.0:3000/cost/material-craft"
+           :ajax-map       {:keywords? true
+                            :params query
+                            :format (json-request-format)
+                            :response-format :json}
+           :success-event [:cost/mdw.dto :cost.material-craft]}}))
+
+(reg-event-fx
+ :cost.material-craft/server.pull
+ (fn [_ [_ query]]
+   {:http {:method  POST
+           :url   "http://0.0.0.0:3000/cost/material-craft"
+           :ajax-map       {:keywords? true
+                            :params query
+                            :format (json-request-format)
+                            :response-format :json}
+           :success-event [:cost/mdw.dto :cost.material-craft]}}))
+
+(reg-event-fx
+ :cost.material-raw/server.pull
+ (fn [_ [_ query]]
+   {:http {:method  POST
+           :url   "http://0.0.0.0:3000/cost/material-raw"
+           :ajax-map       {:keywords? true
+                            :params query
+                            :format (json-request-format)
+                            :response-format :json}
+           :success-event [:cost/mdw.dto :cost.material-raw]}}))
+
+(reg-event-fx
+ :product.output/server.pull
+ (fn [_ [_ query]]
+   {:http {:method  POST
+           :url   "http://0.0.0.0:3000/cost/product-output"
+           :ajax-map       {:keywords? true
+                            :params query
+                            :format (json-request-format)
+                            :response-format :json}
+           :success-event [:cost/mdw.dto :product.output]}}))
+
+(reg-event-fx
+ :product.output/server.pull
+ (fn [_ [_ query]]
+   {:http {:method  POST
+           :url   "http://0.0.0.0:3000/cost/product-output"
+           :ajax-map       {:keywords? true
+                            :params query
+                            :format (json-request-format)
+                            :response-format :json}
+           :success-event [:cost/mdw.dto :product.output]}}))
 
 
+(reg-event-db
+ :order-track/mdw.dto
+ (fn [db [_ response]]
+   (let [dataset  (get-in response [:result])
+         state  (get response :query)]
+     (-> db
+         (assoc-in  [:order-track :datasets] dataset)
+         (assoc-in  [:order-track :state]   state)))))
 
+(reg-event-fx
+ :order-track/server.pull
+ (fn [_ [_ query]]
+   {:http {:method  POST
+           :url   "http://0.0.0.0:3000/cost/order-track"
+           :ajax-map       {:keywords? true
+                            :params query
+                            :format (json-request-format)
+                            :response-format :json}
+           :success-event [:order-track/mdw.dto]}}))
 
+(reg-event-db
+ :cost.detail/mdw-material_craft
+ (fn [db [_ response]]
+   (let [dataset (get-in response [:result])]
+     (-> db
+         (assoc-in [:views :cost.detail :data :material_craft]   dataset)))))
+
+(reg-event-fx
+ :cost.detail/material_craft-pull
+ (fn [_ [_ query]]
+   {:http {:method  POST
+           :url   "http://0.0.0.0:3000/cost/material-craft"
+           :ajax-map       {:keywords? true
+                            :params query
+                            :format (json-request-format)
+                            :response-format :json}
+           :success-event [:cost.detail/mdw-material_craft]}}))

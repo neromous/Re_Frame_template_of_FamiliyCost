@@ -1,4 +1,4 @@
-(ns soul-talk.handler.customer
+(ns soul-talk.handler.cost-customer
   (:require  [re-frame.core :refer [subscribe
                                     reg-event-db
                                     dispatch

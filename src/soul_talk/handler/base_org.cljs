@@ -1,4 +1,4 @@
-(ns soul-talk.handler.org
+(ns soul-talk.handler.base-org
   (:require  [re-frame.core :refer [subscribe
                                     reg-event-db
                                     dispatch
