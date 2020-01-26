@@ -1,21 +1,37 @@
 (ns soul-talk.handlers
   (:require
-   [re-frame.core :refer [inject-cofx dispatch dispatch-sync reg-event-db reg-event-fx subscribe reg-sub]]
+   [re-frame.core :refer [inject-cofx
+                          dispatch
+                          dispatch-sync
+                          reg-event-db
+                          reg-event-fx
+                          subscribe reg-sub]]
    [soul-talk.db :refer [default-db]]
    [soul-talk.local-storage :as storage]
    [soul-talk.utils :refer [url->id]]
    soul-talk.ajax
-   soul-talk.effects
-   soul-talk.handler.errors
-   soul-talk.handler.auth
    soul-talk.handler.admin
-   soul-talk.handler.users
-   soul-talk.handler.category
+   soul-talk.handler.auth
+   soul-talk.handler.errors
    soul-talk.handler.files
-   soul-talk.handler.fake-data
-   soul-talk.handler.data-model))
+   soul-talk.handler.server
+   soul-talk.handler.users
+   ;;
+   soul-talk.handler.base-org
+   soul-talk.handler.cost-orders
+   soul-talk.handler.cost-customer
+   soul-talk.handler.cost-human
+   soul-talk.handler.cost-energy
+   soul-talk.handler.cost-material
+   soul-talk.handler.detail-view
+   soul-talk.handler.index-view
+   soul-talk.handler.product-order
+   soul-talk.handler.product-task
+   soul-talk.handler.sell-order
+   ))
 
 ;; 初始化
+
 (reg-event-fx
  :initialize-db
  [(inject-cofx :local-store storage/login-user-key)
@@ -82,32 +98,32 @@
                         (dissoc :error))}))
 
 ;; 通用db深度操作方法
-
 (reg-sub
  :db/get-in
  (fn [db [_  ks]]
    (get-in db ks)))
 
 (reg-sub
+ :db/group-by
+ (fn [db [_ ks group-func]]
+   (group-by  group-func  (get-in db ks))))
+
+(reg-sub
+ :db/select-keys
+ (fn [db [_  ks selector]]
+   (select-keys (get-in db ks)  selector)))
+
+(reg-sub
  :db/find-by
  (fn [db [_ ks query]]
    (filter #(=  query (select-keys % (keys query)))
+           ;; (-> db (get-in ks) vals))))
            (-> db (get-in ks) vals))))
 
 (reg-event-db
  :db/dissoc-in
  (fn [db [_ ks]]
    (update-in db (drop-last ks) dissoc (last ks))))
-
-
-;; (reg-event-db
-;;  :db/set-in
-;;  (fn [db [_  x]]
-;;    (let [rest-path (drop-last x)
-;;          value (last x)
-;;          full-path rest-path]
-;;      (assoc-in db  full-path value))))
-
 
 (reg-event-db
  :db/assoc-in
@@ -146,24 +162,40 @@
          target pk-target]
      (update-in db target merge  (get-in db origin)))))
 
-
-;;  从一个位置的map 的外键找到另一个位置的列表中匹配其外键的map
-;; (reg-sub
-;;  :item/foreignkey
-;;  (fn [db [_ value-path foreign-set-path  foreign-key]]
-;;    (let [value (get-in db value-path)
-;;          query {foreign-key value}
-;;          foreign-set (get-in db foreign-set-path)]
-;;      (filter #(=  query (select-keys % (keys query)))
-;;              (vals foreign-set )))))
-
+(reg-sub
+ :item/one2one
+ (fn [db [_ origin-path target-set-path relate-field]]
+   ;; origin-path :目标item位置
+   ;; taget-set-path 需要查询的集合位置
+   ;; relate-field  关联的字段
+   (let [item (get-in db origin-path)
+         dataset (get-in db  target-set-path)
+         item-url (get item relate-field)]
+     (get dataset  item-url))))
 
 (reg-sub
- :item/foreignkey
- (fn [db [_ value-path foreign-set-path]]
-   (let [value (get-in db value-path)
-         foreign-set (get-in db foreign-set-path)]
-     (get foreign-set  (-> value  url->id)))))
+ :item/relate-value
+ (fn [db [_ origin-path target-set-path relate-field  target-field]]
+   ;; origin-path :目标item位置
+   ;; taget-set-path 需要查询的集合位置
+   ;; relate-field  关联的字段
+   (let [item (get-in db origin-path)
+         dataset (get-in db  target-set-path)
+         item-url (get item relate-field)]
+     (->  dataset
+          (get   item-url)
+          (get   target-field)))))
+
+(reg-sub
+ :item/one2many
+ ;; origin-path :目标item位置
+ ;; taget-set-path 需要查询的集合位置
+ ;; relate-field  关联的字段
+ (fn [db [_ origin-path target-set-path relate-field]]
+   (let [item (get-in db origin-path)
+         dataset (get-in db  target-set-path)
+         item-urls (get   item relate-field)]
+     (select-keys dataset  item-urls))))
 
 (reg-sub
  :set/map
@@ -184,7 +216,5 @@
  :db/dissoc
  (fn [db [_ k]]
    (dissoc db k)))
-
-
 
 

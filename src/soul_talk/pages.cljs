@@ -1,6 +1,11 @@
 (ns soul-talk.pages
   (:require
-   soul-talk.page.table-template
-   soul-talk.page.charts
-   soul-talk.page.home-page
-   ))
+   ;;soul-talk.page.table-relation-input
+            soul-talk.page.table-manager
+            soul-talk.page.cost
+            soul-talk.page.order-track
+            ;;soul-talk.page.table-manager-head
+            ;;soul-talk.page.table-manager-detail
+            )
+
+  )

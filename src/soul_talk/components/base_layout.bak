@@ -6,6 +6,7 @@
                                                        context-url
                                                        href
                                                        navigate!
+
                                                        run-events
                                                        run-events-admin]]))
 
@@ -18,8 +19,6 @@
       (= view nil) [page]
       (= model nil) [page view]
       :else [page view model])))
-
-
 
 ;; 组件模板
 (defmulti content router-parser)

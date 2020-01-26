@@ -17,9 +17,16 @@
   ([date formatter]
    (unparse formatter (tc/from-date date))))
 
-
-
-
 (defn antd-date-parse [date]
-  (-> date (.format "YYYY-MM-DD") )
-  )
+  (-> date (.format "YYYY-MM-DD")))
+
+(defn moment->diff [target origin]
+  (.diff target origin))
+
+(defn moment->is_time_between? [target date-min date-max]
+  (and  (> (moment->diff target  date-min) 0)
+        (> (moment->diff date-max target) 0)))
+
+(defn moment->type [target-str]
+  (new js/moment target-str))
+
