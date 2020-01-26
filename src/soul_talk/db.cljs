@@ -15,6 +15,7 @@
 (def Env (r/atom  (sorted-map)))
 
 (defonce unique-work (r/atom 0))
+
 (defn unique-id []
   (swap! unique-work inc))
 

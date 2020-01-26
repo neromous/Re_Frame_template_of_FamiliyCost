@@ -10,9 +10,8 @@
             soul-talk.subs
             soul-talk.routes
             soul-talk.local-storage
-            soul-talk.models
             [soul-talk.ajax :refer [load-interceptors!]]
-            [soul-talk.route.utils :refer [logged-in? navigate!]]
+            [soul-talk.route-utils :refer [logged-in? navigate!]]
             [soul-talk.routes :refer [hook-browser-navigation!]]
             [soul-talk.routes :refer [main-page]]))
 

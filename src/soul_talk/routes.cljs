@@ -6,18 +6,8 @@
    [secretary.core :as secretary :refer-macros [defroute]]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
    [accountant.core :as accountant]
-   soul-talk.handlers
-   soul-talk.components.base-layout
-   soul-talk.components.default-layout
-   soul-talk.pages
-   [soul-talk.page.layout :as layout]
-   [soul-talk.model.account :refer [account]]
-   [soul-talk.route.utils :refer [run-events run-events-admin logged-in? navigate!]]
-   [soul-talk.components.base-layout :as home-page]
-   [soul-talk.components.common :as c]
-   (soul-talk.model.account :refer [account record category gears])
-   [soul-talk.config :refer [source-pull source-new source-del source-update]]
-   [soul-talk.models :refer [preform-modals]])
+   [soul-talk.route-utils :refer [run-events run-events-admin logged-in? navigate!]]
+   )
 
   (:import [goog History]
            [goog.History EventType]))
@@ -25,10 +15,7 @@
 
 ;; 初始化所有数据
 (run-events
- [[source-pull account {:limit 100}]
-  [source-pull record {:limit 100}]
-  [source-pull category {:limit 100}]
-  [source-pull gears {:limit 100}]
+ [
   ])
 
 (defroute  "/" []
@@ -65,15 +52,7 @@
     (when @ready?
       (fn []
         [:div
-         [c/success-modal]
-         [c/error-modal]
-         (preform-modals)
-         [layout/layout-hcfs-left
-          {:header  home-page/header
-           :nav home-page/nav
-           :content home-page/content
-           :footer home-page/footer
-           :sider home-page/siderbar}]]))))
+         [:p "dddddd"]]))))
 
 ;; 首页
 ;; 无登录下把事件加入登录事件

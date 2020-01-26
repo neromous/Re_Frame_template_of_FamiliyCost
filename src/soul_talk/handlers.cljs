@@ -10,10 +10,9 @@
    soul-talk.handler.auth
    soul-talk.handler.admin
    soul-talk.handler.users
-   soul-talk.handler.category
    soul-talk.handler.files
-   soul-talk.handler.fake-data
-   soul-talk.handler.data-model))
+
+   ))
 
 ;; 初始化
 (reg-event-fx
@@ -80,111 +79,5 @@
     :db             (-> db
                         (assoc :should-be-loading? true)
                         (dissoc :error))}))
-
-;; 通用db深度操作方法
-
-(reg-sub
- :db/get-in
- (fn [db [_  ks]]
-   (get-in db ks)))
-
-(reg-sub
- :db/find-by
- (fn [db [_ ks query]]
-   (filter #(=  query (select-keys % (keys query)))
-           (-> db (get-in ks) vals))))
-
-(reg-event-db
- :db/dissoc-in
- (fn [db [_ ks]]
-   (update-in db (drop-last ks) dissoc (last ks))))
-
-
-;; (reg-event-db
-;;  :db/set-in
-;;  (fn [db [_  x]]
-;;    (let [rest-path (drop-last x)
-;;          value (last x)
-;;          full-path rest-path]
-;;      (assoc-in db  full-path value))))
-
-
-(reg-event-db
- :db/assoc-in
- (fn [db [_ ks v]]
-   (assoc-in db ks v)))
-
-(reg-event-db
- :db/merge-in
- (fn [db [_ ks v]]
-   (update-in db ks merge v)))
-
-(reg-event-db
- :db/update-in
- (fn [db [_ ks func v]]
-   (update-in db ks func v)))
-
-(reg-event-db
- :paths/copy
- (fn [db [_ pk-target pk-origin]]
-   (let [origin pk-origin
-         target pk-target]
-     (update-in db (drop-last target) assoc (last target)  (get-in db origin)))))
-
-(reg-event-db
- :paths/move
- (fn [db [_ pk-target pk-origin]]
-   (let [origin pk-origin
-         target pk-target]
-     (update-in db (drop-last target) assoc (last target)  (get-in db origin))
-     (update-in db (drop-last origin) dissoc (last origin)))))
-
-(reg-event-db
- :paths/merge
- (fn [db [_ pk-target pk-origin]]
-   (let [origin pk-origin
-         target pk-target]
-     (update-in db target merge  (get-in db origin)))))
-
-
-;;  从一个位置的map 的外键找到另一个位置的列表中匹配其外键的map
-;; (reg-sub
-;;  :item/foreignkey
-;;  (fn [db [_ value-path foreign-set-path  foreign-key]]
-;;    (let [value (get-in db value-path)
-;;          query {foreign-key value}
-;;          foreign-set (get-in db foreign-set-path)]
-;;      (filter #(=  query (select-keys % (keys query)))
-;;              (vals foreign-set )))))
-
-
-(reg-sub
- :item/foreignkey
- (fn [db [_ value-path foreign-set-path]]
-   (let [value (get-in db value-path)
-         foreign-set (get-in db foreign-set-path)]
-     (get foreign-set  (-> value  url->id)))))
-
-(reg-sub
- :set/map
- (fn [db [_ target-path map-fn]]
-   (map map-fn  (get-in db target-path))))
-
-(reg-sub
- :db/get
- (fn [db [_ k]]
-   (get db k)))
-
-(reg-event-db
- :db/assoc
- (fn [db [_ k v]]
-   (assoc db k v)))
-
-(reg-event-db
- :db/dissoc
- (fn [db [_ k]]
-   (dissoc db k)))
-
-
 
 
