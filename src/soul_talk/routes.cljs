@@ -21,31 +21,46 @@
   (:import [goog History]
            [goog.History EventType]))
 
-
-
-
-(def state-sample {
-                   ;;:order_id 1
+(def state-sample {;;:order_id 1
                    :order_detail_id 72
                    ;;:flow_id -1
                    })
 
-
-(dispatch [:views/cost.detail  state-sample ])
+(dispatch [:views/cost.detail  state-sample])
 (subscribe [:views/cost.detail])
 
 (defn page-init [id]
-  (dispatch [:cost.detail/material_craft-pull
-             {"filters" [["="  "order_detail_id"   id]]
-              "limit" 102400}])
-  )
+  (run-events  [[:cost.detail/material_craft-pull
+                 {"filters" [["="  "order_detail_id"   id]]
+                  "limit" 102400}]
+                [:cost.detail/human_resource-pull
+                 {"filters" [["="  "order_detail_id"   id]]
+                  "limit" 102400}]
+                [:cost.detail/machine-pull
+                 {"filters" [["="  "order_detail_id"   id]]
+                  "limit" 102400}]]))
+
 
 (page-init 72)
 
 
 
+;; (run-events [
+;;              [:order-track/server.pull {"limit" 115000}]
+;;              [:base.org/server.pull {"limit" 500}]
+;;              [:base.customer/server.pull {"limit" 500}]
+;;              [:cost.material-raw/server.pull {"limit" 115000}]
+;;              [:product.output/server.pull {"limit" 115000}]
+;;              [:energy.oa_report/server.pull {"limit" 5000}]
+;;              ]
+;;             )
+
+
+
 
 ;; init events
+
+
 (run-events  [[:cost.index/state.init]])
 
 (dispatch [:cost.index/state.init])
@@ -58,12 +73,12 @@
 ;; (-> @(subscribe [:order-track/data.all]) first println )
 
 
- (subscribe [:cost.index/state])
-     
+(subscribe [:cost.index/state])
+
 ;; (-> @(subscribe [:cost.index/flow_ids]))
 ;; (-> @(subscribe [:cost.material-raw/all])
 ;;     first
-    
+
 ;;     )
 ;; (subscribe [:cost.material-raw/data.product_flow])
 
@@ -80,17 +95,6 @@
 
 ;; (subscribe [:org/children-by-id 12 ])
 
-;; (run-events [
-;;              [:order-track/server.pull {"limit" 115000}]
-;;              [:base.org/server.pull {"limit" 500}]
-;;              [:base.customer/server.pull {"limit" 500}]
-;;              [:cost.material-raw/server.pull {"limit" 115000}]
-;;              [:product.output/server.pull {"limit" 115000}]
-;;              [:energy.oa_report/server.pull {"limit" 5000}]
-;;              ]
-;;             )
-
-  
 ;; [:cost.human/server.pull {"limit" 5000  }]
 ;; [:cost.material-craft/server.pull {"limit" 115000}]
 
@@ -119,7 +123,6 @@
 ;;     )
 
 ;; (subscribe [:product-task/material.re_dye.sum])
-
 
 
 (defroute  "/" []

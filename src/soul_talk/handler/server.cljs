@@ -223,20 +223,4 @@
                             :response-format :json}
            :success-event [:order-track/mdw.dto]}}))
 
-(reg-event-db
- :cost.detail/mdw-material_craft
- (fn [db [_ response]]
-   (let [dataset (get-in response [:result])]
-     (-> db
-         (assoc-in [:views :cost.detail :data :material_craft]   dataset)))))
 
-(reg-event-fx
- :cost.detail/material_craft-pull
- (fn [_ [_ query]]
-   {:http {:method  POST
-           :url   "http://0.0.0.0:3000/cost/material-craft"
-           :ajax-map       {:keywords? true
-                            :params query
-                            :format (json-request-format)
-                            :response-format :json}
-           :success-event [:cost.detail/mdw-material_craft]}}))

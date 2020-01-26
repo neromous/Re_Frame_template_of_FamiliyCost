@@ -15,16 +15,49 @@
                                            run-events
                                            run-events-admin]]))
 
-;; (->> @(subscribe [:cost.material-raw/all] )
-;;      ;;(filter #(-> % :order_detail_id (=  72))    )
-;;      (map :dyelot_number)
-;;      set
-;;      count
-;;      )
+(->> @(subscribe [:cost.detail/machine])
+     first
+     keys
+     println)
 
-(dispatch [:cost.detail/material_craft-pull
-           {"filters" [["="  "order_detail_id"   72]]
-            "limit" 102400}])
+(-> @(subscribe [:cost.detail/human_resource])
+    first
+    println)
+
+(subscribe [:cost.detail/material_craft])
+
+(defn machine-table []
+  (r/with-let [machines  (subscribe [:cost.detail/machine])]
+    (let [fields  {:crock_number "流水线号"
+                   :machine_number "设备编号"
+                   :process "工序名称"
+                   :flow_id "flow_id"
+                   :operation_time1  "操作时间1"
+                   :operation_time2 "操作时间2"}
+          columns (map (fn  [[k v]]  {:dataIndex (name k)
+                                      :key (name k)
+                                      :title v})   fields)]
+
+      [:> js/antd.Table {:columns (clj->js columns)
+                         :dataSource @machines}])))
+
+(defn human-table []
+  (r/with-let [humans  (subscribe [:cost.detail/human_resource])]
+    (let [fields   {:order_detail_id "编号"
+                    :flow_id "flow_id"
+                    :worker_group_number "班组号"
+                    :worker_name "工人名称"
+                    :process "工序"
+                    :create_time "工序开始时间"
+                    :weigth "重量"
+                    :proportion "比例"
+                    :quantity "数量"}
+          columns (map (fn  [[k v]]  {:dataIndex (name k)
+                                      :key (name k)
+                                      :title v})   fields)]
+
+      [:> js/antd.Table  {:columns (clj->js columns)
+                          :dataSource @humans}])))
 
 (defn  order-description [item]
   (let [{:keys [order_company_id finish_time tax_money order_saler_id
@@ -89,25 +122,18 @@
         [:> js/antd.Descriptions.Item  {:label "使用机台数"}  "ddd"]
         [:> js/antd.Descriptions.Item  {:label "原纱消耗"}  "ddd"]]])))
 
-
-(-> @(subscribe [:cost.detail/material_craft])
-    first)
-
 (defn task-craft-table []
   (r/with-let [crafts  (subscribe [:cost.detail/material_craft])
                columns  [{:dataIndex  "dyelot_number" :key "dyelot_number" :title "缸号"}
                          {:dataIndex  "dye_zh_name" :key "dye_zh_name" :title "物料名称"}
                          {:dataIndex  "goods_id" :key "goods_id" :title "物料编号"}
                          {:dataIndex  "yl_unit" :key "yl_unit" :title "单位"}
-                         {:dataIndex  "dosage" :key "dosage" :title "用量"}
-
-                         ]]
+                         {:dataIndex  "dosage" :key "dosage" :title "用量"}]]
 
     [:> js/antd.Table {:columns columns
                        :dataSource @crafts
                        :size "small"
-                       :bordered true
-                       }]))
+                       :bordered true}]))
 
 (defn content []
 
@@ -129,8 +155,19 @@
          [:h3 "染料用量情况"]
          [task-craft-table]
 
+         [:> js/antd.Divider]
+         [:h3 "人力状况"]
+         [human-table]
+         [:> js/antd.Divider]
+         [:h3 "机械状况"]
+         [machine-table]
+
+
+
+
          ]
 
+        
         [:> js/antd.Col {:span 8}
          [task-consum-description]]]])))
 
