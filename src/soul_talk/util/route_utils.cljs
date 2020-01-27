@@ -1,4 +1,4 @@
-(ns soul-talk.route-utils
+(ns soul-talk.util.route-utils
   (:require   [re-frame.core :refer [dispatch dispatch-sync subscribe]]
                [accountant.core :as accountant]))
 

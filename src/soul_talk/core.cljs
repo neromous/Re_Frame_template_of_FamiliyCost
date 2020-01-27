@@ -6,14 +6,16 @@
             soul-talk.effects
             soul-talk.ajax
             soul-talk.handlers
-            soul-talk.coeffects
             soul-talk.subs
+            soul-talk.coeffects
             soul-talk.routes
             soul-talk.local-storage
+            soul-talk.views
             [soul-talk.ajax :refer [load-interceptors!]]
-            [soul-talk.route-utils :refer [logged-in? navigate!]]
+            [soul-talk.util.route-utils :refer [logged-in? navigate!]]
             [soul-talk.routes :refer [hook-browser-navigation!]]
-            [soul-talk.routes :refer [main-page]]))
+            [soul-talk.views :refer [main-page]]
+            ))
 
 ;; 挂载页面组件
 (defn mount-component []

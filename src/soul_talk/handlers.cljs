@@ -8,13 +8,14 @@
    soul-talk.effects
    soul-talk.handler.errors
    soul-talk.handler.auth
+   soul-talk.handler.models
    soul-talk.handler.admin
    soul-talk.handler.users
-   soul-talk.handler.files
-
-   ))
+   soul-talk.handler.files))
 
 ;; 初始化
+
+
 (reg-event-fx
  :initialize-db
  [(inject-cofx :local-store storage/login-user-key)
@@ -28,34 +29,21 @@
 
 ;; 设置当前页
 (reg-event-db
- :set-active
+ :set-active-page
  (fn [db [_  x]]
-   (assoc db :active x)))
+   (assoc-in db [:views  :active-page] x)))
 
 (reg-event-db
- :set-breadcrumb
- (fn [db [_ breadcrumb]]
-   (assoc db :breadcrumb breadcrumb)))
-
-(reg-event-fx
- :navigate-to
- (fn [_ [_ url]]
-   {:navigate url}))
+ :set-views
+ (fn [db [_  & kvs]]
+   (let [view-path (drop-last  kvs)
+         value  (last kvs)]
+     (assoc-in db (concat [:views]  view-path) value))))
 
 (reg-event-db
- :set-success
- (fn [db [_ message]]
-   (assoc db :success message)))
-
-(reg-event-db
- :clean-success
- (fn [db _]
-   (dissoc db :success)))
-
-(reg-event-db
- :update-value
- (fn [db [_ keys val]]
-   (assoc-in db keys val)))
+ :update-views
+ (fn [db [_ view-path x]]
+   (update-in db (concat [:views] view-path)  merge x)))
 
 ;; 取消加载
 (reg-event-db
@@ -80,4 +68,31 @@
                         (assoc :should-be-loading? true)
                         (dissoc :error))}))
 
+
+
+
+;; (reg-event-db
+;;  :set-breadcrumb
+;;  (fn [db [_ breadcrumb]]
+;;    (assoc db :breadcrumb breadcrumb)))
+
+;; (reg-event-fx
+;;  :navigate-to
+;;  (fn [_ [_ url]]
+;;    {:navigate url}))
+
+;; (reg-event-db
+;;  :set-success
+;;  (fn [db [_ message]]
+;;    (assoc db :success message)))
+
+;; (reg-event-db
+;;  :clean-success
+;;  (fn [db _]
+;;    (dissoc db :success)))
+
+;; (reg-event-db
+;;  :update-value
+;;  (fn [db [_ keys val]]
+;;    (assoc-in db keys val)))
 

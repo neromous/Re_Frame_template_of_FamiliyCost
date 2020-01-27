@@ -5,58 +5,50 @@
    [clojure.string :as str]
    [secretary.core :as secretary :refer-macros [defroute]]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
+   soul-talk.resources
+   soul-talk.subs
+   soul-talk.sub.model
    [accountant.core :as accountant]
-   [soul-talk.route-utils :refer [run-events run-events-admin logged-in? navigate!]]
-   )
+   [soul-talk.util.route-utils :refer [run-events run-events-admin logged-in? navigate!]])
 
   (:import [goog History]
            [goog.History EventType]))
 
 
+
+(dispatch [:resource/server.query  :material-raw {} ])
+
 ;; 初始化所有数据
-(run-events
- [
-  ])
+
+
+;; (run-events
+;;  [[:set-views :admin-active-model :material-raw]])
+
+;; (subscribe [:views])
 
 (defroute  "/" []
   (run-events
-   [[:set-active {:page :home
-                  :view :index}]]))
+   [[:set-active-page :home-page]]))
 
-(defroute  "/test" []
+(defroute  "/home/:index-page" [index-page]
   (run-events
-   [[:set-active {:page :home
-                  :view :test
-                  :model :test}]]))
+   [[:set-active-page (keyword index-page)]]))
 
-(defroute  "/v/:page" [page]
+(defroute  "/home/:index-page/:id" [index-page id]
   (run-events
-   [[:set-active {:page (keyword page)}]]))
+   [[:set-active-page  (keyword (str index-page "-detail"))]
+    [:set-views (keyword index-page) :id  id]]))
 
-(defroute  "/v/:page/:view" [page view]
+(defroute  "/admin/models/:model" [model]
   (run-events
-   [[:set-active {:page (keyword page)
-                  :view (keyword view)}]]))
+   [[:set-active-page  (keyword model)]
+    [:set-views :admin-active-model (keyword model)]]))
 
-(defroute  "/v/:page/:view/:model" [page view model]
+(defroute  "/admin/models/:model/:id" [model id]
   (run-events
-   [[:set-active {:page (keyword page)
-                  :view (keyword view)
-                  :model (keyword model)}]]))
-
-;; 根据配置加载不同页面
-
-(defn main-page []
-  (r/with-let [ready? (subscribe [:initialised?])
-               db-state (subscribe [:active])]
-    (when @ready?
-      (fn []
-        [:div
-         [:p "dddddd"]]))))
-
-;; 首页
-;; 无登录下把事件加入登录事件
-
+   [[:set-active-page  (keyword model)]
+    [:set-views :admin-active-model (keyword model)]
+    [:set-views (keyword model) :id id]]))
 
 (defroute "*" [])
 
@@ -77,7 +69,4 @@
       (secretary/locate-route path))
     :reload-same-path? true})
   (accountant/dispatch-current!))
-
-
-
 

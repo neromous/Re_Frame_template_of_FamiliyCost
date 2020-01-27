@@ -1,4 +1,4 @@
-(ns soul-talk.date-utils
+(ns soul-talk.util.date-utils
   (:require [cljs-time.format :as cf :refer [parse unparse formatter formatters show-formatters]]
             [cljs-time.coerce :as tc]))
 
