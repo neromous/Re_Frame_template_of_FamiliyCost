@@ -89,8 +89,6 @@
 
 
 
-(defn query_filter [model-map query]
-  (filter #(= query (select-keys % (keys query))) (vals model-map)))
 
 
 

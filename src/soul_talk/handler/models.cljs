@@ -23,7 +23,6 @@
          view-path (get model :view-path)]
      (update-in db view-path  merge new-view-state))))
 
-
 (reg-event-db
  :resource/replace
  (fn [db [_ model-key data-vec]]
@@ -42,25 +41,29 @@
  :resource/delete
  (fn [db [_ model-key query]]
    (let [model (get model-register model-key)
-         data-path (get model :data-path)]
-     (->> (get-in db data-path)
-          (filter  #(query-filter/not-part-of-query? % query))))))
+         data-path (get model :data-path)
+         ;;all-data (get-in db data-path)
+         ]
+     (update-in
+      db
+      data-path
+      (fn [all-data]
+        (filter  #(query-filter/not-part-of-query? % query) all-data))))))
 
 (reg-event-db
  :resource/update
  (fn [db [_ model-key query update-form]]
    (let [model (get model-register model-key)
-         data-path (get model :data-path)]
-     (->> (get-in db data-path)
-          (map (fn [x]
-                 (if (query-filter/is-part-of-query? x query)
-                   (merge x update-form)
-                   query)))))))
+         data-path (get model :data-path)
+         all-data (get-in db data-path)]
+     (update-in db data-path
+                (fn [all-data]
+                  (map (fn [item]
+                         (if (query-filter/is-part-of-query? item query)
+                           (merge item update-form)
+                           item)) all-data))))))
 
-
-
-
-
+(-> model-register :order-track :data-path)
 
 
 

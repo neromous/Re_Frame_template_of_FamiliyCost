@@ -10,18 +10,20 @@
    soul-talk.sub.model
    soul-talk.handlers
    [accountant.core :as accountant]
-   [soul-talk.util.route-utils :refer [run-events run-events-admin logged-in? navigate!]])
+   [soul-talk.util.route-utils :refer [run-events run-events-admin logged-in? navigate!]]
+   [soul-talk.util.query-filter :as query-filter]
+   )
 
   (:import [goog History]
            [goog.History EventType]))
 
 
 
-(-> @(subscribe [:full-order/view.index-page])
-    first
-    :flow_id
-    )
-
+;; (-> @(subscribe [:full-order/view.index-page])
+;;     first
+;;     :flow_id
+;;     )
+  
 ;;(dispatch [:resource/server.query  :order-track {} ])
 ;; (-> @(subscribe [:product-order/tai_an ])
 ;;     count
@@ -29,17 +31,36 @@
 
 
 ;; (run-events [[:resource/server.query :human-resource {"filters" [["=" "order_detail_id" 72]]}]
-;;              [:resource/server.query :order-track {"limit" 15600}]
+;;              [:resource/server.query :order-track {
+;;                                                    ;;"limit" 15600
+
+;;                                                    }]
 ;;              [:resource/server.query :energy-oa {}]
 ;;              [:resource/server.query :machine-resource {"limit" 10000}]
 ;;              [:resource/server.query :material-craft {"filters" [["=" "order_detail_id" 72]]}]
 ;;              [:resource/server.query :material-raw {"filters" [["=" "order_detail_id" 72]]}]])
 
-(subscribe [:current-page-state])
+;; (subscribe [:current-page-state])
 
-(dispatch  [:set-page-state :index-detail :order_detail_id 72])
+;; (dispatch  [:set-page-state :index-detail :order_detail_id 72])
 
-(subscribe [:product-task/view.index-page])
+;; (subscribe [:product-task/view.index-page])
+
+;; (def sample @(subscribe [:full-order/all] ))
+
+;; (count sample)
+
+
+;; (->
+;;  (filter #(query-filter/is-part-of-query? % {:order_id 1}  )    sample  )
+;;  first
+;;  )
+
+;; (dispatch [:resource/update :order-track {:order_id 1 }  {:ttt "dadsd"}  ])
+
+;;(dispatch [:resource/delete :order-track  {:order_id 1}])
+
+;; (count @(subscribe [:resource/all :order-track]))
 
 
 ;; 初始化所有数据

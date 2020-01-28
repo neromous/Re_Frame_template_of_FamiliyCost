@@ -4,7 +4,9 @@
   (= (select-keys  target (keys query))  query))
 
 (defn  not-part-of-query? [target query]
-  (not= (select-keys  target (keys query))  query))
+  (cond
+    (= (count query) 0)  true
+    :defualt (not= (select-keys  target (keys query))  query)))
 
 (defn value-in-list? [target column-key value-vecs]
   (contains? (set value-vecs)  (get column-key target)))

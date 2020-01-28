@@ -12,10 +12,11 @@
 
 
 (defn admin-model-table [model-key]
-  (r/with-let (subscribe [:resource/all model-key])
+  ;;(r/with-let (subscribe [:resource/all model-key])
 
     ;;
-    ))
+;;  )
+)
 
 (defn admin-main-page []
   (r/with-let [view-state  (subscribe [:views])]

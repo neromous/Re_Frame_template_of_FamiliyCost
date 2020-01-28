@@ -1,4 +1,4 @@
-(ns soul-talk.page.product_order
+(ns soul-talk.page.product-order
   (:require
    [reagent.core :as r]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
