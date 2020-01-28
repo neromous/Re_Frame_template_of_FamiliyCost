@@ -10,6 +10,21 @@
             [soul-talk.util.query-filter :as query-filter]))
 
 (reg-event-db
+ :resource/view-state.assoc
+ (fn [db [_ model-key new-view-state]]
+   (let [model (get model-register model-key)
+         view-path (get model :view-path)]
+     (assoc-in db view-path  new-view-state))))
+
+(reg-event-db
+ :resource/view-state.merge
+ (fn [db [_ model-key new-view-state]]
+   (let [model (get model-register model-key)
+         view-path (get model :view-path)]
+     (update-in db view-path  merge new-view-state))))
+
+
+(reg-event-db
  :resource/replace
  (fn [db [_ model-key data-vec]]
    (let [model (get model-register model-key)

@@ -16,6 +16,16 @@
      (get-in db data-path))))
 
 (reg-sub
+ :resource/view-state
+ (fn [db [_ model-key]]
+   (let [model (get model-register model-key)
+         data-path (get model :data-path)
+         view-path (get model :view-path)]
+     (get-in db view-path)
+     ;;
+     )))
+
+(reg-sub
  :resource/filter
  (fn [db [_ model-key filter-fns]]
    (let [model (get model-register model-key)

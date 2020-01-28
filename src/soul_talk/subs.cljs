@@ -1,6 +1,12 @@
 (ns soul-talk.subs
   (:require [re-frame.core :refer [reg-sub]]
             soul-talk.sub.model
+            soul-talk.sub.page-state
+            soul-talk.sub.full-order
+            soul-talk.sub.sell-order
+            soul-talk.sub.product-order
+            soul-talk.sub.product-task
+            soul-talk.sub.cost-consume
             ))
 
 ;; 获取当时全部数据
@@ -18,6 +24,19 @@
  :active-page
  (fn [db _]
    (get-in db [:views  :active-page])))
+
+(reg-sub
+ :page-state
+ (fn [db _]
+   (get-in db [:page-state])))
+
+(reg-sub
+ :current-page-state
+ :<- [:active-page]
+ :<- [:page-state]
+ (fn [[current-page page-state] [_]]
+   (get page-state current-page)))
+
 
 ;; (reg-sub
 ;;  :views

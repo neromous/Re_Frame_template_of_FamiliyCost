@@ -6,6 +6,7 @@
    [soul-talk.utils :refer [url->id]]
    soul-talk.ajax
    soul-talk.effects
+   soul-talk.handler.page-state
    soul-talk.handler.errors
    soul-talk.handler.auth
    soul-talk.handler.models
