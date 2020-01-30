@@ -41,6 +41,19 @@
      (->>  (get-in db data-path)
            (filter  #(query-filter/is-part-of-query? % query))))))
 
+(reg-sub
+ :resource/unique
+ (fn [db [_ model-key field-key]]
+   (let [model (get model-register model-key)
+         data-path (get model :data-path)]
+     (->>  (get-in db data-path)
+           (map (fn [x] (get x field-key)))
+           set
+           ;;
+           ))))
+
+
+
 
 
 

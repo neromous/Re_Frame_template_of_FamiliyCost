@@ -32,7 +32,7 @@
 
 ;; (run-events [[:resource/server.query :human-resource {"filters" [["=" "order_detail_id" 72]]}]
 ;;              [:resource/server.query :order-track {
-;;                                                    ;;"limit" 15600
+;;                                                    "limit" 15600
 
 ;;                                                    }]
 ;;              [:resource/server.query :energy-oa {}]
@@ -42,7 +42,7 @@
 
 ;; (subscribe [:current-page-state])
 
-;; (dispatch  [:set-page-state :index-detail :order_detail_id 72])
+;;(dispatch  [:set-page-state :index-detail :order_detail_id 72])
 
 ;; (subscribe [:product-task/view.index-page])
 

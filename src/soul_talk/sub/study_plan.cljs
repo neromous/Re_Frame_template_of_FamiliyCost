@@ -6,6 +6,7 @@
                                    reg-event-db
                                    reg-event-fx
                                    subscribe reg-sub]]
+            [soul-talk.components.common :as c]
             [soul-talk.utils :as utils]
             [soul-talk.util.query-filter :as query-filter]))
 
@@ -40,7 +41,11 @@
 (def plan-template
   {:plan-name ""
    :plan-start-date ""
-   :plan-date ""
+   :plan-end-date ""
    :actual-start-date ""
    :actual-end-date ""
    :relate-skills []})
+
+
+
+
