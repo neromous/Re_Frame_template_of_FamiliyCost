@@ -9,7 +9,17 @@
             [soul-talk.util.query-filter :as query-filter]))
 
 (reg-sub
- :get-page-state
- (fn [db [_ page-key]]
-   (get-in  db [:page-state page-key])))
+ :page-state
+ (fn [db [_ & args]]
+   (let []
+     (get-in db  (concat  [:page-state]  args)))))
+
+(reg-sub
+ :current-page-state
+ :<- [:active-page]
+ :<- [:page-state]
+ (fn [[current-page page-state] [_]]
+   (get page-state current-page)))
+
+
 

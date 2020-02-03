@@ -63,7 +63,6 @@
                            (merge item update-form)
                            item)) all-data))))))
 
-(-> model-register :order-track :data-path)
 
 
 

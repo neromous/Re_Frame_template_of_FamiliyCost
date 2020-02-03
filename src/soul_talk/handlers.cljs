@@ -10,6 +10,7 @@
    soul-talk.handler.errors
    soul-talk.handler.auth
    soul-talk.handler.models
+   soul-talk.handler.metadata
    soul-talk.handler.admin
    soul-talk.handler.users
    soul-talk.handler.files))

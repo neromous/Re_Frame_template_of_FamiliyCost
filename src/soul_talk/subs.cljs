@@ -7,9 +7,11 @@
             soul-talk.sub.product-order
             soul-talk.sub.product-task
             soul-talk.sub.cost-consume
-            ))
+            soul-talk.sub.metadata))
 
 ;; 获取当时全部数据
+
+
 (reg-sub
  :db-state
  (fn [db _]
@@ -25,24 +27,13 @@
  (fn [db _]
    (get-in db [:views  :active-page])))
 
-(reg-sub
- :page-state
- (fn [db _]
-   (get-in db [:page-state])))
-
-(reg-sub
- :current-page-state
- :<- [:active-page]
- :<- [:page-state]
- (fn [[current-page page-state] [_]]
-   (get page-state current-page)))
-
-
 ;; (reg-sub
 ;;  :views
 ;;  (fn [db _] (get db :views)))
 
 ;; 权宜之计
+
+
 (defn query [db [event-id]]
   (event-id db))
 

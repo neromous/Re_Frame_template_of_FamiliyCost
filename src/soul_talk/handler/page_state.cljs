@@ -11,12 +11,12 @@
             [soul-talk.util.query-filter :as query-filter]))
 
 (reg-event-db
- :set-page-state
- (fn [db [_ page-key  k  v]]
+ :page-state
+ (fn [db [_ page-key k v]]
    (assoc-in db  [:page-state page-key  k] v)))
 
 (defn set-current-page-state [k v]
   (r/with-let [current-page (subscribe)]
-    (dispatch [:set-page-state  @current-page k v])))
+    (dispatch [:page-state  @current-page k v])))
 
 
