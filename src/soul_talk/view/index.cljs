@@ -6,7 +6,7 @@
    [soul-talk.page.product-order :as product-order]
    [soul-talk.view.pages :refer [pages]]
    [soul-talk.page.study-plan :as study-plan]
-   [soul-talk.page.metadata :as metadata]))
+   [soul-talk.page.metadata-index :as metadata]))
 
 (defmethod pages :home-page [state _] [(fn []  [:p "这里是主页"
                                                 [:p (str state)]])])

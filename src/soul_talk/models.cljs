@@ -85,6 +85,35 @@
                       :query-sub/filter [:resource/filter  :machine-resource]
                       :query-sub/find-by [:resource/find-by :machine-resource]}
 
+   :sys_org {:url "http://0.0.0.0:3000/api/v2/query/sys_org"
+             :model-name "sys_org"
+             :table_name "sys_org"
+             :model-key :sys_org
+             :data-path [:datas  :sys_org]
+             :view-path [:views  :sys_org]
+             :cache-path [:caches :sys_org]
+             :fields-key  :sys_org
+             :event/server-pull [:resource/server.query :sys_org]
+             :sub/all [:resource/all :sys_org]
+             :query-sub/filter [:resource/filter  :sys_org]
+             :query-sub/find-by [:resource/find-by :sys_org]}
+
+   :erp_goods {:url "http://0.0.0.0:3000/api/v2/query/erp_goods"
+             :model-name "erp_goods"
+             :table_name "erp_goods"
+             :model-key :erp_goods
+             :data-path [:datas  :erp_goods]
+             :view-path [:views  :erp_goods]
+             :cache-path [:caches :erp_goods]
+             :fields-key  :erp_goods
+             :event/server-pull [:resource/server.query :erp_goods]
+             :sub/all [:resource/all :erp_goods]
+             :query-sub/filter [:resource/filter  :erp_goods]
+             :query-sub/find-by [:resource/find-by :erp_goods]}
+
+
+
+
 
 
    ;;

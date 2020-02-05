@@ -7,23 +7,31 @@
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
    soul-talk.resources
    soul-talk.subs
-   soul-talk.sub.model
    soul-talk.handlers
    [accountant.core :as accountant]
    [soul-talk.util.route-utils :refer [run-events run-events-admin logged-in? navigate!]]
-   [soul-talk.util.query-filter :as query-filter]
-   )
+   [soul-talk.util.query-filter :as query-filter])
 
   (:import [goog History]
            [goog.History EventType]))
 
 
-(dispatch [:metadata/server.query])
+
+(run-events [ [:metadata/server.query]])
 
 
 (defroute  "/" []
   (run-events
    [[:set-active-page :home-page]]))
+
+
+(defroute  "/home/metadata-index" [index-page]
+  (run-events
+   [[:set-active-page :metadata-index ]
+    [:metadata/server.query]
+    ]))
+
+
 
 (defroute  "/home/:index-page" [index-page]
   (run-events
@@ -36,12 +44,13 @@
 
 (defroute  "/admin/models/:model" [model]
   (run-events
-   [[:set-active-page  (keyword model)]
+   [[:set-active-page  :admin-page]
+    [:resource/server.query (keyword model) {"limit" 1000}]
     [:set-views :admin-active-model (keyword model)]]))
 
 (defroute  "/admin/models/:model/:id" [model id]
   (run-events
-   [[:set-active-page  (keyword model)]
+   [[:set-active-page  :admin-detail-page]
     [:set-views :admin-active-model (keyword model)]
     [:set-views (keyword model) :id id]]))
 

@@ -1,4 +1,4 @@
-(ns soul-talk.sub.model
+(ns soul-talk.sub.resource
   (:require [soul-talk.models :refer [model-register]]
             [re-frame.core :refer [inject-cofx
                                    dispatch
@@ -14,6 +14,32 @@
    (let [model (get model-register model-key)
          data-path (get model :data-path)]
      (get-in db data-path))))
+
+(reg-sub
+ :resource/columns
+ :<- [:metadata/all]
+ (fn [all-meta  [_  model-key]]
+   (let [model (get model-register model-key)
+         table_name (get model :table_name)]
+     (->> (get-in all-meta [table_name])
+          ))))
+
+(reg-sub
+ :resource/view.table-columns
+ :<- [:metadata/all]
+ (fn [all-meta  [_  model-key]]
+   (let [model (get model-register model-key)
+         table_name (get model :table_name)]
+     (-> (get-in all-meta [table_name]) 
+         vals
+         (->>
+          (map (fn [x] {:key (:column_name x)
+                        :dataIndex (:column_name x)
+                        :title (or (:view_title x)
+                                   (:column_comment x)
+                                   (:column_name x))})))
+         ;;
+         ))))
 
 (reg-sub
  :resource/view-state

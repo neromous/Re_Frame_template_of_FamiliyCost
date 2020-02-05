@@ -7,27 +7,37 @@
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
    soul-talk.resources
    soul-talk.subs
-   soul-talk.sub.model
    soul-talk.handlers
    [accountant.core :as accountant]
    [soul-talk.util.route-utils :refer [run-events run-events-admin logged-in? navigate!]]
-   [soul-talk.util.query-filter :as query-filter]
-   )
-  )
-
+   [soul-talk.util.query-filter :as query-filter]))
 
 (subscribe [:metadata/select-column])
 
 (dispatch [:page-state :metadata-index :dasdf "dasdf"])
 (dispatch [:page-state :sdasdf-index :dasdf "dasdf"])
 
-(subscribe [:page-state ])
+(subscribe [:page-state])
 
 (subscribe [:metadata/select-table_name])
 (subscribe [:metadata/select-table])
 
+(first @(subscribe [:metadata/all]))
 
-(first @(subscribe [:metadata/indexed]))
+(subscribe [:metadata/column.type "erp_goods" "goods_id"])
+
+(first @(subscribe [:metadata/flatten]))
+
+(subscribe [:metadata/column.unique :data_type])
+
+(subscribe [:resource/columns :sys_org])
+
+(dispatch [:metadata/new.table_name  "hahaha"])
+
+(dispatch [:metadata/column.update  "erp_goods" "goods_hahah" {:column_name "daasdd"  }   ])
+(subscribe [:metadata/all.view_type])
+
+(subscribe [:metadata/relation.all])
 
 ;; (first @(subscribe [:metadata/all]))
 ;; (subscribe [:metadata/column.comment  "ACT_GE_BYTEARRAY" "NAME_" ])
@@ -52,10 +62,8 @@
 
 
 ;; (run-events [[:resource/server.query :human-resource {"filters" [["=" "order_detail_id" 72]]}]
-;;              [:resource/server.query :order-track {
-;;                                                    "limit" 15600
+;;              [:resource/server.query :order-track {"limit" 15600}]
 
-;;                                                    }]
 ;;              [:resource/server.query :energy-oa {}]
 ;;              [:resource/server.query :machine-resource {"limit" 10000}]
 ;;              [:resource/server.query :material-craft {"filters" [["=" "order_detail_id" 72]]}]
@@ -90,8 +98,6 @@
 ;;  [[:set-views :admin-active-model :material-raw]])
 
 ;; (subscribe [:views])
-
-
 
 
 (subscribe [:metadata/column.unique :data_type])

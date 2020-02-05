@@ -3,9 +3,7 @@
    [reagent.core :as r]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]))
 
-
-
-(defmulti pages  (fn [global-state _]
+(defmulti pages  (fn [global-state & _]
                    (get global-state :active-page)))
 
 (defmethod pages :default [_ _]

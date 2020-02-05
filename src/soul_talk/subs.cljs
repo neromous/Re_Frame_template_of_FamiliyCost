@@ -1,6 +1,6 @@
 (ns soul-talk.subs
   (:require [re-frame.core :refer [reg-sub]]
-            soul-talk.sub.model
+            soul-talk.sub.resource
             soul-talk.sub.page-state
             soul-talk.sub.full-order
             soul-talk.sub.sell-order
