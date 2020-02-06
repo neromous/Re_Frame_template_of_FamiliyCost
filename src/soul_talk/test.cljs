@@ -12,7 +12,10 @@
    [soul-talk.util.route-utils :refer [run-events run-events-admin logged-in? navigate!]]
    [soul-talk.util.query-filter :as query-filter]))
 
+(subscribe [:page-state :index-detail])
 (subscribe [:metadata/select-column])
+
+ (subscribe [:product-task/by-order_detail_id 72])
 
 (dispatch [:page-state :metadata-index :dasdf "dasdf"])
 (dispatch [:page-state :sdasdf-index :dasdf "dasdf"])
@@ -38,6 +41,9 @@
 (subscribe [:metadata/all.view_type])
 
 (subscribe [:metadata/relation.all])
+
+(subscribe [:resource/find_by-order_detail_id :machine-resource 189])
+(subscribe [:resource/all :machine-resource])
 
 ;; (first @(subscribe [:metadata/all]))
 ;; (subscribe [:metadata/column.comment  "ACT_GE_BYTEARRAY" "NAME_" ])

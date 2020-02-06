@@ -5,10 +5,11 @@
                                     reg-sub
                                     reg-event-fx]]
              [soul-talk.utils :as utils]
-             [soul-talk.util.query-filter :as query-filter]
-             ))
+             [soul-talk.util.query-filter :as query-filter]))
 
 ;;全公司生产任务
+
+
 (reg-sub
  :product-task/all
  :<- [:full-order/all]
@@ -35,12 +36,20 @@
                               ;; 地点信息
                               :company_id
                               :factory_id
-                              :workshop_id
-                              ])  all-detail)
+                              :workshop_id])  all-detail)
        set)))
+
+(reg-sub
+ :product-task/by-order_detail_id
+ :<- [:product-task/all]
+ (fn [all-data [_ id]]
+   (-> (filter #(= (:order_detail_id %)  id)  all-data))))
+
 
 
 ;;
+
+
 (reg-sub
  :product-task/view.index-page
  :<- [:product-task/all]
@@ -48,7 +57,7 @@
  :<- [:current-page-state]
  (fn [[all-data active-page current-page-state] [_]]
    (let [order_detail_id (get current-page-state :order_detail_id)]
-          (filter  #(query-filter/has-kv? % :order_detail_id order_detail_id ) all-data  )
+     (filter  #(query-filter/has-kv? % :order_detail_id order_detail_id) all-data)
      ;;
      )))
 

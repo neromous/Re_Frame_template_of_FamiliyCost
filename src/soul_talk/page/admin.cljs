@@ -3,10 +3,10 @@
    [reagent.core :as r]
    [reagent.ratom :as ratom]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
-   [soul-talk.components.global_components :as gbc]
    [soul-talk.components.field :as field]
    [soul-talk.components.label-field :as label-field]
    [soul-talk.utils :as utils]
+   [soul-talk.components.home-page :as hpc]
    [soul-talk.util.model-utils :refer [metadata->dto]]
    [soul-talk.components.antd-dsl
     :refer [>Input
@@ -90,7 +90,7 @@
 
    [admin-edit-form state edit-state column]])
 
-(defn home-page [state & _]
+(defn content [state  & _]
   (r/with-let
     [all-data (subscribe [:resource/all (:admin-active-model state)])
      column (subscribe [:resource/columns (:admin-active-model state)])
@@ -98,22 +98,10 @@
      page-state (r/atom {})
      input-state (r/cursor page-state [:input-state])
      edit-state (r/cursor page-state [:edit-state])]
-
-    [>Layout
-     [>Header
-      [:p (str state)]
-
-      [input-modal page-state input-state column]
-      [edit-modal page-state edit-state column]]
-
      [>Layout
-      [>Sider
-       [:> js/antd.Menu {:mode                "inline"
-                         :className            "sidebar"
-                         :theme               "light"
-                         :default-select-keys ["user"]
-                         :default-open-keys   ["account" "user"]
-                         :selected-keys       ["sales-area"]}]]
+      [input-modal page-state input-state column]
+      [edit-modal page-state edit-state column]
+
 
       [>Content
        [:div
@@ -135,11 +123,28 @@
 
          :pagination {:defaultPageSize 5}}]
        [:hr]]
-      [>Sider
-       [:div]]]
-     [>Footer]
+
+     ]
      ;;
-     ]))
+     ))
+
+
+(defn home-page [state & _]
+  (r/with-let [active (subscribe [:active-page])
+               page-state (subscribe [:current-page-state])]
+
+    [:> js/antd.Layout
+     [hpc/head state
+      [hpc/nav state]]
+     [:> js/antd.Layout {:style {:padding "24px"}}
+      [hpc/side-bar state]
+
+      [:> js/antd.Layout.Content {:style {:background "#fff"
+                                          :padding 24
+                                          :margin 0
+                                          :minHeight 280}}
+       [content state]]]
+     [hpc/foot state]]))
 
 
 

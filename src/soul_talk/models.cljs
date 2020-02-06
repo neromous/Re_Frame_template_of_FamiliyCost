@@ -112,6 +112,37 @@
              :query-sub/find-by [:resource/find-by :erp_goods]}
 
 
+   :erp_provider {:url "http://0.0.0.0:3000/api/v2/query/erp_provider"
+               :model-name "erp_provider"
+               :table_name "erp_provider"
+               :model-key :erp_provider
+               :data-path [:datas  :erp_provider]
+               :view-path [:views  :erp_provider]
+               :cache-path [:caches :erp_provider]
+               :fields-key  :erp_provider
+               :event/server-pull [:resource/server.query :erp_provider]
+               :sub/all [:resource/all :erp_provider]
+               :query-sub/filter [:resource/filter  :erp_provider]
+               :query-sub/find-by [:resource/find-by :erp_provider]}
+
+
+   
+   :erp_customer {:url "http://0.0.0.0:3000/api/v2/query/erp_customer"
+                  :model-name "erp_customer"
+                  :table_name "erp_customer"
+                  :model-key :erp_customer
+                  :data-path [:datas  :erp_customer]
+                  :view-path [:views  :erp_customer]
+                  :cache-path [:caches :erp_customer]
+                  :fields-key  :erp_customer
+                  :event/server-pull [:resource/server.query :erp_customer]
+                  :sub/all [:resource/all :erp_customer]
+                  :query-sub/filter [:resource/filter  :erp_customer]
+                  :query-sub/find-by [:resource/find-by :erp_customer]}
+
+
+
+
 
 
 

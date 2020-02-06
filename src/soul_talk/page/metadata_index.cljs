@@ -3,10 +3,10 @@
    [reagent.core :as r]
    [reagent.ratom :as ratom]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
-   [soul-talk.components.global_components :as gbc]
    [soul-talk.components.field :as field]
    [soul-talk.components.label-field :as label-field]
    [soul-talk.utils :as utils]
+   [soul-talk.components.home-page :as hpc]
    [soul-talk.util.model-utils :refer [metadata->dto]]
    [soul-talk.components.antd-dsl
     :refer [>Input
@@ -61,19 +61,37 @@
       }]))
 
 (defn fields-table-component [page-state all-data]
-  (r/with-let  [columns  [{:key "column_name"
-                           :dataIndex "column_name"
-                           :title "字段名"}
-                          {:key "data_type"
-                           :dataIndex "data_type"
-                           :title "数据类型"}
-                          {:key "intel_type"
-                           :dataIndex "intel_type"
-                           :title "信息类型"}]
+  (r/with-let
 
-                edit-column (r/cursor page-state [:edit-column])
-                selected-table  (r/cursor page-state [:selected-table])
-                selected-column  (r/cursor page-state [:selected-column])]
+    [edit-column (r/cursor page-state [:edit-column])
+     edit-column (r/cursor page-state [:edit-column])
+     selected-table  (r/cursor page-state [:selected-table])
+     selected-column  (r/cursor page-state [:selected-column])
+     relation-new (r/cursor page-state [:relation-new])
+     columns [{:key "column_name"
+               :dataIndex "column_name"
+               :title "字段名"}
+              {:key "data_type"
+               :dataIndex "data_type"
+               :title "数据类型"}
+              {:key "intel_type"
+               :dataIndex "intel_type"
+               :title "信息类型"}
+              {:title  "操作"
+               :dataIndex "actions"
+               :key "actions"
+               :align "center"
+               :render  (fn [_ item]
+                          (let [item (-> item
+                                         (js->clj :keywordize-keys true))]
+                            (r/as-element
+                             [:div
+                              [>Button  {:onClick (fn []
+                                                    (swap! edit-column assoc :cache item)
+                                                    (swap! edit-column assoc :visible true))}
+                               "编辑"]
+                              [>Button {:on-click #(swap! relation-new assoc :visible true)}
+                               "新关系"]])))}]]
 
     [:div
      [>Table  {:dataSource (-> @all-data
@@ -89,8 +107,9 @@
                  (let [item (-> record
                                 (js->clj :keywordize-keys true))]
                    #js   {:onClick (fn []
-                                     (swap! edit-column assoc :cache item)
-                                     (swap! edit-column assoc :visible true))}
+                                     (reset! selected-column (:column_name  item))
+                                     ;;
+                                     )}
 
 
                    ;
@@ -111,7 +130,7 @@
 
    [>Input {:on-change  #(swap! state assoc :table_name  (-> % .-target .-value))}]])
 
-(defn new-column-modal [state all-data]
+(defn new-column-modal [page-state state all-data]
   (r/with-let [data_type_list (subscribe [:metadata/all.data_type])
                view_type_list (subscribe [:metadata/all.view_type])
                entity_type_list (subscribe [:metadata/all.entity_type])
@@ -122,6 +141,8 @@
                data_type (r/cursor state [:cache :data_type])
                view_type (r/cursor state [:cache :view_type])
                entity_type (r/cursor state [:cache :entity_type])
+               selected-table  (r/cursor page-state [:selected-table])
+               selected-column  (r/cursor page-state [:selected-column])
                ;;
                ]
 
@@ -130,7 +151,7 @@
       :visible (:visible @state)
       :onOk (fn [] (do
                      (dispatch [:metadata/column.new
-                                @table_name
+                                (or @selected-table @table_name)
                                 @column_name
                                 @cache-data])
                      (swap! state assoc :visible false)))
@@ -142,6 +163,8 @@
       [>AutoComplete
        {:on-change  #(reset! table_name (-> %))
         :filterOption true
+        :value (or @selected-table @table_name)
+        :defaultValue @selected-table
         :placeholder "选择实体名称"
         :defaultActiveFirstOption true
         :dataSource  (-> @all-data
@@ -248,30 +271,34 @@
       ;;
       ]]))
 
-(defn new-relation-modal [state all-relation all-table]
+(defn new-relation-modal [page-state state all-relation all-table]
   (r/with-let [cache-data (r/cursor state [:cache])
                origin-table (r/cursor state [:cache :origin_table])
                origin-column (r/cursor state [:cache :origin_column])
                target-table (r/cursor state [:cache :target_table])
                target-column (r/cursor state [:cache :target_column])
-               relation (r/cursor state [:cache :relation])]
+               relation (r/cursor state [:cache :relation])
+               selected-table  (r/cursor page-state [:selected-table])
+               selected-column  (r/cursor page-state [:selected-column])]
     [:> js/antd.Modal
      {:title "修改字段"
       :visible (:visible @state)
       :onOk (fn [] (do
                      (dispatch [:metadata/relation.new
-                                (merge @cache-data {:id (swap! relation-id inc)})])
+                                (-> {:origin_table @selected-table
+                                     :origin_column @selected-column}
+                                    (merge @cache-data)
+                                    (merge {:id (swap! relation-id inc)}))])
 
                      (swap! state assoc :visible false)))
       :onCancel  (fn [] (do
                           (swap! state assoc :visible false)))}
 
      [:div
-
       [>Row
        [>AutoComplete
         {:on-change  #(reset! origin-table (-> %))
-
+         :defaultValue @selected-table
          :filterOption true
          :placeholder "选择起始表"
          :defaultActiveFirstOption true
@@ -284,6 +311,7 @@
        [>AutoComplete
         {:on-change  #(reset! origin-column (-> %))
          :placeholder "选择起始字段名"
+         :defaultValue @selected-column
          :filterOption true
          :defaultActiveFirstOption true
          :dataSource  (-> (get-in @all-table [@origin-table])
@@ -360,7 +388,6 @@
                                         (= (:target_table x) @selected-table) true
                                         (nil? @selected-table)  true))))
 
-               
                :bordered true
                :columns columns
                :size "smaill"
@@ -378,7 +405,7 @@
     ;;
     ))
 
-(defn home-page []
+(defn content [state & _]
   (r/with-let  [all-data (subscribe [:metadata/all])
                 all-relation (subscribe [:metadata/relation.all])
                 page-state (r/atom {})
@@ -389,39 +416,51 @@
 
     [>Layout
      [new-table_name-modal  atom-table_name]
-     [new-column-modal  create-column all-data]
+     [new-column-modal page-state create-column all-data]
      [edit-column-modal  edit-column all-data]
-     [new-relation-modal relation-new all-relation all-data]
-     [>Header]
-
-     [>Layout
-      [>Sider]
-
-      [>Content
-
-       [>Row {:gutter 32}
+     [new-relation-modal page-state  relation-new all-relation all-data]
+     [>Content
+      [>Row {:gutter 32}
         ;; table 自身的维护
-        [>Col {:span 12}
+       [>Col {:span 12}
          ;; 按钮
-         [>Row {:gutter 32}
-          [>Col {:span 6}
-           [table-selector page-state all-data]]
+        [>Row {:gutter 32}
+         [>Col {:span 6}
+          [table-selector page-state all-data]]
 
-          [>Col {:span 6}
-           [>Button {:on-click #(swap! atom-table_name assoc :visible true)}
-            "添加新表名"]]
-          [>Col {:span 6}
-           [>Button {:on-click #(swap! create-column assoc :visible true)}
-            "添加新字段"]]]
-         [fields-table-component  page-state all-data]]
+         [>Col {:span 6}
+          [>Button {:on-click #(swap! atom-table_name assoc :visible true)}
+           "添加新表名"]]
+         [>Col {:span 6}
+          [>Button {:on-click #(swap! create-column assoc :visible true)}
+           "添加新字段"]]]
+        [fields-table-component  page-state all-data]]
 
         ;; table关系的维护
 
-        [>Col {:span 12}
-         [>Button {:on-click #(swap! relation-new assoc :visible true)}
-          "添加新字段"]
-         [relation-table-component page-state all-relation]]]]]
+       [>Col {:span 12}
+       ;; [>Button {:on-click #(swap! relation-new assoc :visible true)}
+       ;;  "添加新关系"]
+        [relation-table-component page-state all-relation]]]]]
 
-     [>Footer]]
     ;;
     ))
+
+(defn home-page [state & _]
+  (r/with-let [active (subscribe [:active-page])
+               page-state (subscribe [:current-page-state])]
+
+    [:> js/antd.Layout
+     [hpc/head state
+      [hpc/nav state]]
+     [:> js/antd.Layout {:style {:padding "24px"}}
+      [hpc/side-bar state]
+
+      [:> js/antd.Layout.Content {:style {:background "#fff"
+                                          :padding 24
+                                          :margin 0
+                                          :minHeight 280}}
+       [content]]]
+     [hpc/foot state]]))
+
+

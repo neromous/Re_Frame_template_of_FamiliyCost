@@ -21,8 +21,7 @@
  (fn [all-meta  [_  model-key]]
    (let [model (get model-register model-key)
          table_name (get model :table_name)]
-     (->> (get-in all-meta [table_name])
-          ))))
+     (->> (get-in all-meta [table_name])))))
 
 (reg-sub
  :resource/view.table-columns
@@ -30,7 +29,7 @@
  (fn [all-meta  [_  model-key]]
    (let [model (get model-register model-key)
          table_name (get model :table_name)]
-     (-> (get-in all-meta [table_name]) 
+     (-> (get-in all-meta [table_name])
          vals
          (->>
           (map (fn [x] {:key (:column_name x)
@@ -66,6 +65,14 @@
          data-path (get model :data-path)]
      (->>  (get-in db data-path)
            (filter  #(query-filter/is-part-of-query? % query))))))
+
+(reg-sub
+ :resource/find_by-order_detail_id
+ (fn [db [_ model-key id]]
+   (let [model (get model-register model-key)
+         data-path (get model :data-path)]
+     (->>  (get-in db data-path)
+           (filter  #(= (:order_detail_id  %)  id))))))
 
 (reg-sub
  :resource/unique

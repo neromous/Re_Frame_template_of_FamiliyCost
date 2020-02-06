@@ -33,11 +33,14 @@
                               :order_detail_weight
                               ;;:company_id
                               :order_time
-                              :finish_time
-                              ])  all-detail)
+                              :finish_time])  all-detail)
        set)))
 
-
+(reg-sub
+ :sell-order/by-order_detail_id
+ :<- [:sell-order/all]
+ (fn [all-data [_ id]]
+   (-> (filter #(= (:order_detail_id %)  id)  all-data))))
 
 (reg-sub
  :sell-order/view.index-page
@@ -46,10 +49,9 @@
  :<- [:current-page-state]
  (fn [[all-data active-page current-page-state] [_]]
    (let [order_detail_id (get current-page-state :order_detail_id)]
-     (filter  #(query-filter/has-kv? % :order_detail_id order_detail_id )  all-data )
+     (filter  #(query-filter/has-kv? % :order_detail_id order_detail_id)  all-data)
      ;;
      )))
-
 
 (reg-sub
  :sell-order/all.count_orders
@@ -65,8 +67,7 @@
        (->> (map #(get %  :tax_money))
             ;;(map utils/round-number)
             (apply +)
-            utils/round-number
-            ))))
+            utils/round-number))))
 
 (reg-sub
  :sell-order/all.order_detail_weight
@@ -76,15 +77,14 @@
        (->> (map #(get %  :order_detail_weight))
             ;;(map utils/round-number)
             (map js/parseInt)
-            (apply +)
-            ))))
+            (apply +)))))
 (reg-sub
  :sell-order/all.job_order_weight
  :<- [:product-order/all]
  (fn [all-order [_]]
    (-> all-order
        (->> (map #(get %  :job_order_weight))
-            (filter #(-> % nil? not)  )
+            (filter #(-> % nil? not))
             (map js/parseInt)
             (apply +)
             ;;(map utils/round-number)
@@ -96,12 +96,10 @@
  (fn [all-order [_]]
    (-> all-order
        (->> (map #(get %  :flow_plan_release))
-            (filter #(-> % nil? not)  )
+            (filter #(-> % nil? not))
             ;;(map utils/round-number)
             (map js/parseInt)
-            (apply +)
-
-            ))))
+            (apply +)))))
 
 (reg-sub
  :sell-order/all.flow_final_weight
@@ -110,11 +108,10 @@
    (-> all-order
        (->> (map #(get %  :flow_final_weight))
             ;;(map utils/round-number)
-            (filter #(-> % nil? not)  )
-            (filter #(not= % "")  )
+            (filter #(-> % nil? not))
+            (filter #(not= % ""))
             (map js/parseInt)
-            (apply +)
-            ))))
+            (apply +)))))
 
 
 ;; 泰安公司相关
@@ -150,15 +147,14 @@
        (->> (map #(get %  :order_detail_weight))
             ;;(map utils/round-number)
             (map js/parseInt)
-            (apply +)
-            ))))
+            (apply +)))))
 (reg-sub
  :sell-order/tai_an.job_order_weight
  :<- [:product-order/tai_an]
  (fn [all-order [_]]
    (-> all-order
        (->> (map #(get %  :job_order_weight))
-            (filter #(-> % nil? not)  )
+            (filter #(-> % nil? not))
             (map js/parseInt)
             (apply +)
 
@@ -171,13 +167,10 @@
  (fn [all-order [_]]
    (-> all-order
        (->> (map #(get %  :flow_plan_release))
-            (filter #(-> % nil? not)  )
+            (filter #(-> % nil? not))
             ;;(map utils/round-number)
             (map js/parseInt)
-            (apply +)
-
-            ))))
-
+            (apply +)))))
 
 (reg-sub
  :sell-order/tai_an.flow_final_weight
@@ -186,13 +179,13 @@
    (-> all-order
        (->> (map #(get %  :flow_final_weight))
             ;;(map utils/round-number)
-            (filter #(-> % nil? not)  )
-            (filter #(not= % "")  )
+            (filter #(-> % nil? not))
+            (filter #(not= % ""))
             (map js/parseInt)
-            (apply +)
-            ))))
+            (apply +)))))
 
 ;; 新泰公司相关
+
 
 (reg-sub
  :sell-order/xin_tai
@@ -216,7 +209,6 @@
             (apply +)
             utils/round-number))))
 
-
 (reg-sub
  :sell-order/xin_tai.order_detail_weight
  :<- [:sell-order/xin_tai]
@@ -225,15 +217,14 @@
        (->> (map #(get %  :order_detail_weight))
             ;;(map utils/round-number)
             (map js/parseInt)
-            (apply +)
-            ))))
+            (apply +)))))
 (reg-sub
  :sell-order/xin_tai.job_order_weight
  :<- [:product-order/xin_tai]
  (fn [all-order [_]]
    (-> all-order
        (->> (map #(get %  :job_order_weight))
-            (filter #(-> % nil? not)  )
+            (filter #(-> % nil? not))
             (map js/parseInt)
             (apply +)
 
@@ -246,13 +237,10 @@
  (fn [all-order [_]]
    (-> all-order
        (->> (map #(get %  :flow_plan_release))
-            (filter #(-> % nil? not)  )
+            (filter #(-> % nil? not))
             ;;(map utils/round-number)
             (map js/parseInt)
-            (apply +)
-
-            ))))
-
+            (apply +)))))
 
 (reg-sub
  :sell-order/xin_tai.flow_final_weight
@@ -261,11 +249,10 @@
    (-> all-order
        (->> (map #(get %  :flow_final_weight))
             ;;(map utils/round-number)
-            (filter #(-> % nil? not)  )
-            (filter #(not= % "")  )
+            (filter #(-> % nil? not))
+            (filter #(not= % ""))
             (map js/parseInt)
-            (apply +)
-            ))))
+            (apply +)))))
 
 
 

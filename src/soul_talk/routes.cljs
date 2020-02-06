@@ -15,32 +15,54 @@
   (:import [goog History]
            [goog.History EventType]))
 
-
-
-(run-events [ [:metadata/server.query]])
+(run-events [[:metadata/server.query]])
 
 
 (defroute  "/" []
   (run-events
-   [[:set-active-page :home-page]]))
+   [[:set-active-page :home-page]
+    [:resource/server.query :order-track {"limit" 15600}]
+    ]))
 
+(defroute  "/home/index" []
+  (run-events
+   [[:set-active-page :index]
+    [:resource/server.query :energy-oa {}]
+    ]))
+
+(defroute  "/home/index/detail/:id" [id]
+  (run-events
+   [[:set-active-page :index-detail]
+    [:page-state :index-detail :order-detail-id  (int id)]
+
+    [:resource/server.query :order-track {"filters" [["=" "order_detail_id" (int id)]]
+                                          "limit" 15600}]
+    [:resource/server.query :human-resource {"filters" [["=" "order_detail_id" (int id)]]
+                                             "limit" 15600}]
+    [:resource/server.query :energy-oa {"limit" 15600}]
+    [:resource/server.query :machine-resource {"filters" [["=" "order_detail_id" (int id)]]
+                                               "limit" 15600}]
+    [:resource/server.query :material-craft {"filters" [["=" "order_detail_id" (int id)]]
+                                             "limit" 15600}]
+    [:resource/server.query :material-raw {"filters" [["=" "order_detail_id" (int id)]]
+                                           "limit" 15600}]]))
 
 (defroute  "/home/metadata-index" [index-page]
   (run-events
-   [[:set-active-page :metadata-index ]
-    [:metadata/server.query]
-    ]))
+   [[:set-active-page :metadata-index]
+    [:metadata/server.query]]))
 
 
 
-(defroute  "/home/:index-page" [index-page]
-  (run-events
-   [[:set-active-page (keyword index-page)]]))
+;; (defroute  "/home/:index-page" [index-page]
+;;   (run-events
+;;    [[:set-active-page (keyword index-page)]]))
 
-(defroute  "/home/:index-page/:id" [index-page id]
-  (run-events
-   [[:set-active-page  (keyword (str index-page "-detail"))]
-    [:set-views (keyword index-page) :id  id]]))
+;; (defroute  "/home/:index-page/:id" [index-page id]
+;;   (run-events
+;;    [[:set-active-page  (keyword (str index-page "-detail"))]
+;;     [:set-views (keyword index-page) :id  id]]))
+
 
 (defroute  "/admin/models/:model" [model]
   (run-events

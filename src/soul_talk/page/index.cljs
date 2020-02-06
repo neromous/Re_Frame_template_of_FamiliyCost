@@ -2,7 +2,7 @@
   (:require
    [reagent.core :as r]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
-   [soul-talk.components.global_components :as gbc]
+   [soul-talk.components.home-page :as gbc]
    [soul-talk.utils :as utils]
    ))
 
@@ -282,7 +282,7 @@
       [:> js/antd.Col {:span 6} "dd"]
       [:> js/antd.Col  {:span 6}  "dd"]]]))
 
-(defn cost-content []
+(defn cost-content [state]
   (r/with-let []
     [:> js/antd.Layout.Content
      [:> js/antd.Row {:gutter 16}
@@ -293,38 +293,23 @@
        [detail-board]]
       [:> js/antd.Col {:span 5}
        [cost-dashboard]
-
        ;;
        ]]]))
 
-
-
-(defn home-page []
+(defn home-page [state]
   (r/with-let [active (subscribe [:active-page])]
     (fn []
       [:> js/antd.Layout
-       [gbc/head [gbc/nav ]]
+       [gbc/head state  [gbc/nav  state ]]
        [:> js/antd.Layout {:style {:padding "24px"}}
-        [side-bar ]
-
+        [side-bar state]
+        
         [:> js/antd.Layout.Content {:style {:background "#fff"
                                             :padding 24
                                             :margin 0
                                             :minHeight 280}}
-         [cost-content]]]
-       [gbc/foot  ]])))
+         [cost-content state ]]]
+       [gbc/foot state ]])))
 
-
-
-
-;; (defn home-page []
-;;   (r/with-let [active (subscribe [:active])]
-;;     (layout/layout
-;;      gbc/head
-;;      gbc/nav
-;;      side-bar
-;;      ;;layout/content
-;;      cost-content
-;;      gbc/foot)))
 
 

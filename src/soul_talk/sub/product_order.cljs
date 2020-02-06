@@ -31,7 +31,11 @@
                               :order_detail_weight
                               :job_order_weight])  all-detail)
        set)))
-
+(reg-sub
+ :product-order/by-order_detail_id
+ :<- [:product-order/all]
+ (fn [all-data [_ id]]
+   (-> (filter #(= (:order_detail_id %)  id)  all-data))))
 
 (reg-sub
  :product-order/view.index-page
@@ -40,15 +44,9 @@
  :<- [:current-page-state]
  (fn [[all-data active-page current-page-state] [_]]
    (let [order_detail_id (get current-page-state :order_detail_id)]
-     (filter  #(query-filter/has-kv? % :order_detail_id order_detail_id )  all-data )
+     (filter  #(query-filter/has-kv? % :order_detail_id order_detail_id)  all-data)
      ;;
      )))
-
-
-
-
-
-
 
 ;; 泰安公司相关
 (reg-sub

@@ -12,7 +12,7 @@
  :page-state
  (fn [db [_ & args]]
    (let []
-     (get-in db  (concat  [:page-state]  args)))))
+     (get-in db  (concat  [:views :page-state]  args)))))
 
 (reg-sub
  :current-page-state

@@ -20,9 +20,14 @@
          view-path (get model :view-path)
          data-state-path (concat view-path [:data-state])
          dataset  (get-in response [:result])
-         state  (get response :query)]
+         state  (get response :query)
+         add-data (fn [origin target]
+                    (let [origin (set origin)
+                          target (set target)]
+                      (into origin target)))]
+
      (-> db
-         (assoc-in  data-path   dataset)
+         (update-in  data-path add-data  dataset)
          (assoc-in  data-state-path state)))))
 
 (reg-event-fx
@@ -35,4 +40,5 @@
                             :format (json-request-format)
                             :response-format :json}
            :success-event [:resource/dto model-key]}}))
+
 

@@ -2,11 +2,12 @@
   (:require
    [reagent.core :as r]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
-   [soul-talk.components.global_components :as gbc]
+   [soul-talk.components.home-page :as home-page-component]
    [soul-talk.utils :as utils]))
 
-(defn machine-table []
-  (r/with-let [machines  (subscribe [:machine-resource/view.index-page])]
+(defn machine-table [id]
+  (r/with-let [machines  (subscribe
+                          [:resource/find_by-order_detail_id  :machine-resource id])]
     (let [fields  {:crock_number "流水线号"
                    :machine_number "设备编号"
                    :process "工序名称"
@@ -19,11 +20,10 @@
 
       [:> js/antd.Table {:columns (clj->js columns)
                          :dataSource @machines
-                         :pagination {:defaultPageSize	5}
-                         }])))
+                         :pagination {:defaultPageSize	5}}])))
 
-(defn human-table []
-  (r/with-let [humans  (subscribe [:human-resource/view.index-page])]
+(defn human-table [id]
+  (r/with-let [humans  (subscribe [:resource/find_by-order_detail_id :human-resource id])]
     (let [fields   {:order_detail_id "编号"
                     :flow_id "flow_id"
                     :worker_group_number "班组号"
@@ -75,18 +75,20 @@
                  {:dataIndex "flow_plan_release" :key "flow_plan_release" :title "计划投料"}
                  {:dataIndex "flow_final_weight" :key "flow_final_weight" :title "实际产出"}]]
 
-    [:> js/antd.Table {:columns (clj->js columns)
-                       :dataSource item
-                       :size "small"
-                       :pagination {:defaultPageSize	5}
-                       :bordered true}]))
+    [:div
+     [:> js/antd.Table {:columns (clj->js columns)
+                        :dataSource item
+                        :size "small"
+                        :pagination {:defaultPageSize	5}
+                        :bordered true}]]))
 
-(defn task-consum-description []
-  (r/with-let [material_raw (subscribe [:material-raw/view.index-page])]
+(defn task-consum-description [id]
+  (r/with-let [material_raw
+               (fn [id]
+                 (subscribe
+                  [:resource/find_by-order_detail_id :material-raw id]))]
     (let [material-consum (->>
-                           @material_raw
-                           ;;vals
-                           ;;(apply concat)
+                           @(material_raw id)
                            (map :ql_weight)
                            (apply +)
                            utils/round-number)]
@@ -105,8 +107,9 @@
         [:> js/antd.Descriptions.Item  {:label "使用机台数"}  "ddd"]
         [:> js/antd.Descriptions.Item  {:label "原纱消耗"}  "ddd"]]])))
 
-(defn task-craft-table []
-  (r/with-let [crafts  (subscribe [:material-craft/view.index-page])
+(defn task-craft-table [id]
+  (r/with-let [crafts  (subscribe
+                        [:resource/find_by-order_detail_id :material-craft id])
                columns  [{:dataIndex  "dyelot_number" :key "dyelot_number" :title "缸号"}
                          {:dataIndex  "dye_zh_name" :key "dye_zh_name" :title "物料名称"}
                          {:dataIndex  "goods_id" :key "goods_id" :title "物料编号"}
@@ -119,57 +122,53 @@
                        :pagination {:defaultPageSize	5}
                        :bordered true}]))
 
-(defn content []
+(defn content [state & _]
 
-  (r/with-let [orders  (subscribe [:sell-order/view.index-page])
-               tasks (subscribe [:product-task/view.index-page])
-               material (subscribe [:material-raw/view.index-page])]
-    (let [item   (or (first @orders)  {})
-          tasks @tasks]
-      [:div
-       [:> js/antd.Row {:gutter 24}
-        [:> js/antd.Col {:span 16}
-         [order-description item]
+  (r/with-let [id (subscribe [:page-state :index-detail :order-detail-id])
+               orders  (fn [id] (subscribe [:sell-order/by-order_detail_id @id]))
+               tasks  (fn [id] (subscribe [:product-task/by-order_detail_id @id]))]
 
-         [:> js/antd.Divider]
-         [:h3 "生产订单分拆情况"]
-         [task-description-table  tasks]
+    [:div
+     [:> js/antd.Row {:gutter 24}
+
+      [:> js/antd.Col {:span 16}
+       [order-description  (first @(orders  id))]
+
+       [:> js/antd.Divider]
+       [:h3 "生产订单分拆情况"]
+       [task-description-table  @(tasks id)]
 
          ;;
-         [:> js/antd.Divider]
-         [:h3 "人力状况"]
-         [human-table]
+       [:> js/antd.Divider]
+       [:h3 "人力状况"]
+       [human-table @id]
          ;;
-         [:> js/antd.Divider]
-         [:h3 "机械状况"]
-         [machine-table]
+       [:> js/antd.Divider]
+       [:h3 "机械状况"]
+       [machine-table @id]
          ;;
-         [:> js/antd.Divider]
-         [:h3 "染料用量情况"]
-         [task-craft-table]
+       [:> js/antd.Divider]
+       [:h3 "染料用量情况"]
+       [task-craft-table @id]]
+      [:> js/antd.Col {:span 8}
+       [task-consum-description @id]]]]))
 
-
-
-         ]
-
-        [:> js/antd.Col {:span 8}
-         [task-consum-description]]]])))
-
-(defn home-page []
+(defn home-page [state & _]
   (r/with-let [active (subscribe [:active-page])
                page-state (subscribe [:current-page-state])]
-    (fn []
-      (let []
 
-        [:> js/antd.Layout
-         [gbc/head [gbc/nav]]
-         [:> js/antd.Layout {:style {:padding "24px"}}
-          [gbc/side-bar]
+    [:> js/antd.Layout
+     [home-page-component/head state
+      [home-page-component/nav state]]
+     [:> js/antd.Layout {:style {:padding "24px"}}
 
-          [:> js/antd.Layout.Content {:style {:background "#fff"
-                                              :padding 24
-                                              :margin 0
-                                              :minHeight 280}}
-           [content]]]
-         [gbc/foot]]))))
+      [home-page-component/side-bar state]
+
+      [:> js/antd.Layout.Content {:style {:background "#fff"
+                                          :padding 24
+                                          :margin 0
+                                          :minHeight 280}}
+
+       [content state]]]
+     [home-page-component/foot state]]))
 
