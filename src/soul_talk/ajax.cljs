@@ -9,8 +9,7 @@
         :headers
         #(merge
            %
-           {;:Accept        "application/transit+json"
-            :Accept        "application/json"
+           {:Accept        "application/transit+json"
             :Authorization (str "Token " @token)
             :X-CSRF-Token  @(rf/subscribe [:csrf-token])})))))
 

@@ -27,6 +27,7 @@
                                     (dispatch [:unset-loading]))}
                   ajax-map))))
 
+
 (reg-fx
   :navigate
   (fn [url]
@@ -56,5 +57,3 @@
   :clean-auth-token
   (fn []
     (storage/remove-item! storage/auth-token-key)))
-
-

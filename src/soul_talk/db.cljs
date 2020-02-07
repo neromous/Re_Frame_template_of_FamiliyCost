@@ -1,22 +1,11 @@
-(ns soul-talk.db
-  (:require  [reagent.core :as r]
-
-             ;;
-             ))
-
-(goog-define api-uri "http://localhost:8000/api/v1")
+(ns soul-talk.db)
 
 (def default-db
-  (->
-   {:active {}
-    :breadcrumb ["Home"]
-    :login-events []}))
-
-(def Env (r/atom  (sorted-map)))
-
-(defonce unique-work (r/atom 0))
-
-(defn unique-id []
-  (swap! unique-work inc))
+  {:active-page :home
+   :pagination {:page     1
+               :pre-page 6}
+   :breadcrumb ["Home"]
+   :login-events []})
 
 
+(goog-define api-uri "http://localhost:3000/api")

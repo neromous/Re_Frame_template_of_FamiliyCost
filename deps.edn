@@ -12,24 +12,16 @@
            bouncer {:mvn/version "1.0.1"}
            com.taoensso/timbre {:mvn/version "4.10.0"}
            ;cljsjs/antd {:mvn/version "3.19.0-0"}
-           cider/cider-nrepl {:mvn/version  "0.21.1"}
-           org.clojure/tools.nrepl {:mvn/version "0.2.13"}
-           com.bhauman/figwheel-main {:mvn/version "0.2.0"}
-           com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
-           cljsjs/react-beautiful-dnd {:mvn/version  "10.0.4-0"}
-           cljsjs/d3 {:mvn/version "5.12.0-0"}
-           cljsjs/moment {:mvn/version "2.24.0-0"}
-           cljsjs/chartjs {:mvn/version "2.9.1-0"}
-           re-frisk {:mvn/version "0.5.4.1"}}
+           }
 
- :paths   ["src" "src-cljc" "resources" "target"  "env/dev"]
- :aliases {:fig {:extra-deps {}
+ :paths   ["src" "src-cljc" "resources"]
+
+ :aliases {:fig {:extra-deps {com.bhauman/figwheel-main {:mvn/version "0.2.0"}
+                              com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
+                              re-frisk {:mvn/version "0.5.4.1"} }
                  :extra-paths ["target"]}
            :dev {:main-opts ["-m" "figwheel.main" "-b" "dev" "-r"]
                  :extra-paths ["env/dev"]}
            :test {:extra-paths ["test"]}
            :prod {:main-opts ["-m" "figwheel.main" "-bo" "prod"]
-                  :extra-paths ["env/prod"]}}
- :plugins {cider/cider-nrepl {:mvn/version  "0.21.1"}}
-
- }
+                  :extra-paths ["env/prod"]}}}

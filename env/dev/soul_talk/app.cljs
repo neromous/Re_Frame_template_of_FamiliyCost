@@ -1,8 +1,7 @@
 (ns soul-talk.app
   (:require [soul-talk.core :as core]
             [devtools.core :as devtools]
-            [re-frame.core :as rf]
-            ))
+            [re-frame.core :as rf]))
 
 (enable-console-print!)
 
@@ -13,7 +12,5 @@
 
 (rf/clear-subscription-cache!)
 (goog-define api-uri "http://localhost:3000/api")
- 
 (core/init!)
-
 

@@ -1,98 +1,164 @@
 (ns soul-talk.routes
-  (:require
-   [reagent.core :as r]
-   [goog.events :as events]
-   [clojure.string :as str]
-   [secretary.core :as secretary :refer-macros [defroute]]
-   [re-frame.core :refer [dispatch dispatch-sync subscribe]]
-   soul-talk.resources
-   soul-talk.subs
-   soul-talk.handlers
-   [accountant.core :as accountant]
-   [soul-talk.util.route-utils :refer [run-events run-events-admin logged-in? navigate!]]
-   [soul-talk.util.query-filter :as query-filter])
-
+  (:require [goog.events :as events]
+            [secretary.core :as secretary :refer-macros [defroute]]
+            [accountant.core :as accountant]
+            [reagent.core :as r]
+            [re-frame.core :refer [dispatch dispatch-sync subscribe]])
   (:import [goog History]
            [goog.History EventType]))
 
-(run-events [[:metadata/server.query]])
+
+;; 判断是否登录
+(defn logged-in? []
+  @(subscribe [:user]))
+
+(defn context-url [url]
+  (str url))
+
+(defn href [url]
+  {:href (str url)})
+
+(defn navigate! [url]
+  (accountant/navigate! (context-url url)))
+
+;; 加载多个事件
+(defn run-events
+  [events]
+  (doseq [event events]
+    (dispatch event)))
+
+(defn run-events-admin
+  [events]
+  (doseq [event events]
+    (if (logged-in?)
+      (dispatch event)
+      (dispatch [:add-login-event event]))))
 
 
-(defroute  "/" []
+(defn home-page-events [& events]
+  (.scrollTo js/window 0 0)
+  (run-events (into
+                [[:load-categories]
+                 [:load-tags]
+                 [:set-active-page :home]]
+                events)))
+
+;; 首页
+(defroute "/" []
   (run-events
-   [[:set-active-page :home-page]
-    [:resource/server.query :order-track {"limit" 15600}]
-    ]))
-
-(defroute  "/home/index" []
-  (run-events
-   [[:set-active-page :index]
-    [:resource/server.query :energy-oa {}]
-    ]))
-
-(defroute  "/home/index/detail/:id" [id]
-  (run-events
-   [[:set-active-page :index-detail]
-    [:page-state :index-detail :order-detail-id  (int id)]
-
-    [:resource/server.query :order-track {"filters" [["=" "order_detail_id" (int id)]]
-                                          "limit" 15600}]
-    [:resource/server.query :human-resource {"filters" [["=" "order_detail_id" (int id)]]
-                                             "limit" 15600}]
-    [:resource/server.query :energy-oa {"limit" 15600}]
-    [:resource/server.query :machine-resource {"filters" [["=" "order_detail_id" (int id)]]
-                                               "limit" 15600}]
-    [:resource/server.query :material-craft {"filters" [["=" "order_detail_id" (int id)]]
-                                             "limit" 15600}]
-    [:resource/server.query :material-raw {"filters" [["=" "order_detail_id" (int id)]]
-                                           "limit" 15600}]]))
-
-(defroute  "/home/metadata-index" [index-page]
-  (run-events
-   [[:set-active-page :metadata-index]
-    [:metadata/server.query]]))
+    [[:load-posts {:page 1 :pre-page 3}]
+     [:set-active-page :home]]))
 
 
 
-;; (defroute  "/home/:index-page" [index-page]
-;;   (run-events
-;;    [[:set-active-page (keyword index-page)]]))
+(defroute "/blog" []
+  (let [pagination {:page     1
+                    :pre-page 20}]
+    (run-events
+      [[:load-posts pagination]
+       [:load-posts-archives]
+       [:set-active-page :blog]])))
 
-;; (defroute  "/home/:index-page/:id" [index-page id]
-;;   (run-events
-;;    [[:set-active-page  (keyword (str index-page "-detail"))]
-;;     [:set-views (keyword index-page) :id  id]]))
+(defroute "/blog/archives/:year/:month" [year month]
+  (run-events [[:load-posts-archives-year-month year month]
+               [:load-posts-archives]
+               [:set-active-page :blog/archives]]))
+
+(defroute "/login" []
+  (run-events [[:set-active-page :login]]))
+
+(defroute "/register" []
+  (run-events [[:set-active-page :register]]))
+
+;; 无登录下把事件加入登录事件
+(defn admin-page-events [& events]
+  (.scrollTo js/window 0 0)
+  (run-events-admin (into
+                      [[:set-active-page :admin]]
+                      events)))
+
+;; 后台管理
+(defroute admin "/admin" []
+  (run-events [[:set-breadcrumb ["面板"]]
+               [:set-active-page :admin]]))
+
+(defroute "/change-pass" []
+  (run-events [[:set-breadcrumb ["个人管理" "修改密码"]]
+               [:set-active-page :change-pass]]))
+
+(defroute "/user-profile" []
+  (run-events [[:set-breadcrumb ["个人管理" "个人信息"]]
+               [:set-active-page :user-profile]]))
+
+(defroute "/users" []
+  (run-events [[:set-breadcrumb ["用户" "清单"]]
+               [:admin/load-users]
+               [:set-active-page :users]]))
+
+(defroute "/categories" []
+  (run-events [[:set-breadcrumb ["分类" "清单"]]
+               [:load-categories]
+               [:set-active-page :categories]]))
+
+(defroute "/category/edit/" []
+  (run-events [[:close-category]
+               [:set-breadcrumb ["分类" "新增"]]
+               [:set-active-page :categories-add]]))
+
+(defroute "/category/edit/:id" [id]
+  (run-events [[:close-category]
+               [:set-breadcrumb ["分类" "编辑"]]
+               [:load-category id]
+               [:set-active-page :categories-edit]]))
+
+(defroute "/category/view/:id" [id]
+  (run-events [[:load-category id]
+               [:set-active-page :category-view]]))
 
 
-(defroute  "/admin/models/:model" [model]
-  (run-events
-   [[:set-active-page  :admin-page]
-    [:resource/server.query (keyword model) {"limit" 1000}]
-    [:set-views :admin-active-model (keyword model)]]))
+(defroute "/posts" []
+  (run-events [[:admin/load-posts]
+               [:set-breadcrumb ["文章" "列表"]]
+               [:set-active-page :posts]]))
 
-(defroute  "/admin/models/:model/:id" [model id]
-  (run-events
-   [[:set-active-page  :admin-detail-page]
-    [:set-views :admin-active-model (keyword model)]
-    [:set-views (keyword model) :id id]]))
 
-(defroute "*" [])
+
+(defroute "/posts/add" []
+  (r/with-let [user (subscribe [:user])]
+    (run-events [[:load-categories]
+                 [:load-tags]
+                 [:set-active-page :posts/add]])))
+
+(defroute "/posts/:id/edit" [id]
+  (if-not (or (logged-in?)
+            (nil? @(subscribe [:post])))
+    (navigate! "/login")
+    (run-events [[:load-post id]
+                 [:load-categories]
+                 [:set-active-page :posts/edit]])))
+
+(defroute "/posts/:id" [id]
+  (run-events [[:load-categories]
+               [:load-post id]
+               [:set-active-page :posts/view]]))
+
+(defroute "*" []
+  )
 
 (secretary/set-config! :prefix "#")
 
 ;; 使用浏览器可以使用前进后退 历史操作
 (defn hook-browser-navigation! []
   (doto
-   (History.)
+    (History.)
     (events/listen EventType.NAVIGATE #(secretary/dispatch! (.-token %)))
     (.setEnabled true))
   (accountant/configure-navigation!
-   {:nav-handler
-    (fn [path]
-      (secretary/dispatch! path))
-    :path-exists?
-    (fn [path]
-      (secretary/locate-route path))
-    :reload-same-path? true})
+    {:nav-handler
+                        (fn [path]
+                          (secretary/dispatch! path))
+     :path-exists?
+                        (fn [path]
+                          (secretary/locate-route path))
+     :reload-same-path? true})
   (accountant/dispatch-current!))
-
