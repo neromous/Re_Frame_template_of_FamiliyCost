@@ -29,7 +29,7 @@
 (defroute  "/home/index/detail/:id" [id]
   (run-events
    [[:set-active-page :index-detail]
-    [:page-state :index-detail :order-detail-id  (int id)]
+    [:page-state.set :index-detail :order-detail-id  (int id)]
 
     [:resource/server.query :order-track
      {"filters" [["=" "order_detail_id" (int id)]]

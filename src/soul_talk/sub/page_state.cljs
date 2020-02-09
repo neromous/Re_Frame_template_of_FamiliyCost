@@ -6,30 +6,36 @@
                           reg-event-db
                           reg-event-fx
                           subscribe reg-sub]]
+   [soul-talk.sub.funcs.path :as path]
    [soul-talk.util.query-filter :as query-filter]))
 
 (reg-sub
  :active-page
  (fn [db _]
-   (get-in db [:views  :active-page])))
+   (get db  path/active-page)))
 
 (reg-sub
- :views
+ :page-state.all
  (fn [db [_]]
-   (get db :views)))
+   (get-in db path/page-prefix)))
 
 (reg-sub
  :page-state
- (fn [db [_ & args]]
-   (let []
-     (get-in db  (concat  [:views :page-state]  args)))))
+ (fn [db [_ page-key]]
+   (get-in db (path/page->path page-key))))
 
 (reg-sub
- :current-page-state
+ :page-state.get
+ (fn [db [_ page-key k]]
+   (get-in db (path/page->state page-key k))))
+
+(reg-sub
+ :get-view
+ :<- [:page-state.all]
  :<- [:active-page]
- :<- [:page-state]
- (fn [[current-page page-state] [_]]
-   (get page-state current-page)))
+ (fn [[all-state active-page] _]
+   {:active-page  active-page
+    :page-state   (get all-state active-page  )}))
 
 
 

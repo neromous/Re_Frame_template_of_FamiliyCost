@@ -34,7 +34,7 @@
 
 (defn main-page []
   (r/with-let [ready? (subscribe [:initialised?])
-               view-state (subscribe [:views])]
+               view-state (subscribe [:get-view])]
     (when @ready?
       (fn []
         [:div

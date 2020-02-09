@@ -26,7 +26,7 @@
          (filter  #(query-filter/is-part-of-query? % query)))))
 
 (defn  find-id> [db [_ model-key id]]
-  (let [path (path/->id  model-key id)]
+  (let [path (path/->item-id  model-key id)]
     (->> (get-in db (conj path id))
          vals
          (filter  #(query-filter/is-part-of-query? %  {:id id})))))
@@ -39,6 +39,7 @@
   (let [view-state  (path/->view-state model-key state-key)]
     (get-in db view-state)))
 
+;; 中间件所用的
 (defn replace> [db [_ model-key response]]
   (let [data-path (path/->data-path model-key)
         view-path (path/->view-path model-key)
@@ -46,14 +47,28 @@
         dataset  (get-in response [:dataset])
         dataset (-> (group-by :id dataset)
                     ((fn [x] (zipmap (keys x)  (->> x vals   (map first))))))
-        pagination  (get response :pagination)
-       ]
-
+        pagination  (get response :pagination)]
     (-> db
         (assoc-in data-path  dataset)
         (assoc-in pagination-path pagination))))
 
+(defn add> [db [_ model-key response]]
+  (let [data-path (path/->data-path model-key)
+        view-path (path/->view-path model-key)
+        data  (first (get-in response [:dataset]))
+        id (:id data)]
+    (assoc-in  db (conj data-path id)  data)))
 
+(defn del>  [db [_ model-key response]]
+  (let [data-path (path/->data-path model-key)
+        view-path (path/->view-path model-key)
+        id   (get-in response [:dataset])]
+    (update-in  db data-path  dissoc id)))
 
+(defn update>  [db [_ model-key response]]
+  (let [data (get-in response [:dataset])
+        id (:id data)
+        item-path (path/->item-id model-key id)]
+    (assoc-in  db item-path data)))
 
 

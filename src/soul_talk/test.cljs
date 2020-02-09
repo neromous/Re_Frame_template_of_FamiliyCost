@@ -11,8 +11,23 @@
    [soul-talk.util.route-utils :refer [run-events run-events-admin logged-in? navigate!]]
    [soul-talk.util.query-filter :as query-filter]))
 
+(dispatch [:set-active-page :test])
+(dispatch [:page-state.set  :test :haha "dd"  ])
+
+(subscribe [:page-state.all])
+(subscribe [:get-view])
+
+@(subscribe [:resource-api/raw :todos])
+
 (dispatch [:resource-api/server.pull :todos {}])
-(subscribe [:resource-api/raw :todos])
+(dispatch [:resource-api/server.add :todos {:title "hahaha"}])
+(subscribe [:resource-api/all :todos])
+(dispatch [:resource-api/server.del :todos 2])
+(dispatch [:resource-api/server.update :todos {:id 4 :title "再次测试"}])
+
+
+
+
 
 ;; (dispatch [:resource-api/server.add :todos {:title "dasdf"}])
 

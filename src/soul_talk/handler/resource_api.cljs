@@ -7,33 +7,31 @@
                                    reg-event-fx
                                    subscribe
                                    reg-sub]]
+            [soul-talk.sub.funcs.path :as path]
             [soul-talk.util.query-filter :as query-filter]))
 
 (reg-event-db
  :resource-api/replace
  (fn [db [_ model-key data-vec]]
-   (let [model (get model-register model-key)
-         data-path (get model :data-path)]
+   (let [data-path (path/->data-path model-key)]
      (assoc-in db data-path  data-vec))))
 
 (reg-event-db
  :resource-api/new
  (fn [db [_ model-key form]]
-   (let [model (get model-register model-key)
-         data-path (get model :data-path)
+   (let [data-path (path/->data-path model-key)
          id (:id form)]
      (assoc-in db (conj data-path id) form))))
 
 (reg-event-db
  :resource-api/delete
  (fn [db [_ model-key id]]
-   (let [model (get model-register model-key)
-         data-path (get model :data-path)]
+   (let [data-path (path/->data-path model-key)]
      (update-in db data-path dissoc id))))
 
 (reg-event-db
  :resource-api/update
  (fn [db [_ model-key id update-form]]
-   (let [model (get model-register model-key)
+   (let [data-path (path/->data-path model-key)
          all-data (get-in db data-path)]
      (update-in db (conj data-path id)   merge update-form))))

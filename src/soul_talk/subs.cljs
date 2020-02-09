@@ -1,6 +1,7 @@
 (ns soul-talk.subs
   (:require [re-frame.core :refer [reg-sub]]
             soul-talk.sub.resource
+            soul-talk.sub.resource-api
             soul-talk.sub.page-state
             soul-talk.sub.full-order
             soul-talk.sub.sell-order
@@ -12,10 +13,7 @@
 ;; 获取当时全部数据
 
 
-(reg-sub
- :db-state
- (fn [db _]
-   db))
+(reg-sub :db-state (fn [db _]   db))
 
 (reg-sub
  :initialised?
@@ -28,7 +26,6 @@
 
 (defn query [db [event-id]]
   (event-id db))
-
 
 (reg-sub :user query)
 

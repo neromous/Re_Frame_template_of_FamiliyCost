@@ -3,6 +3,7 @@
              [reagent.core :as r]
              [soul-talk.util.route-utils :refer [run-events run-events-admin logged-in? navigate!]]
              [soul-talk.db :refer [model-register]]
+             [soul-talk.sub.funcs.orm :as orm]
              [ajax.core :refer [POST
                                 GET
                                 DELETE
@@ -41,28 +42,8 @@
                             :response-format :json}
            :success-event [:resource/dto model-key]}}))
 
-
 ;;;
-
-
-(reg-event-db
- :resource-api/mdw.replace
- (fn [db [_ model-key response]]
-   (let [model (get model-register model-key)
-         model-name (get model :model-name)
-         data-path (get model :data-path)
-         view-path (get model :view-path)
-         data-state-path (concat view-path [:pagination])
-         dataset  (get-in response [:dataset])
-         dataset (-> (group-by :id dataset)
-                     ((fn [x] (zipmap (keys x)  (->> x vals   (map first))))))
-
-         pagination  (get response :pagination)]
-
-     (-> db
-         (assoc-in  data-path  dataset)
-         (assoc-in  data-state-path pagination)))))
-
+(reg-event-db :resource-api/mdw.replace orm/replace>)
 (reg-event-fx
  :resource-api/server.pull
  (fn [_ [_ model-key query]]
@@ -74,23 +55,8 @@
                             :response-format :json}
            :success-event [:resource-api/mdw.replace model-key]}}))
 
-
-
-
 ;;
-
-
-(reg-event-db
- :resource-api/mdw.add
- (fn [db [_ model-key response]]
-   (let [model (get model-register model-key)
-         model-name (get model :model-name)
-         data-path (get model :data-path)
-         view-path (get model :view-path)
-         data  (first (get-in response [:dataset]))
-         id (:id data)]
-     (assoc-in  db (conj data-path id)  data))))
-
+(reg-event-db :resource-api/mdw.add orm/add>)
 (reg-event-fx
  :resource-api/server.add
  (fn [_ [_ model-key form]]
@@ -101,21 +67,9 @@
                             :format (json-request-format)
                             :response-format :json}
            :success-event [:resource-api/mdw.add model-key]}}))
-
-
 ;;
 
-
-(reg-event-db
- :resource-api/mdw.del
- (fn [db [_ model-key response]]
-   (let [model (get model-register model-key)
-         model-name (get model :model-name)
-         data-path (get model :data-path)
-         id   (get-in response [:dataset])
-         view-path (get model :view-path)]
-     (update-in  db data-path  dissoc id))))
-
+(reg-event-db :resource-api/mdw.del orm/del>)
 (reg-event-fx
  :resource-api/server.del
  (fn [_ [_ model-key id]]
@@ -127,16 +81,7 @@
                             :response-format :json}
            :success-event [:resource-api/mdw.del model-key]}}))
 ;;
-(reg-event-db
- :resource-api/mdw.update
- (fn [db [_ model-key response]]
-   (let [model (get model-register model-key)
-         model-name (get model :model-name)
-         data-path (get model :data-path)
-         item   (get-in response [:dataset])
-         view-path (get model :view-path)]
-     (assoc-in  db (conj data-path id) item))))
-
+(reg-event-db :resource-api/mdw.update orm/update>)
 (reg-event-fx
  :resource-api/server.update
  (fn [_ [_ model-key  {:keys [id] :as item}]]
@@ -146,13 +91,4 @@
                             :keywords? true
                             :format (json-request-format)
                             :response-format :json}
-           :success-event [:resource-api/mdw.del model-key]}}))
-
-
-
-
-
-
-
-
-
+           :success-event [:resource-api/mdw.update model-key]}}))

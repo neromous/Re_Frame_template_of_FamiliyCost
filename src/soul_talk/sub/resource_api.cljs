@@ -10,7 +10,6 @@
             [soul-talk.sub.funcs.orm :as orm]
             [soul-talk.sub.funcs.path :as path]))
 
-
 (reg-sub :resource-api/raw orm/raw>)
 
 (reg-sub :resource-api/all orm/all>)
@@ -42,9 +41,7 @@
                         :dataIndex (:column_name x)
                         :title (or (:view_title x)
                                    (:column_comment x)
-                                   (:column_name x))})))
-         ;;
-         ))))
+                                   (:column_name x))})))))))
 
 (reg-sub
  :resource-api/filter

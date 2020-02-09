@@ -8,12 +8,16 @@
     1 []
     3 []}))
 
+(def value-register
+  {:test {:url ""
+          :data-path [:datas :values :test]}})
+
 (def model-register
   {:material-raw {:url "http://0.0.0.0:3000/cost/material-raw"
                   :model-name "material-raw"
                   :model-key :material-raw
-                  :data-path [:datas  :material-raw]
-                  :view-path [:views  :material-raw]
+                  :data-path [:datas :models :material-raw]
+                  :view-path [:views :models :material-raw]
                   :cache-path [:caches :material-raw]
                   :fields-key  :material-raw
                   :event/server-pull [:resource/server.query :material-raw]
@@ -24,8 +28,8 @@
    :material-craft {:url "http://0.0.0.0:3000/cost/material-craft"
                     :model-name "material-craft"
                     :model-key :material-craft
-                    :data-path [:datas  :material-craft]
-                    :view-path [:views  :material-craft]
+                    :data-path [:datas :models :material-craft]
+                    :view-path [:views :models :material-craft]
                     :cache-path [:caches :material-craft]
                     :fields-key  :material-craft
                     :event/server-pull [:resource/server.query :material-craft]
@@ -36,8 +40,8 @@
    :human-resource {:url "http://0.0.0.0:3000/cost/human"
                     :model-name "human-resource"
                     :model-key :human-resource
-                    :data-path [:datas  :human-resource]
-                    :view-path [:views  :human-resource]
+                    :data-path [:datas :models :human-resource]
+                    :view-path [:views :models :human-resource]
                     :cache-path [:caches :human-resource]
                     :fields-key  :human-resource
                     :event/server-pull [:resource/server.query :human-resource]
@@ -48,8 +52,8 @@
    :energy-oa {:url "http://0.0.0.0:3000/cost/energy/oa_report"
                :model-name "energy-oa"
                :model-key :energy-oa
-               :data-path [:datas  :energy-oa]
-               :view-path [:views  :energy-oa]
+               :data-path [:datas :models :energy-oa]
+               :view-path [:views :models :energy-oa]
                :cache-path [:caches :energy-oa]
                :fields-key  :energy-oa
                :event/server-pull [:resource/server.query :energy-oa]
@@ -60,8 +64,8 @@
    :product-output {:url "http://0.0.0.0:3000/cost/product-output"
                     :model-name "product-output"
                     :model-key :product-output
-                    :data-path [:datas  :product-output]
-                    :view-path [:views  :product-output]
+                    :data-path [:datas :models :product-output]
+                    :view-path [:views :models :product-output]
                     :cache-path [:caches :product-output]
                     :fields-key  :product-output
                     :event/server-pull [:resource/server.query :product-output]
@@ -72,8 +76,8 @@
    :order-track {:url "http://0.0.0.0:3000/cost/order-track"
                  :model-name "order-track"
                  :model-key :order-track
-                 :data-path [:datas  :order-track]
-                 :view-path [:views  :order-track]
+                 :data-path [:datas :models :order-track]
+                 :view-path [:views :models :order-track]
                  :cache-path [:caches :order-track]
                  :fields-key  :order-track
                  :event/server-pull [:resource/server.query :order-track]
@@ -84,8 +88,8 @@
    :machine-resource {:url "http://0.0.0.0:3000/cost/machine"
                       :model-name "machine-resource"
                       :model-key :machine-resource
-                      :data-path [:datas  :machine-resource]
-                      :view-path [:views  :machine-resource]
+                      :data-path [:datas :models :machine-resource]
+                      :view-path [:views :models :machine-resource]
                       :cache-path [:caches :machine-resource]
                       :fields-key  :machine-resource
                       :event/server-pull [:resource/server.query :machine-resource]
@@ -97,8 +101,8 @@
              :model-name "sys_org"
              :table_name "sys_org"
              :model-key :sys_org
-             :data-path [:datas  :sys_org]
-             :view-path [:views  :sys_org]
+             :data-path [:datas :models  :sys_org]
+             :view-path [:views :models :sys_org]
              :cache-path [:caches :sys_org]
              :fields-key  :sys_org
              :event/server-pull [:resource/server.query :sys_org]
@@ -110,8 +114,8 @@
                :model-name "erp_goods"
                :table_name "erp_goods"
                :model-key :erp_goods
-               :data-path [:datas  :erp_goods]
-               :view-path [:views  :erp_goods]
+               :data-path [:datas :models :erp_goods]
+               :view-path [:views :models :erp_goods]
                :cache-path [:caches :erp_goods]
                :fields-key  :erp_goods
                :event/server-pull [:resource/server.query :erp_goods]
@@ -123,8 +127,8 @@
                   :model-name "erp_provider"
                   :table_name "erp_provider"
                   :model-key :erp_provider
-                  :data-path [:datas  :erp_provider]
-                  :view-path [:views  :erp_provider]
+                  :data-path [:datas :models :erp_provider]
+                  :view-path [:views :models :erp_provider]
                   :cache-path [:caches :erp_provider]
                   :fields-key  :erp_provider
                   :event/server-pull [:resource/server.query :erp_provider]
@@ -136,8 +140,8 @@
                   :model-name "erp_customer"
                   :table_name "erp_customer"
                   :model-key :erp_customer
-                  :data-path [:datas  :erp_customer]
-                  :view-path [:views  :erp_customer]
+                  :data-path [:datas :models :erp_customer]
+                  :view-path [:views :models :erp_customer]
                   :cache-path [:caches :erp_customer]
                   :fields-key  :erp_customer
                   :event/server-pull [:resource/server.query :erp_customer]
@@ -149,8 +153,8 @@
            :model-name "todos"
            :table_name "todos"
            :model-key :todos
-           :data-path [:datas  :todos]
-           :view-path [:views  :todos]
+           :data-path [:datas :models :todos]
+           :view-path [:views :models :todos]
            :cache-path [:caches :todos]
            :fields-key  :todos
            :event/server-pull [:resource/server.query :todos]
@@ -160,7 +164,7 @@
    ;;
    })
 
-;;(defonce model-state (r/atom  model-register))
+(defonce model-state (r/atom  model-register))
 
 (def default-db
   {:active {}
