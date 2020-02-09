@@ -22,14 +22,6 @@
  (fn [db _]
    (not (empty? db))))
 
-(reg-sub
- :active-page
- (fn [db _]
-   (get-in db [:views  :active-page])))
-
-;; (reg-sub
-;;  :views
-;;  (fn [db _] (get db :views)))
 
 ;; 权宜之计
 
@@ -37,7 +29,6 @@
 (defn query [db [event-id]]
   (event-id db))
 
-(reg-sub :views query)
 
 (reg-sub :user query)
 

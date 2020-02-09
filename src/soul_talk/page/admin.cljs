@@ -76,7 +76,6 @@
       ;;
       ))]
   ;;
-  ;;
   )
 
 (defn edit-modal [state edit-state column item]

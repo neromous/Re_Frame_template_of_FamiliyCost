@@ -5,7 +5,6 @@
    [clojure.string :as str]
    [secretary.core :as secretary :refer-macros [defroute]]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
-   soul-talk.resources
    soul-talk.subs
    soul-talk.handlers
    [accountant.core :as accountant]
@@ -17,35 +16,37 @@
 
 (run-events [[:metadata/server.query]])
 
-
 (defroute  "/" []
   (run-events
    [[:set-active-page :home-page]
-    [:resource/server.query :order-track {"limit" 15600}]
-    ]))
+    [:resource/server.query :order-track {"limit" 15600}]]))
 
 (defroute  "/home/index" []
   (run-events
    [[:set-active-page :index]
-    [:resource/server.query :energy-oa {}]
-    ]))
+    [:resource/server.query :energy-oa {}]]))
 
 (defroute  "/home/index/detail/:id" [id]
   (run-events
    [[:set-active-page :index-detail]
     [:page-state :index-detail :order-detail-id  (int id)]
 
-    [:resource/server.query :order-track {"filters" [["=" "order_detail_id" (int id)]]
-                                          "limit" 15600}]
-    [:resource/server.query :human-resource {"filters" [["=" "order_detail_id" (int id)]]
-                                             "limit" 15600}]
+    [:resource/server.query :order-track
+     {"filters" [["=" "order_detail_id" (int id)]]
+      "limit" 15600}]
+    [:resource/server.query :human-resource
+     {"filters" [["=" "order_detail_id" (int id)]]
+      "limit" 15600}]
     [:resource/server.query :energy-oa {"limit" 15600}]
-    [:resource/server.query :machine-resource {"filters" [["=" "order_detail_id" (int id)]]
-                                               "limit" 15600}]
-    [:resource/server.query :material-craft {"filters" [["=" "order_detail_id" (int id)]]
-                                             "limit" 15600}]
-    [:resource/server.query :material-raw {"filters" [["=" "order_detail_id" (int id)]]
-                                           "limit" 15600}]]))
+    [:resource/server.query :machine-resource
+     {"filters" [["=" "order_detail_id" (int id)]]
+      "limit" 15600}]
+    [:resource/server.query :material-craft
+     {"filters" [["=" "order_detail_id" (int id)]]
+      "limit" 15600}]
+    [:resource/server.query :material-raw
+     {"filters" [["=" "order_detail_id" (int id)]]
+      "limit" 15600}]]))
 
 (defroute  "/home/metadata-index" [index-page]
   (run-events

@@ -50,16 +50,16 @@
 ;;
 
 
-(reg-sub
- :product-task/view.index-page
- :<- [:product-task/all]
- :<- [:active-page]
- :<- [:current-page-state]
- (fn [[all-data active-page current-page-state] [_]]
-   (let [order_detail_id (get current-page-state :order_detail_id)]
-     (filter  #(query-filter/has-kv? % :order_detail_id order_detail_id) all-data)
-     ;;
-     )))
+;; (reg-sub
+;;  :product-task/view.index-page
+;;  :<- [:product-task/all]
+;;  :<- [:active-page]
+;;  :<- [:current-page-state]
+;;  (fn [[all-data active-page current-page-state] [_]]
+;;    (let [order_detail_id (get current-page-state :order_detail_id)]
+;;      (filter  #(query-filter/has-kv? % :order_detail_id order_detail_id) all-data)
+;;      ;;
+;;      )))
 
 ;;  泰安公司相关
 (reg-sub

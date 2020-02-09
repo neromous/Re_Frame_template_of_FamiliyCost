@@ -1,5 +1,5 @@
 (ns soul-talk.sub.full-order
-  (:require [soul-talk.models :refer [model-register]]
+  (:require 
             [re-frame.core :refer [inject-cofx
                                    dispatch
                                    dispatch-sync
@@ -8,24 +8,22 @@
                                    subscribe reg-sub]]
             [soul-talk.util.query-filter :as query-filter]))
 
-
 (reg-sub
  :full-order/all
  :<- [:resource/all :order-track]
  (fn [all-order [_]]
    all-order))
 
-
-(reg-sub
- :full-order/view.index-page
- :<- [:full-order/all]
- :<- [:active-page]
- :<- [:current-page-state]
- (fn [[all-data active-page current-page-state] [_]]
-   (let [order_detail_id (get current-page-state :order_detail_id)]
-     (filter  #(query-filter/has-kv? % :order_detail_id order_detail_id ) all-data  )
-     ;;
-     )))
+;; (reg-sub
+;;  :full-order/view.index-page
+;;  :<- [:full-order/all]
+;;  :<- [:active-page]
+;;  :<- [:current-page-state]
+;;  (fn [[all-data active-page current-page-state] [_]]
+;;    (let [order_detail_id (get current-page-state :order_detail_id)]
+;;      (filter  #(query-filter/has-kv? % :order_detail_id order_detail_id ) all-data  )
+;;      ;;
+;;      )))
 
 
 ;; 未参与重染订单

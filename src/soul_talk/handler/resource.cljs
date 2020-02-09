@@ -1,5 +1,5 @@
-(ns soul-talk.handler.models
-  (:require [soul-talk.models :refer [model-register]]
+(ns soul-talk.handler.resource
+  (:require [soul-talk.db :refer [model-register]]
             [re-frame.core :refer [inject-cofx
                                    dispatch
                                    dispatch-sync

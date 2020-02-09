@@ -1,5 +1,5 @@
 (ns soul-talk.sub.sell-order
-  (:require [soul-talk.models :refer [model-register]]
+  (:require 
             [re-frame.core :refer [inject-cofx
                                    dispatch
                                    dispatch-sync

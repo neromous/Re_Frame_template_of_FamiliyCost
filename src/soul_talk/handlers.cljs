@@ -9,7 +9,8 @@
    soul-talk.handler.page-state
    soul-talk.handler.errors
    soul-talk.handler.auth
-   soul-talk.handler.models
+   soul-talk.handler.resource
+   soul-talk.handler.resource-server
    soul-talk.handler.metadata
    soul-talk.handler.admin
    soul-talk.handler.users
@@ -28,24 +29,6 @@
          db (:db cofx)]
      {:db (merge db (assoc default-db :user (js->clj user :keywordize-keys true)
                            :auth-token auth-token))})))
-
-;; 设置当前页
-(reg-event-db
- :set-active-page
- (fn [db [_  x]]
-   (assoc-in db [:views  :active-page] x)))
-
-(reg-event-db
- :set-views
- (fn [db [_  & kvs]]
-   (let [view-path (drop-last  kvs)
-         value  (last kvs)]
-     (assoc-in db (concat [:views]  view-path) value))))
-
-(reg-event-db
- :update-views
- (fn [db [_ view-path x]]
-   (update-in db (concat [:views] view-path)  merge x)))
 
 ;; 取消加载
 (reg-event-db

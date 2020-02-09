@@ -5,45 +5,57 @@
    [clojure.string :as str]
    [secretary.core :as secretary :refer-macros [defroute]]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
-   soul-talk.resources
    soul-talk.subs
    soul-talk.handlers
    [accountant.core :as accountant]
    [soul-talk.util.route-utils :refer [run-events run-events-admin logged-in? navigate!]]
    [soul-talk.util.query-filter :as query-filter]))
 
-(subscribe [:page-state :index-detail])
-(subscribe [:metadata/select-column])
+(dispatch [:resource-api/server.pull :todos {}])
+(subscribe [:resource-api/raw :todos])
 
- (subscribe [:product-task/by-order_detail_id 72])
+;; (dispatch [:resource-api/server.add :todos {:title "dasdf"}])
 
-(dispatch [:page-state :metadata-index :dasdf "dasdf"])
-(dispatch [:page-state :sdasdf-index :dasdf "dasdf"])
+;; (dispatch [:resource-api/delete :todos 9])
 
-(subscribe [:page-state])
+;; (dispatch [:resource-api/update :todos 0 {:haha "dfasdf"} ])
 
-(subscribe [:metadata/select-table_name])
-(subscribe [:metadata/select-table])
+;;(dispatch [:resource-api/server.update  :todos {:id 12 :title "测试"} ])
 
-(first @(subscribe [:metadata/all]))
 
-(subscribe [:metadata/column.type "erp_goods" "goods_id"])
+;; (subscribe [:page-state :index-detail])
+;; (subscribe [:metadata/select-column])
 
-(first @(subscribe [:metadata/flatten]))
+;;  (subscribe [:product-task/by-order_detail_id 72])
 
-(subscribe [:metadata/column.unique :data_type])
+;; (dispatch [:page-state :metadata-index :dasdf "dasdf"])
+;; (dispatch [:page-state :sdasdf-index :dasdf "dasdf"])
 
-(subscribe [:resource/columns :sys_org])
+;; (subscribe [:page-state])
 
-(dispatch [:metadata/new.table_name  "hahaha"])
+;; (subscribe [:metadata/select-table_name])
+;; (subscribe [:metadata/select-table])
 
-(dispatch [:metadata/column.update  "erp_goods" "goods_hahah" {:column_name "daasdd"  }   ])
-(subscribe [:metadata/all.view_type])
+;; (first @(subscribe [:metadata/all]))
 
-(subscribe [:metadata/relation.all])
+;; (subscribe [:metadata/column.type "erp_goods" "goods_id"])
 
-(subscribe [:resource/find_by-order_detail_id :machine-resource 189])
-(subscribe [:resource/all :machine-resource])
+;; (first @(subscribe [:metadata/flatten]))
+
+;; (subscribe [:metadata/column.unique :data_type])
+
+;; (subscribe [:resource/columns :sys_org])
+
+;; (dispatch [:metadata/new.table_name  "hahaha"])
+
+;; (dispatch [:metadata/column.update  "erp_goods" "goods_hahah" {:column_name "daasdd"  }   ])
+;; (subscribe [:metadata/all.view_type])
+
+;; (subscribe [:metadata/relation.all])
+
+;; (subscribe [:resource/find_by-order_detail_id :machine-resource 189])
+;; (subscribe [:resource/all :machine-resource])
+
 
 ;; (first @(subscribe [:metadata/all]))
 ;; (subscribe [:metadata/column.comment  "ACT_GE_BYTEARRAY" "NAME_" ])

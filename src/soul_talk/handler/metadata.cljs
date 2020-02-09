@@ -3,7 +3,7 @@
              [reagent.core :as r]
              [soul-talk.util.route-utils :refer [run-events run-events-admin logged-in? navigate!]]
              [soul-talk.util.query-filter :as query-filter]
-             [soul-talk.models :refer [model-register]]
+             [soul-talk.db :refer [model-register]]
              [ajax.core :refer [POST
                                 GET
                                 DELETE

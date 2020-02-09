@@ -1,5 +1,5 @@
 (ns soul-talk.sub.study-plan
-  (:require [soul-talk.models :refer [model-register]]
+  (:require
             [re-frame.core :refer [inject-cofx
                                    dispatch
                                    dispatch-sync
