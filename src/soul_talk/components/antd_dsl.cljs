@@ -1,7 +1,4 @@
 (ns soul-talk.components.antd-dsl)
-;; (defn input-value [in]
-;;   (-> in .-target .-value))
-
 
 (defn >Input [& args]
   (vec  (concat [:> js/antd.Input]  args)))
@@ -18,8 +15,7 @@
 (defn >List [& args]
   (vec (concat [:> js/antd.List]  args)))
 
-(defn >List_Item [& args]
-  (vec  (concat [:> js/antd.List.Item]  args)))
+(def list-item js/antd.List.Item)
 
 (defn >Table [& args]
   (vec  (concat [:> js/antd.Table]  args)))
@@ -27,8 +23,7 @@
 (defn >Description [& args]
   (vec (concat [:> js/antd.Descriptions]  args)))
 
-(defn >Description_Item [& args]
-  (vec (concat [:> js/antd.Descriptions.Item]  args)))
+(def descrip-item js/antd.Descriptions.Item)
 
 (defn >Cascader [& args]
   (vec (concat [:> js/antd.Cascader]  args)))
@@ -50,12 +45,41 @@
 (defn >Layout [& args]
   (vec (concat [:> js/antd.Layout] args)))
 
-
-(defn >Divine [& args]
+(defn >Divider [& args]
   (vec (concat [:> js/antd.Divider] args)))
 
 (defn >AutoComplete [& args]
   (vec (concat [:> js/antd.AutoComplete] args)))
+
+(defn >Switch [& args]
+  (vec (concat [:> js/antd.Switch] args)))
+
+(defn >Checkbox [& args]
+  (vec (concat [:> js/antd.Checkbox] args)))
+
+(defn >Checkbox_group [& args]
+  (vec (concat [:> js/antd.Checkbox.Group] args)))
+
+(defn >Select [& args]
+  (vec (concat [:> js/antd.Select] args)))
+
+(def select-option  js/antd.Select.Option)
+
+(defn >Form [& args]
+  (vec (concat [:> js/antd.Form] args)))
+
+(def form-item js/antd.Form.Item)
+
+(defn >Modal [& args]
+  (vec (concat [:> js/antd.Modal] args)))
+
+
+(defn >DatePicker [& args]
+  (vec (concat [:> js/antd.DatePicker  ] args)))
+
+
+
+
 
 
 

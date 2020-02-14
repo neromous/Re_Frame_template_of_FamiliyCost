@@ -11,20 +11,41 @@
    [soul-talk.util.route-utils :refer [run-events run-events-admin logged-in? navigate!]]
    [soul-talk.util.query-filter :as query-filter]))
 
-(dispatch [:set-active-page :test])
-(dispatch [:page-state.set  :test :haha "dd"  ])
+(subscribe [:metadata/table :todos])
 
-(subscribe [:page-state.all])
-(subscribe [:get-view])
+(subscribe [:metadata/table-columns :todos])
 
-@(subscribe [:resource-api/raw :todos])
+(dispatch [:item/server.get :test])
 
-(dispatch [:resource-api/server.pull :todos {}])
-(dispatch [:resource-api/server.add :todos {:title "hahaha"}])
-(subscribe [:resource-api/all :todos])
-(dispatch [:resource-api/server.del :todos 2])
-(dispatch [:resource-api/server.update :todos {:id 4 :title "再次测试"}])
+(dispatch [:item/server.get :relation])
 
+(subscribe [:item/raw :relation])
+
+(subscribe [:item/raw :test])
+
+(subscribe [:page-state])
+
+(subscribe [:item/all :product-track])
+
+(first @(subscribe [:product-task/all]))
+(first @(subscribe  [:sell-order/all]))
+(subscribe [:sell-order/all.flow_plan_release])
+;; (dispatch [:set-active-page :test])
+;; (dispatch [:page-state.set  :test :haha "dd"  ])
+
+;; (subscribe [:page-state.all])
+;; (subscribe [:get-view])
+
+;; @(subscribe [:resource-api/raw :todos])
+
+;; (dispatch [:resource-api/server.pull :todos {}])
+;; (dispatch [:resource-api/server.add :todos {:title "hahaha"}])
+;; (subscribe [:resource-api/all :todos])
+;; (dispatch [:resource-api/server.del :todos 2])
+;; (dispatch [:resource-api/server.update :todos {:id 4 :title "再次测试"}])
+
+
+;;  (subscribe [:model/view-state :todos])
 
 
 

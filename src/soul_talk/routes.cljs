@@ -14,68 +14,25 @@
   (:import [goog History]
            [goog.History EventType]))
 
-(run-events [[:metadata/server.query]])
+(defn init! []
+  (run-events [;;[:item/server.pull :sell-order {:limit 10000}]
+               [:item/server.pull :product-track {:limit 10000}]]))
+;;(init!)
 
 (defroute  "/" []
   (run-events
-   [[:set-active-page :home-page]
-    [:resource/server.query :order-track {"limit" 15600}]]))
+   [[:set-active-page :home-page]]))
 
-(defroute  "/home/index" []
+(defroute  "/todo-index" []
   (run-events
-   [[:set-active-page :index]
-    [:resource/server.query :energy-oa {}]]))
+   [[:set-active-page :todo-index]
+    [:model/server.pull :todos]
+    [:model/server.pull :tags]
+    [:model/server.pull :tag_type]]))
 
-(defroute  "/home/index/detail/:id" [id]
+(defroute  "/product-track" []
   (run-events
-   [[:set-active-page :index-detail]
-    [:page-state.set :index-detail :order-detail-id  (int id)]
-
-    [:resource/server.query :order-track
-     {"filters" [["=" "order_detail_id" (int id)]]
-      "limit" 15600}]
-    [:resource/server.query :human-resource
-     {"filters" [["=" "order_detail_id" (int id)]]
-      "limit" 15600}]
-    [:resource/server.query :energy-oa {"limit" 15600}]
-    [:resource/server.query :machine-resource
-     {"filters" [["=" "order_detail_id" (int id)]]
-      "limit" 15600}]
-    [:resource/server.query :material-craft
-     {"filters" [["=" "order_detail_id" (int id)]]
-      "limit" 15600}]
-    [:resource/server.query :material-raw
-     {"filters" [["=" "order_detail_id" (int id)]]
-      "limit" 15600}]]))
-
-(defroute  "/home/metadata-index" [index-page]
-  (run-events
-   [[:set-active-page :metadata-index]
-    [:metadata/server.query]]))
-
-
-
-;; (defroute  "/home/:index-page" [index-page]
-;;   (run-events
-;;    [[:set-active-page (keyword index-page)]]))
-
-;; (defroute  "/home/:index-page/:id" [index-page id]
-;;   (run-events
-;;    [[:set-active-page  (keyword (str index-page "-detail"))]
-;;     [:set-views (keyword index-page) :id  id]]))
-
-
-(defroute  "/admin/models/:model" [model]
-  (run-events
-   [[:set-active-page  :admin-page]
-    [:resource/server.query (keyword model) {"limit" 1000}]
-    [:set-views :admin-active-model (keyword model)]]))
-
-(defroute  "/admin/models/:model/:id" [model id]
-  (run-events
-   [[:set-active-page  :admin-detail-page]
-    [:set-views :admin-active-model (keyword model)]
-    [:set-views (keyword model) :id id]]))
+   [[:set-active-page :product-track]]))
 
 (defroute "*" [])
 

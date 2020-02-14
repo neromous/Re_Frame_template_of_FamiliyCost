@@ -1,7 +1,7 @@
 (ns soul-talk.sub.funcs.path
   (:require
    [soul-talk.db :refer [model-register
-                         value-register]]))
+                         item-register]]))
 
 (def page-prefix [:views :pages])
 (def value-prefix [:datas :values])
@@ -12,15 +12,29 @@
   (let [model (get model-register model-key)]
     model))
 
+
 (defn ->data-path [model-key]
   (let [model (->model model-key)]
     (get model :data-path)))
 
+(defn ->model-types [model-key]
+  (let [model (->model model-key)]
+    (get model :type-list)))
+
 
 ;; 集合视图状态
+
+
 (defn ->view-path [model-key]
   (let [model (->model model-key)]
     (get model :view-path)))
+
+(defn ->meta-path [model-key]
+  (let [model (->model model-key)]
+    (get model :metadata-path)))
+
+(defn ->meta-by-name [model-key column-name]
+  (conj (->meta-path model-key)  column-name))
 
 (defn ->view-state [model-key state-key]
   (let [view-path (->view-path model-key)]
@@ -62,11 +76,4 @@
 
 (defn page->state [page-key state-key]
   (conj (page->path  page-key) state-key))
-
-;;  单一值所用的存储路径
-(defn value-model [value-key]
-  (get value-register value-key))
-
-(defn value->path [value-key]
-  (get (value-model value-key) :data-path))
 

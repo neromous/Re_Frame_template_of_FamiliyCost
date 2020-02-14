@@ -1,14 +1,11 @@
 (ns soul-talk.subs
   (:require [re-frame.core :refer [reg-sub]]
             soul-talk.sub.resource
-            soul-talk.sub.resource-api
             soul-talk.sub.page-state
-            soul-talk.sub.full-order
-            soul-talk.sub.sell-order
-            soul-talk.sub.product-order
-            soul-talk.sub.product-task
-            soul-talk.sub.cost-consume
-            soul-talk.sub.metadata))
+            soul-talk.sub.item
+            soul-talk.sub.product-track
+            ))
+
 
 ;; 获取当时全部数据
 

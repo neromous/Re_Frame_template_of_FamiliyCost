@@ -5,18 +5,18 @@
             [reagent.core :as r]))
 
 
-(defn table-selector [state  dataSource]
-  (r/with-let []
+;; (defn table-selector [state  dataSource]
+;;   (r/with-let []
 
-    [>AutoComplete
-     {:on-change  #(reset! state (-> %))
-      :filterOption true
-      :placeholder "选择实体名称"
-      :defaultActiveFirstOption true
-      :dataSource  (-> @dataSource
-                       keys
-                       sort)
-      ;;
-      }]))
+;;     [>AutoComplete
+;;      {:on-change  #(reset! state (-> %))
+;;       :filterOption true
+;;       :placeholder "选择实体名称"
+;;       :defaultActiveFirstOption true
+;;       :dataSource  (-> @dataSource
+;;                        keys
+;;                        sort)
+;;       ;;
+;;       }]))
 
 

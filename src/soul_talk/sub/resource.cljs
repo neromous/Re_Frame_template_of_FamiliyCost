@@ -6,84 +6,72 @@
                                    reg-event-db
                                    reg-event-fx
                                    subscribe reg-sub]]
-            [soul-talk.util.query-filter :as query-filter]))
+            [soul-talk.util.query-filter :as query-filter]
+            [soul-talk.sub.funcs.orm :as orm]
+            [soul-talk.sub.funcs.path :as path]))
+
+(reg-sub :model/raw orm/raw>)
+
+(reg-sub :model/all orm/all>)
+
+(reg-sub :model/find-by orm/find-by>)
+
+(reg-sub :model/find-id orm/find-id>)
+
+(reg-sub :model/view-state orm/view-state>)
 
 (reg-sub
- :resource/all
- (fn [db [_ model-key]]
-   (let [model (get model-register model-key)
-         data-path (get model :data-path)]
-     (get-in db data-path))))
+ :metadata/all
+ (fn [db [_]]
+   (get db :metadata)))
 
 (reg-sub
- :resource/columns
- :<- [:metadata/all]
- (fn [all-meta  [_  model-key]]
-   (let [model (get model-register model-key)
-         table_name (get model :table_name)]
-     (->> (get-in all-meta [table_name])))))
+ :metadata/table
+ (fn [db  [_  model-key]]
+   (let [meta-path (path/->meta-path model-key)]
+     (get-in db meta-path))))
 
 (reg-sub
- :resource/view.table-columns
- :<- [:metadata/all]
- (fn [all-meta  [_  model-key]]
-   (let [model (get model-register model-key)
-         table_name (get model :table_name)]
-     (-> (get-in all-meta [table_name])
+ :metadata/columns
+ (fn [db  [_  model-key]]
+   (let [meta-path (path/->meta-path model-key)
+         table-columns (get-in db meta-path)]
+     (-> table-columns
+         vals
+         ))))
+
+(reg-sub
+ :metadata/views.table-columns
+ (fn [db  [_  model-key]]
+   (let [meta-path (path/->meta-path model-key)
+         table-columns (get-in db meta-path)]
+     (-> table-columns
          vals
          (->>
           (map (fn [x] {:key (:column_name x)
                         :dataIndex (:column_name x)
                         :title (or (:view_title x)
                                    (:column_comment x)
-                                   (:column_name x))})))
-         ;;
-         ))))
+                                   (:column_name x))})))))))
 
-(reg-sub
- :resource/view-state
- (fn [db [_ model-key]]
-   (let [model (get model-register model-key)
-         data-path (get model :data-path)
-         view-path (get model :view-path)]
-     (get-in db view-path)
-     ;;
-     )))
 
-(reg-sub
- :resource/filter
- (fn [db [_ model-key filter-fns]]
-   (let [model (get model-register model-key)
-         data-path (get model :data-path)]
-     (->>  (get-in db data-path)
-           (filter (comp  filter-fns))))))
 
-(reg-sub
- :resource/find-by
- (fn [db [_ model-key query]]
-   (let [model (get model-register model-key)
-         data-path (get model :data-path)]
-     (->>  (get-in db data-path)
-           (filter  #(query-filter/is-part-of-query? % query))))))
+;; (reg-sub
+;;  :model/filter
+;;  (fn [db [_ model-key filter-fns]]
+;;    (let [data-path (path/->data-path model-key)]
+;;      (->>  (get-in db data-path)
+;;            (filter (comp  filter-fns))))))
 
-(reg-sub
- :resource/find_by-order_detail_id
- (fn [db [_ model-key id]]
-   (let [model (get model-register model-key)
-         data-path (get model :data-path)]
-     (->>  (get-in db data-path)
-           (filter  #(= (:order_detail_id  %)  id))))))
+;; (reg-sub
+;;  :model/unique
+;;  (fn [db [_ model-key field-key]]
+;;    (let [model (get model-register model-key)
+;;          data-path (get model :data-path)]
+;;      (->>  (get-in db data-path)
+;;            (map (fn [x] (get x field-key)))
+;;            set))))
 
-(reg-sub
- :resource/unique
- (fn [db [_ model-key field-key]]
-   (let [model (get model-register model-key)
-         data-path (get model :data-path)]
-     (->>  (get-in db data-path)
-           (map (fn [x] (get x field-key)))
-           set
-           ;;
-           ))))
 
 
 

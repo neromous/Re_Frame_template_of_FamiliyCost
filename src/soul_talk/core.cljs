@@ -2,10 +2,10 @@
   (:require [reagent.core :as r]
             [re-frame.core :refer [dispatch-sync dispatch]]
             ;;初始化处理器和订阅器
+            soul-talk.handlers
             soul-talk.db
             soul-talk.effects
             soul-talk.ajax
-            soul-talk.handlers
             soul-talk.subs
             soul-talk.coeffects
             soul-talk.routes

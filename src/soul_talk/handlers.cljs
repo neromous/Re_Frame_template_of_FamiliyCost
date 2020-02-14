@@ -3,21 +3,18 @@
    [re-frame.core :refer [inject-cofx dispatch dispatch-sync reg-event-db reg-event-fx subscribe reg-sub]]
    [soul-talk.db :refer [default-db]]
    [soul-talk.local-storage :as storage]
-   [soul-talk.utils :refer [url->id]]
    soul-talk.ajax
    soul-talk.effects
    soul-talk.handler.page-state
    soul-talk.handler.errors
+   soul-talk.handler.item-server
+   soul-talk.handler.model
    soul-talk.handler.auth
-   soul-talk.handler.resource
-   soul-talk.handler.resource-server
-   soul-talk.handler.metadata
-   soul-talk.handler.admin
+   soul-talk.handler.model-server
    soul-talk.handler.users
    soul-talk.handler.files))
 
 ;; 初始化
-
 
 (reg-event-fx
  :initialize-db
