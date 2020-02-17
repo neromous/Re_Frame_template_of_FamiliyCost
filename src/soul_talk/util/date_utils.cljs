@@ -32,7 +32,7 @@
                  (.format  "YYYY-MM-DD"))))
 
 (defn str->date
-  [date format-key]
+  [date ]
   (cond
     (nil? date)  nil
     (= date "") ""
@@ -41,17 +41,13 @@
                      (unparse (cf/formatters :year-month-day)))))
 
 (defn str->date-time
-  [date format-key]
+  [date]
   (cond
     (nil? date)  nil
     (= date "") ""
     :default    (->> date
                      tc/from-string
                      (unparse (cf/formatters :mysql)))))
-
-(defn test []
-  (utils/map-items-kv  [{:haha "2018-02-02"}]  :haha str->date))
-
 
 
 

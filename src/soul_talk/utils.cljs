@@ -28,13 +28,14 @@
   [f]
   (/ (.round js/Math (* 100 f)) 100))
 
-
 (defn items-serial-apply
 
   ([items k-f-coll]
-   (let [funcs (for [[k func] k-f-coll]
-                 (partial  map #(update % k func)))]
-     ((apply comp   funcs) items)))
+   (if (-> k-f-coll count (= 0))
+     items
+     (let [funcs (for [[k func] k-f-coll]
+                   (partial  map #(update % k func)))]
+       ((apply comp   funcs) items))))
 
   ([items k k-f]
    (items-serial-apply items [[k k-f]])))
@@ -42,7 +43,9 @@
 (defn item-kv-apply
 
   ([item k-f-coll]
-   (reduce (fn [x [k func]] (update x k #(func %))) item k-f-coll))
+   (if (-> k-f-coll count (= 0))
+     item
+     (reduce (fn [x [k func]] (update x k #(func %))) item k-f-coll)))
 
   ([item k k-f]
    (item-kv-apply item [[k k-f]])))
@@ -51,6 +54,7 @@
 
 
 ;;(items-mapkv [{:haha "90"}] :haha js/parseInt)
+
 
 (defn url->id [url]
   (->  url

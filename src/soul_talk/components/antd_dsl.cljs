@@ -1,5 +1,8 @@
 (ns soul-talk.components.antd-dsl)
 
+(defn >Card [& args]
+  (vec  (concat [:> js/antd.Card]  args)))
+
 (defn >Input [& args]
   (vec  (concat [:> js/antd.Input]  args)))
 
@@ -73,9 +76,8 @@
 (defn >Modal [& args]
   (vec (concat [:> js/antd.Modal] args)))
 
-
 (defn >DatePicker [& args]
-  (vec (concat [:> js/antd.DatePicker  ] args)))
+  (vec (concat [:> js/antd.DatePicker] args)))
 
 
 

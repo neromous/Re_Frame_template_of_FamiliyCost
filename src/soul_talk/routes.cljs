@@ -34,6 +34,17 @@
   (run-events
    [[:set-active-page :product-track]]))
 
+(defroute  "/product-detail/:id" [id]
+  (run-events
+   [[:set-active-page :product-detail]
+    [:page-state.set :product-detail :page-id (int id)]]))
+
+(defroute  "/price-index" []
+  (run-events
+   [[:set-active-page :price-index]]))
+
+
+
 (defroute "*" [])
 
 (secretary/set-config! :prefix "#")

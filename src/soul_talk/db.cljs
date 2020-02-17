@@ -20,7 +20,8 @@
    :product-track {:url "http://localhost:3000/api/prodcut-track/order-track-big"
                    :data-path [:datas :items :product-track]}
 
-
+   :price-index {:url ""
+                 :data-path [:datas :items :price-index]}
 
    ;;
    })

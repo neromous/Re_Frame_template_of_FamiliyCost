@@ -42,7 +42,6 @@
 ;;   (let [view-state  (path/->view-state model-key state-key)]
 ;;     (get-in db view-state)))
 
-B
 ;; 中间件所用的
 (defn replace> [db [_ model-key response]]
   (let [data-path (path/->data-path model-key)
@@ -89,7 +88,7 @@ B
   (let [model-types (path/->model-types model-key)
         data (get-in response [:dataset])
         id (:id data)
-        data (utils/items-kv-apply data model-types)
+        data (utils/item-kv-apply data model-types)
         item-path (path/->item-id model-key id)]
     (assoc-in  db item-path data)))
 

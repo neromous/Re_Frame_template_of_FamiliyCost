@@ -33,14 +33,28 @@
       {:key "title", :dataIndex "title", :title "标题"}
       {:key "content", :dataIndex "content", :title "内容"}
       {:key "is_done", :dataIndex "is_done", :title "完成"}
-      {:key "plan_time", :dataIndex "plan_time", :title "计划完成时间"}
-      {:key "create_time", :dataIndex "create_time", :title "创建时间"}
+      {:key "plan_time", :dataIndex "plan_time", :title "计划完成时间"
+       :render (fn [date-str _]
+                 (r/as-element [:label (du/str->date date-str )])
+                 )
+       }
+      {:key "create_time", :dataIndex "create_time", :title "创建时间"
+       :render (fn [date-str _]
+                 (r/as-element [:label (du/str->date date-str)])
+                 )
+       }
       ;;  {:key "tags_id", :dataIndex "tags_id", :title "tags_id"}
-      {:key "done_time", :dataIndex "done_time", :title "完成时间"}
+      {:key "done_time", :dataIndex "done_time", :title "完成时间"
+       :render (fn [date-str _]
+                 (r/as-element [:label (du/str->date date-str)])
+                 )
+       }
       {:key "note", :dataIndex "note", :title "备注"}
       ;;  {:key "modify_time", :dataIndex "modify_time", :title "modify_time"}
       ]
-     (c/columns-with-do :todos [selected-todo show-vis]   [edit-todo edit-vis])
+     (c/columns-with-do :todos
+                        [selected-todo show-vis]
+                        [edit-todo edit-vis])
      ;;
      )))
 

@@ -90,7 +90,8 @@
          [:> js/antd.Select.Option  {:value 4} "4"]]]
        ;;
        [:> form-item  {:label "计划日期"}
-        [>DatePicker  {:on-change #(swap! todo assoc :plan_time (du/moment->date %))}]]
+        [>DatePicker  {:on-change #(swap! todo assoc :plan_time
+                                          (du/moment->datetime %))}]]
        ;;
        [:> form-item  {:label "完成日期"}
         [>DatePicker  {:on-change #(swap!
@@ -192,14 +193,14 @@
           :value (:content @todo)}]]
 
        [:> form-item  {:label "计划日期"}
-        [>DatePicker  {:on-change #(swap! todo assoc :plan_time    %)
+        [>DatePicker  {:on-change #(swap! todo assoc :plan_time  %)
                        :value (new js/moment (:plan_time @todo))}]]
 
        [:> form-item  {:label "完成日期"}
         [>DatePicker  {:on-change #(swap!
                                     todo
                                     assoc
-                                    :done_time  %)
+                                    :done_time %)
                        :value (new js/moment (:done_time @todo))}]]
 
        [:> form-item  {:label "完成日期"}
@@ -218,6 +219,5 @@
 
 
 
-(def yoyo #inst "2018-01-01")
 
 

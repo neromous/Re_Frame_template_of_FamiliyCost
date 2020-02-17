@@ -5,12 +5,9 @@
    [soul-talk.components.home-page :as hpc]
    [soul-talk.components.modal :as modal]
    [soul-talk.components.antd-dsl
-    :refer [
-            >Layout
-            
-            >Content
+    :refer [>Layout
+            >Content]]
 
-            ]]
    [soul-talk.utils :as utils]))
 
 (defn content [state  page-state & _]
@@ -29,9 +26,9 @@
       [hpc/side-bar state]
 
       [>Content {:style {:background "#fff"
-                                          :padding 24
-                                          :margin 0
-                                          :minHeight 280}}
+                         :padding 24
+                         :margin 0
+                         :minHeight 280}}
        [content state]]]
      [hpc/foot state]]))
 
