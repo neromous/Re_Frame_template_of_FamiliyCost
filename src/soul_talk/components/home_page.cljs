@@ -64,6 +64,11 @@
                           :on-click #(navigate! "#/product-detail/1")}
     "订单明细"]
 
+   [:> js/antd.Menu.Item {:key      "price-input"
+                          :on-click #(navigate! "#/price-index")}
+    "价格录入页面"]
+
+
 
 
 

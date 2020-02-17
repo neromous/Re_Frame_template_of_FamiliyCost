@@ -15,8 +15,6 @@
    "text"  str
    "int"   int
    "int4"  int
-   "timestamp" to-moment
-   "date" to-moment
    })
 
 (def trans-map
