@@ -1,4 +1,5 @@
 (ns soul-talk.handlers
+<<<<<<< HEAD
   (:require [re-frame.core :refer [inject-cofx dispatch dispatch-sync reg-event-db reg-event-fx subscribe]]
             [soul-talk.db :refer [default-db]]
             [soul-talk.local-storage :as storage]
@@ -10,6 +11,22 @@
             soul-talk.handler.category
             soul-talk.handler.tag
             soul-talk.handler.files))
+=======
+  (:require
+   [re-frame.core :refer [inject-cofx dispatch dispatch-sync reg-event-db reg-event-fx subscribe reg-sub]]
+   [soul-talk.db :refer [default-db]]
+   [soul-talk.local-storage :as storage]
+   soul-talk.ajax
+   soul-talk.effects
+   soul-talk.handler.page-state
+   soul-talk.handler.errors
+   soul-talk.handler.item-server
+   soul-talk.handler.model
+   soul-talk.handler.auth
+   soul-talk.handler.model-server
+   soul-talk.handler.users
+   soul-talk.handler.files))
+>>>>>>> kpn_ai
 
 ;; 初始化
 (reg-event-fx
@@ -29,16 +46,20 @@
   (fn [db [_ page]]
     (assoc db :active-page page)))
 
+<<<<<<< HEAD
 (reg-event-db
   :set-breadcrumb
   (fn [db [_ breadcrumb]]
     (assoc db :breadcrumb breadcrumb)))
 
+=======
+>>>>>>> kpn_ai
 (reg-event-fx
   :navigate-to
   (fn [_ [_ url]]
     {:navigate url}))
 
+<<<<<<< HEAD
 (reg-event-db
   :set-success
   (fn [db [_ message]]
@@ -54,6 +75,8 @@
   (fn [db [_ keys val]]
     (assoc-in db keys val)))
 
+=======
+>>>>>>> kpn_ai
 ;; 取消加载
 (reg-event-db
   :unset-loading

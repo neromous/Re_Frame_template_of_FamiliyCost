@@ -1,4 +1,5 @@
 (ns soul-talk.routes
+<<<<<<< HEAD
   (:require [goog.events :as events]
             [secretary.core :as secretary :refer-macros [defroute]]
             [accountant.core :as accountant]
@@ -89,6 +90,51 @@
 (defroute "/user-profile" []
   (run-events [[:set-breadcrumb ["个人管理" "个人信息"]]
                [:set-active-page :user-profile]]))
+=======
+  (:require
+   [reagent.core :as r]
+   [goog.events :as events]
+   [clojure.string :as str]
+   [secretary.core :as secretary :refer-macros [defroute]]
+   [re-frame.core :refer [dispatch dispatch-sync subscribe]]
+   soul-talk.subs
+   soul-talk.handlers
+   [accountant.core :as accountant]
+   [soul-talk.util.route-utils :refer [run-events run-events-admin logged-in? navigate!]]
+   [soul-talk.util.query-filter :as query-filter])
+
+  (:import [goog History]
+           [goog.History EventType]))
+
+(defn init! []
+  (run-events [[:item/server.pull :sell-order {:limit 10000}]
+               [:item/server.pull :product-track {:limit 10000}]]))
+(init!)
+
+(defroute  "/" []
+  (run-events
+   [[:set-active-page :home-page]]))
+
+;; (defroute  "/todo-index" []
+;;   (run-events
+;;    [[:set-active-page :todo-index]
+;;     [:model/server.pull :todos]
+;;     [:model/server.pull :tags]
+;;     [:model/server.pull :tag_type]]))
+
+(defroute  "/product-track" []
+  (run-events
+   [[:set-active-page :product-track]]))
+
+(defroute  "/product-detail/:id" [id]
+  (run-events
+   [[:set-active-page :product-detail]
+    [:page-state.set :product-detail :page-id (int id)]]))
+
+(defroute  "/price-index" []
+  (run-events
+   [[:set-active-page :price-index]]))
+>>>>>>> kpn_ai
 
 (defroute "/users" []
   (run-events [[:set-breadcrumb ["用户" "清单"]]

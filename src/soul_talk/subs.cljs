@@ -1,4 +1,5 @@
 (ns soul-talk.subs
+<<<<<<< HEAD
   (:require [re-frame.core :refer [reg-sub]]))
 
 ;; 获取当时全部数据
@@ -11,14 +12,41 @@
   :initialised?
   (fn [db _]
     (not (empty? db))))
+=======
+  (:require [re-frame.core :refer [reg-sub]]
+            soul-talk.sub.resource
+            soul-talk.sub.page-state
+            soul-talk.sub.item
+            soul-talk.sub.product-track
+            ))
+
+
+;; 获取当时全部数据
+
+
+(reg-sub :db-state (fn [db _]   db))
+
+(reg-sub
+ :initialised?
+ (fn [db _]
+   (not (empty? db))))
+
+
+;; 权宜之计
+
+>>>>>>> kpn_ai
 
 ;; 响应事件
 (defn query [db [event-id]]
   (event-id db))
 
+<<<<<<< HEAD
 (reg-sub
   :api-url
   query)
+=======
+(reg-sub :user query)
+>>>>>>> kpn_ai
 
 ;; 当前页配置
 (reg-sub :auth-token query)
