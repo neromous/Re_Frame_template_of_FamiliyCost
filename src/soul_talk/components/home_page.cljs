@@ -55,9 +55,6 @@
                     :selectedKeys      []}
 
    [:> js/antd.Menu.Item {:key      "index"
-                          :on-click #(navigate! "#/todo-index")}
-    "待办事项 "]
-   [:> js/antd.Menu.Item {:key      "index"
                           :on-click #(navigate! "#/product-track")}
     "订单汇总页"]
    [:> js/antd.Menu.Item {:key      "index"

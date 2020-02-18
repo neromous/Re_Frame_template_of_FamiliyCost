@@ -115,9 +115,7 @@
  (fn [all-data [_ id]]
    (-> (filter #(= (:order_detail_id %)  id)  all-data))))
 
-
 ;;  泰安公司相关
-
 
 (reg-sub
  :product-task/tai_an

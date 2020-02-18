@@ -15,20 +15,20 @@
            [goog.History EventType]))
 
 (defn init! []
-  (run-events [;;[:item/server.pull :sell-order {:limit 10000}]
+  (run-events [[:item/server.pull :sell-order {:limit 10000}]
                [:item/server.pull :product-track {:limit 10000}]]))
-;;(init!)
+(init!)
 
 (defroute  "/" []
   (run-events
    [[:set-active-page :home-page]]))
 
-(defroute  "/todo-index" []
-  (run-events
-   [[:set-active-page :todo-index]
-    [:model/server.pull :todos]
-    [:model/server.pull :tags]
-    [:model/server.pull :tag_type]]))
+;; (defroute  "/todo-index" []
+;;   (run-events
+;;    [[:set-active-page :todo-index]
+;;     [:model/server.pull :todos]
+;;     [:model/server.pull :tags]
+;;     [:model/server.pull :tag_type]]))
 
 (defroute  "/product-track" []
   (run-events
@@ -42,8 +42,6 @@
 (defroute  "/price-index" []
   (run-events
    [[:set-active-page :price-index]]))
-
-
 
 (defroute "*" [])
 
