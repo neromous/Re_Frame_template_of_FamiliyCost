@@ -8,7 +8,10 @@
    soul-talk.subs
    soul-talk.handlers
    [accountant.core :as accountant]
-   [soul-talk.util.route-utils :refer [run-events run-events-admin logged-in? navigate!]]
+   [soul-talk.util.route-utils :refer [run-events
+                                       run-events-admin
+                                       logged-in?
+                                       navigate!]]
    [soul-talk.util.query-filter :as query-filter])
 
   (:import [goog History]
@@ -23,13 +26,6 @@
   (run-events
    [[:set-active-page :home-page]]))
 
-;; (defroute  "/todo-index" []
-;;   (run-events
-;;    [[:set-active-page :todo-index]
-;;     [:model/server.pull :todos]
-;;     [:model/server.pull :tags]
-;;     [:model/server.pull :tag_type]]))
-
 (defroute  "/product-track" []
   (run-events
    [[:set-active-page :product-track]]))
@@ -42,6 +38,12 @@
 (defroute  "/price-index" []
   (run-events
    [[:set-active-page :price-index]]))
+
+
+(defroute  "/mother-index" []
+  (run-events
+   [[:set-active-page :mother-index]]))
+
 
 (defroute "*" [])
 

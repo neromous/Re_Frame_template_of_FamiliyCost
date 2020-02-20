@@ -13,7 +13,9 @@
     "dependencies": {
         "antd": "^3.19.5",
         "highlight.js": "^9.15.8",
+        "hljs": "^6.2.3",
         "moment": "^2.24.0",
+        "puppeteer": "^2.1.1",
         "react": "^16.8.6",
         "react-chartjs": "^1.1.1",
         "react-dom": "^16.8.6",

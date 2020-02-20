@@ -7,6 +7,8 @@
    [soul-talk.page.product-track :as product-track]
    [soul-talk.page.product-detail :as product-detail]
    [soul-talk.page.price-index  :as price-index]
+   [soul-talk.page.mother-index :as mother-index]
+  
 
    ))
 
@@ -22,6 +24,7 @@
 
 (defmethod pages :product-detail [state _] [product-detail/home-page state])
 (defmethod pages :price-index [state _] [price-index/home-page state])
+(defmethod pages :mother-index [state _] [mother-index/home-page state])
 
 (defn main-page []
   (r/with-let [ready? (subscribe [:initialised?])
