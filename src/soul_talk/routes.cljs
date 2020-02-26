@@ -43,6 +43,10 @@
   (run-events
    [[:set-active-page :price-index]]))
 
+(defroute  "/state_capital_index" []
+  (run-events
+   [[:set-active-page :state-capital-index]]))
+
 (defroute "*" [])
 
 (secretary/set-config! :prefix "#")

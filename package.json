@@ -12,9 +12,12 @@
     "license": "ISC",
     "dependencies": {
         "antd": "^3.19.5",
+        "anychart": "^8.7.1",
+        "chartjs": "^0.3.24",
         "highlight.js": "^9.15.8",
         "moment": "^2.24.0",
         "react": "^16.8.6",
+        "react-amap": "^1.2.8",
         "react-chartjs": "^1.1.1",
         "react-dom": "^16.8.6",
         "showdown": "^1.9.0",

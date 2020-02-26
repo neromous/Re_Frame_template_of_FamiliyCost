@@ -19,7 +19,7 @@
            cljsjs/react-beautiful-dnd {:mvn/version  "10.0.4-0"}
            cljsjs/d3 {:mvn/version "5.12.0-0"}
            cljsjs/moment {:mvn/version "2.24.0-0"}
-           cljsjs/chartjs {:mvn/version "2.9.1-0"}
+           cljsjs/chartjs {:mvn/version "2.9.3-0"}
            re-frisk {:mvn/version "0.5.4.1"}}
 
  :paths   ["src" "src-cljc" "resources" "target"  "env/dev"]
@@ -30,6 +30,4 @@
            :test {:extra-paths ["test"]}
            :prod {:main-opts ["-m" "figwheel.main" "-bo" "prod"]
                   :extra-paths ["env/prod"]}}
- :plugins {cider/cider-nrepl {:mvn/version  "0.21.1"}}
-
- }
+ :plugins {cider/cider-nrepl {:mvn/version  "0.21.1"}}}
