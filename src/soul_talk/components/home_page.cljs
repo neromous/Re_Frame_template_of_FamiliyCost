@@ -58,7 +58,7 @@
                           :on-click #(navigate! "#/product-track")}
     "订单汇总页"]
    [:> js/antd.Menu.Item {:key      "index"
-                          :on-click #(navigate! "#/product-detail/1")}
+                          :on-click #(navigate! "#/product-detail/SO201907250001")}
     "订单明细"]
 
    [:> js/antd.Menu.Item {:key      "price-input"

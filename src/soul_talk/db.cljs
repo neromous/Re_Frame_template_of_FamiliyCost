@@ -1,74 +1,56 @@
 (ns soul-talk.db
-  (:require  [reagent.core :as r]))
-
-(def model-relation
-  (into
-   (sorted-map)
-   {2 []
-    1 []
-    3 []}))
+  (:require  [reagent.core :as r]
+             [soul-talk.util.date-utils :as du]))
 
 (def item-register
-  {:todo {:url "http://localhost:3000/api/todos"
-          :data-path [:datas :items :todo]}
-   :relation {:url "http://localhost:3000/api/relations"
-              :data-path [:datas :items :relation]}
+  {:metadata {:url "http://localhost:3000/api/kpn-metadata/all"
+              :data-path [:datas :items :metadata]
+              :validator {:yarn_weight [:int 0]}
+              ;; === 如果是 dataset ==========
+              :dataset? false
+              :serialize? false
+              :to-map? false
+              :query {}}
 
-   :sell-order {:url "http://localhost:3000/api/prodcut-track/sell-order"
-                :data-path [:datas :items :sell-order]}
+   :order_number {:url "http://localhost:3000/api/kpn-metadata/order_number"
+                  :data-path [:datas :items :order_number]}
 
-   :product-track {:url "http://localhost:3000/api/prodcut-track/order-track-big"
-                   :data-path [:datas :items :product-track]}
+   :sell-info {:url "http://localhost:3000/api/product-info/all"
+               :data-path [:datas :items :product-track]}
 
-   :price-index {:url ""
-                 :data-path [:datas :items :price-index]}
+   :craft-material-info {:url "http://localhost:3000/api/craft-material-info/flow_id"
+                         :data-path [:datas :items :craft-material-info]}
+
+   :human-info {:url "http://localhost:3000/api/human-info/flow_id"
+                :data-path [:datas :items :human-info]}
+
+   :machine-info {:url "http://localhost:3000/api/machine-info/flow_id"
+                  :data-path [:datas :items :machine-info]}
 
    ;;
    })
 
 (def model-register
-  {:todos {:url "http://localhost:3000/api/todos"
-           :model-name "todos"
-           :table_name "todos"
-           :model-key :todos
-           :data-path [:datas :models :todos]
-           :view-path [:views :models :todos]
-           :metadata-path [:metadata :todos]
-           :cache-path [:caches :todos]
-           :fields-key  :todos
-           :type-list [[:id int]]}
-
-   :tags {:url "http://localhost:3000/api/tags"
-          :model-name "tags"
-          :table_name "tags"
-          :model-key :tags
-          :data-path [:datas :models :tags]
-          :view-path [:views :models :tags]
-          :metadata-path [:metadata :tags]
-          :cache-path [:caches :tags]
-          :fields-key  :tags
-          :type-list [[:id int]
-                      [:tag_name str]]}
-   :tag_type {:url "http://localhost:3000/api/tag_types"
-              :model-name "tag_type"
-              :table_name "tag_type"
-              :model-key :tag_type
-              :data-path [:datas :models :tag_type]
-              :view-path [:views :models :tag_type]
-              :metadata-path [:metadata :tag_type]
-              :cache-path [:caches :tag_type]
-              :fields-key  :tag_type
-              :type-list [[:id int]
-                          [:type_name str]]}
+  {:tb_relation {:url "http://localhost:3000/api/tb_relation"
+                 :model-name "tb_relation"
+                 :table_name "tb_relation"
+                 :model-key :tb_relation
+                 :data-path [:datas :models :tb_relation]
+                 :view-path [:views :models :tb_relation]
+                 :metadata-path [:metadata :tb_relation]
+                 :cache-path [:caches :tb_relation]
+                 :fields-key  :tb_relation
+                 :type-list []}
      ;;
    })
 
 (defonce model-state (r/atom  model-register))
 
 (def default-db
-  {:active {}
-   :breadcrumb ["Home"]
-   :login-events []})
+  (->   {:active {}
+         :breadcrumb ["Home"]
+         :login-events []}
+        ))
 
 (defonce unique-work (r/atom 0))
 

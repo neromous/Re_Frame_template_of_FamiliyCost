@@ -1,4 +1,4 @@
-(ns soul-talk.page.price-index
+(ns soul-talk.modules.kpn.prices
   (:require
    [reagent.core :as r]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
@@ -34,8 +34,7 @@
 
 (defn  Modal-input-new-price [page-state]
   (r/with-let [vis (r/cursor page-state [:input-price :vis])
-               item-cache (r/cursor page-state [:input-price :cache])
-               ]
+               item-cache (r/cursor page-state [:input-price :cache])]
     [:> js/antd.Modal
      {:title    "修改价格"
       :visible  @vis
@@ -44,22 +43,21 @@
 
      [>Form {:labelCol {:span 6}
              :wapperCol {:span 16}}
+
       [:> js/antd.Form.Item {:label "物料id"}
        [>Select {:style {:width 120}
                  :disabled true
                  :defaultValue 1
-                 :placeholder (:id @item-cache)
-                 }
-        [:> js/antd.Select.Option {:value 1}  (:id @item-cache)]
-        ]]
+                 :placeholder (:id @item-cache)}
+        [:> js/antd.Select.Option {:value 1}  (:id @item-cache)]]]
       ;;
       [:> js/antd.Form.Item {:label "初始价格"}
        [>InputNumber  {:disabled true
-                       :value (:price_available @item-cache)
-                       }
-        ]]
+                       :value (:price_available @item-cache)}]]
 
       ;;
+
+
       [:> js/antd.Form.Item {:label "生效价格"}
        [>InputNumber]]
       ;;
@@ -107,7 +105,9 @@
                item-cache (r/cursor page-state [:input-price :cache])]
     [:div
      [>Button  {:on-click #(reset! vis true)}  "修改材料价格"]
-     [>Table  {:dataSource  (or @all-order (:prices  fake-data))
+     [>Table  {:dataSource []
+
+               ;;(or @all-order (:prices  fake-data))
                :columns  Table-columns-price
                :rowSelection {:on-change (fn [i item]
                                            (let [item (js->clj item :keywordize-keys true)]
@@ -137,7 +137,6 @@
                          :minHeight 280}}
 
        [Table-price page-state]
-
        ;;
        ]]
 

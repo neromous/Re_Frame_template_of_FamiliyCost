@@ -6,7 +6,16 @@
                           reg-event-db
                           subscribe]]))
 
+(defn vecs->columns [input-vec]
+  (for [[k v]  input-vec]
+    {:key k
+     :dataIndex k
+     :title v}))
+
+
 ;; route 的工具函数
+
+
 (defn to-keyword [x]
   (if (keyword? x)
     x
@@ -62,6 +71,16 @@
        last
        str
        keyword))
+
+
+
+(defn update-map [item kf vf]
+  (reduce-kv (fn [m k v]
+               (assoc m (kf k) (vf v)))  {} item))
+
+
+
+
 
 (defn url->id-str [url]
   (->  url

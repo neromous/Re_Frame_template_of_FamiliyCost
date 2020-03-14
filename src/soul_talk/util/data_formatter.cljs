@@ -1,14 +1,21 @@
-(ns soul-talk.util.data-utils)
+(ns soul-talk.util.data-formatter)
+
+(defn to-keyword [x]
+  (if (keyword? x)
+    x
+    (keyword x)))
+
+(defn round-number
+  [f]
+  (/ (.round js/Math (* 100 f)) 100))
 
 (defn to-2-float
   [f]
   (/ (.round js/Math (* 100 f)) 100))
 
-
 (defn to-float
   [f]
   (js/parseFloat f))
-
 
 (def sql_type->type
   {"varchar"  str

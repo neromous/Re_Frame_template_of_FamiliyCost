@@ -35,7 +35,7 @@
  :<- [:active-page]
  (fn [[all-state active-page] _]
    {:active-page  active-page
-    :page-state   (get all-state active-page  )}))
+    :page-state   (get all-state active-page)}))
 
 
 

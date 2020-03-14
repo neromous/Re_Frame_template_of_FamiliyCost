@@ -1,21 +1,22 @@
 (ns soul-talk.handlers
   (:require
-   [re-frame.core :refer [inject-cofx dispatch dispatch-sync reg-event-db reg-event-fx subscribe reg-sub]]
+   [re-frame.core :refer [inject-cofx dispatch dispatch-sync
+                          reg-event-db reg-event-fx subscribe reg-sub]]
    [soul-talk.db :refer [default-db]]
    [soul-talk.local-storage :as storage]
    soul-talk.ajax
    soul-talk.effects
    soul-talk.handler.page-state
    soul-talk.handler.errors
-   soul-talk.handler.item-server
    soul-talk.handler.model
    soul-talk.handler.auth
-   soul-talk.handler.model-server
    soul-talk.handler.users
-   soul-talk.handler.files))
+   soul-talk.handler.files
+   soul-talk.handler.server
+   soul-talk.handler.common
+   soul-talk.handler.middleware))
 
 ;; 初始化
-
 (reg-event-fx
  :initialize-db
  [(inject-cofx :local-store storage/login-user-key)

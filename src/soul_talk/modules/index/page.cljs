@@ -1,4 +1,4 @@
-(ns soul-talk.page.home-page
+(ns soul-talk.modules.index.page
   (:require
    [reagent.core :as r]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]

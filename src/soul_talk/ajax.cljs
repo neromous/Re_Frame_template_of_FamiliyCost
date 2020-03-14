@@ -5,9 +5,9 @@
 (defn request-headers [request]
   (let [token (rf/subscribe [:auth-token])]
     (-> request
-      (update
-        :headers
-        #(merge
+        (update
+         :headers
+         #(merge
            %
            {;:Accept        "application/transit+json"
             :Accept        "application/json"
@@ -19,3 +19,4 @@
          conj
          (ajax/to-interceptor {:name    "defaults headers"
                                :request request-headers})))
+

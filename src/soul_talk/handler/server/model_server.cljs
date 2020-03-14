@@ -1,7 +1,9 @@
-(ns soul-talk.handler.model-server
-  (:require  [re-frame.core :refer [subscribe reg-event-db dispatch reg-sub reg-event-fx]]
+(ns soul-talk.handler.server.model-server
+  (:require  [re-frame.core :refer [subscribe reg-event-db
+                                    dispatch reg-sub reg-event-fx]]
              [reagent.core :as r]
-             [soul-talk.util.route-utils :refer [run-events run-events-admin logged-in? navigate!]]
+             [soul-talk.util.route-utils :refer [run-events run-events-admin
+                                                 logged-in? navigate!]]
              [soul-talk.db :refer [model-register]]
              [soul-talk.sub.funcs.orm :as orm]
              [ajax.core :refer [POST
@@ -13,6 +15,9 @@
                                 json-request-format
                                 json-response-format]]))
 ;;;
+
+
+
 (reg-event-db :model/mdw.replace orm/replace>)
 (reg-event-fx
  :model/server.pull
@@ -62,7 +67,3 @@
                             :format (json-request-format)
                             :response-format :json}
            :success-event [:model/mdw.update model-key]}}))
-
-
-
-

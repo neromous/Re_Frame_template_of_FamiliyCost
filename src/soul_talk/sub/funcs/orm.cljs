@@ -1,7 +1,6 @@
 (ns soul-talk.sub.funcs.orm
   (:require [soul-talk.util.query-filter :as query-filter]
             [soul-talk.sub.funcs.path :as path]
-            [soul-talk.util.data-utils :as data-utils]
             [soul-talk.utils :as utils]
             [soul-talk.db :refer [model-register]]))
 
@@ -41,8 +40,8 @@
 ;; (defn view-state> [db [_ model-key state-key]]
 ;;   (let [view-state  (path/->view-state model-key state-key)]
 ;;     (get-in db view-state)))
-
 ;; 中间件所用的
+
 (defn replace> [db [_ model-key response]]
   (let [data-path (path/->data-path model-key)
         model-types (path/->model-types model-key)
@@ -50,7 +49,6 @@
         meta-path (path/->meta-path model-key)
         pagination-path (path/->pagination model-key)
         metadata (get-in response [:metadata])
-
         dataset  (get-in response [:dataset])
         dataset (utils/items-serial-apply dataset model-types   ) 
         ;;dataset (map #(data-utils/dto % model-types)  dataset)
@@ -84,7 +82,6 @@
     (update-in  db data-path  dissoc id)))
 
 (defn update>  [db [_ model-key response]]
-
   (let [model-types (path/->model-types model-key)
         data (get-in response [:dataset])
         id (:id data)

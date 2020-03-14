@@ -2,6 +2,7 @@
 
            ;; client
            org.clojure/clojurescript       {:mvn/version "1.10.520"}
+
            com.andrewmcveigh/cljs-time {:mvn/version "0.5.2"}
            reagent                         {:mvn/version "0.8.1"
                                             :exclusions [cljsjs/react cljsjs/react-dom]}
@@ -20,7 +21,10 @@
            cljsjs/d3 {:mvn/version "5.12.0-0"}
            cljsjs/moment {:mvn/version "2.24.0-0"}
            cljsjs/chartjs {:mvn/version "2.9.3-0"}
-           re-frisk {:mvn/version "0.5.4.1"}}
+           re-frisk {:mvn/version "0.5.4.1"}
+           ;;
+           datascript {:mvn/version  "0.18.10"}
+           }
 
  :paths   ["src" "src-cljc" "resources" "target"  "env/dev"]
  :aliases {:fig {:extra-deps {}

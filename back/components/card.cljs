@@ -1,4 +1,4 @@
-(ns soul-talk.components.card
+ (ns soul-talk.components.card
 
   (:require [reagent.core :as r]
             [re-frame.core :as rf]

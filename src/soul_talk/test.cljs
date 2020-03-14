@@ -8,28 +8,138 @@
    soul-talk.subs
    soul-talk.handlers
    [accountant.core :as accountant]
-   [soul-talk.util.route-utils :refer [run-events run-events-admin logged-in? navigate!]]
+   [soul-talk.util.route-utils :refer [run-events
+                                       run-events-admin
+                                       logged-in?
+                                       navigate!]]
+   [soul-talk.sub.funcs.product-series :as product-series]
    [soul-talk.util.query-filter :as query-filter]))
 
-(subscribe [:metadata/table :todos])
+;; (dispatch [:sell-order.edn<- {:query '[:find ?e
+;;                                :where [?ee :cost/machine.start-time ?e]
+;;                                ]}  ])
 
-(subscribe [:metadata/table-columns :todos])
 
-(dispatch [:item/server.get :test])
+;; (dispatch [:metadata.post<- {}])
 
-(dispatch [:item/server.get :relation])
+(dispatch [:datomic/schema.edn<-])
 
-(subscribe [:item/raw :relation])
+(dispatch [:sell-detail.edn<- {:query '[:find  (pull ?e [*])
+                                        :in $ [?id]
+                                        :where
+                                        [?e :sell-detail/detail_id ?id]]
+                               :input [2]}])
 
-(subscribe [:item/raw :test])
+(dispatch [:sell-order.edn<-])
 
-(subscribe [:page-state])
+(dispatch [:product-task.edn<-])
+(first @(subscribe [:product-task.data]))
+;;(dispatch [:product-flow.edn<-])
+(subscribe [:db/schema])
 
-(subscribe [:item/all :product-track])
+(first  @(subscribe [:sell-detail.data]))
+(first  @(subscribe [:sell-order.list]))
 
-(first @(subscribe [:product-task/all]))
-(first @(subscribe  [:sell-order/all]))
-(subscribe [:sell-order/all.flow_plan_release])
+(first @(subscribe [:sell-detail.view/data]))
+
+(dispatch [:flow.cost.transact
+           {:query '[:find  (pull ?order [* {:sell-order/ref.order_company [*]
+                                             :sell-order/ref.customer [*]}])
+                     :in $ ?id
+                     :where
+                     [?detail :sell-detail/detail_id]
+                     [?detail :sell-detail/ref.sell-order ?order]
+                     [?task :product-task/ref.sell-detail ?detail]
+                     [?cost :cost/ref.product-task ?task]]
+            :input 200}])
+
+
+(first @(subscribe [:flow.cost.data]))
+;;(dispatch [:item/server.pull :metadata {:limit 1000} ];; )
+;; (dispatch [:item/server.pull :product-track {:limit 1000} ])
+
+;; (last @(subscribe [:item/all :metadata]))
+;; (count @(subscribe [:item/all :relations]))
+
+;; (dispatch [:item/server.pull :craft-material-info {:ids [1 ]}])
+;; (dispatch [:item/server.pull :human-info {:ids [1 ]}])
+;; (dispatch [:item/server.pull :machine-info {:ids [1 ]}])
+
+;; (dispatch [:item/server.pull :order_number {:order_number "SO201907250001"}] )
+
+
+;; (subscribe [:order_number/get :human])
+;; (-> @(subscribe [:order_number ])
+;;     keys
+;;     )
+
+
+
+;; (dispatch [:http/post :metadata ])
+
+;; (dispatch [:edn/update '{:find [(pull ?eee [*]) ]
+;;                          :where
+;;                          [[?e :product-flow/ref.workshop ?p]
+;;                           [?e :product-flow/flow_id 100]
+;;                           [?ee :sell-detail/ref.product-flows ?e]
+;;                           [?eee :sell-order/ref.sell-details ?ee]]}    ])
+;;  (subscribe [:get :tttt])
+
+;; (subscribe [:product-task/order_id 1])
+
+;; (->> @(subscribe [:full-order/all])
+;;     ;; product-series/order-company->TaiAn
+;;     ;;product-series/tax_money
+;;      (product-series/product-company->TaiAn)
+;;      count)
+
+;; (->> @(subscribe [:full-order/all])
+;;      product-series/count-order_id)
+
+;; (->  @(subscribe [:full-order/all])
+;;      ((juxt product-series/count-order_id
+;;             product-series/count-order_detail_id
+;;             product-series/count-job_order_id
+;;             product-series/count-flow_id
+;;             product-series/tax_money
+;;             product-series/order_detail_weight
+;;             product-series/flow_final_weight
+;;             product-series/flow_plan_release
+;;             )))
+
+
+;; (-> @(subscribe [:item/all :relations])
+;;     first
+;;     )
+;; (subscribe [:metadata/table :todos])
+
+;; (subscribe [:metadata/table-columns :todos])
+
+;; (dispatch [:item/server.get :test])
+
+;; (dispatch [:item/server.get :relation])
+
+;; (subscribe [:item/raw :relation])
+
+;; (subscribe [:item/raw :test])
+
+;; (subscribe [:page-state])
+
+;; (subscribe [:item/all :product-track])
+
+;; (first @(subscribe [:product-task/all]))
+;; (first @(subscribe  [:sell-order/all]))
+;; (subscribe [:sell-order/all.flow_plan_release])
+
+;; (subscribe [:sell-order/xin_tai.order_detail_weight])
+
+;; (subscribe [:sell-order/all.flow_plan_release])
+
+;; (-> (last @(subscribe [:product-order/all])))
+
+;; (subscribe [:sell-order/all.job_order_weight])
+
+
 ;; (dispatch [:set-active-page :test])
 ;; (dispatch [:page-state.set  :test :haha "dd"  ])
 
@@ -154,6 +264,6 @@
 ;; (subscribe [:views])
 
 
-(subscribe [:metadata/column.unique :data_type])
+;;(subscribe [:metadata/column.unique :data_type])
 ;; => #<Reaction 191: ("bigint" "bit" "blob" "char" "date" "datetime" "decimal" "double" "float" "int" "longblob" "longtext" "smallint" "text" "timestamp" "tinyint" "varchar")>
 

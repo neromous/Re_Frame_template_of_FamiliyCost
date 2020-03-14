@@ -1,4 +1,4 @@
-(ns soul-talk.page.product-track
+(ns soul-talk.modules.kpn.global-order
   (:require
    [reagent.core :as r]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
@@ -6,6 +6,7 @@
    [soul-talk.components.modal :as modal]
    [soul-talk.components.common :as c]
    [soul-talk.util.date-utils :as du]
+   [soul-talk.util.data-formatter :as formatter]
    [soul-talk.components.antd-dsl
     :refer [>Input  >InputNumber >Col  >Row >List >Card
             list-item  >AutoComplete  >Modal  >Table
@@ -50,16 +51,23 @@
      [:p]]))
 
 (defn Card-global [page-state]
-  (r/with-let  []
+  (r/with-let  [all-orders (subscribe [:metadata.data])  ]
 
     [>Card {:title (str  "康平纳集团公司" "  --  "  "基础指标")
             :bodyStyle    {:height "220px" :overflow "hidden"}}
 
      [:> js/antd.Descriptions
       {:bordered false}
-      [:> descrip-item {:label  "订单个量(个)"}]
-      [:> descrip-item  {:label "订单金额(万元)"}]
-      [:> descrip-item  {:label  "色纱需求量(吨)"}]
+      [:> descrip-item {:label  "订单个量(个)"}  (-> (:order_count @all-orders)
+                                                     ) ]
+      [:> descrip-item  {:label "订单金额(万元)"} (-> (:total_money @all-orders)
+                                                      (* 0.0001)
+                                                      formatter/round-number
+                                                      ) ]
+      [:> descrip-item  {:label  "色纱需求量(吨)"} (-> (:total_weight @all-orders)
+                                                       (* 0.001)
+                                                       formatter/round-number
+                                                       ) ]
       [:> descrip-item  {:label "已分配需求量(吨)"}]
       [:> descrip-item {:label "已计划投产量(吨)"}]
       [:> descrip-item {:label "已完工需求量(吨)"}]
@@ -104,6 +112,8 @@
    {:key "order_number" :dataIndex "order_number" :title "订单编号"}
    {:key "customer_name" :dataIndex "customer_name" :title "客户名称"}
    {:key "customer_color" :dataIndex "customer_color" :title "客户色号"}
+   {:key "color_number" :dataIndex "color_number" :title "本厂色号"}
+
    {:key "order_time" :dataIndex "order_time" :title "下单时间"
     :render (fn [data _]
               (r/as-element  (-> data js/moment. (.format "YYYY-MM-DD"))))}
@@ -112,12 +122,12 @@
     :render (fn [data _]
               (r/as-element  (-> data js/moment. (.format "YYYY-MM-DD"))))}
 
-   {:key "order_detail_weight" :dataIndex "order_detail_weight" :title "订单重量"}
+   {:key "yarn_weight" :dataIndex "yarn_weight" :title "订单重量"}
    {:key "tax_price" :dataIndex "tax_price" :title "单价"}
    {:key "tax_money" :dataIndex "tax_money" :title "总价"}])
 
 (defn Table-product-order [page-state]
-  (r/with-let [all-order (subscribe [:item/all :product-track])]
+  (r/with-let [all-order (subscribe [:sell-info.data])]
     [>Table  {:dataSource  @all-order
               :columns table-columns}]))
 

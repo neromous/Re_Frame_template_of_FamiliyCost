@@ -1,4 +1,4 @@
-(ns soul-talk.handler.item-server
+(ns soul-talk.handler.server.item-server
   (:require  [re-frame.core :refer [subscribe
                                     reg-event-db
                                     dispatch
@@ -25,16 +25,17 @@
  (fn [db [_  item-key response]]
    (let [data-path (item-path/->data-path  item-key)
          data   (get-in response [:dataset])]
+
      (assoc-in db data-path data))
    ;;
    ))
 
 (reg-event-fx
  :item/server.get
- (fn [_ [_ item-key]]
+ (fn [_ [_ item-key query]]
    {:http {:method    GET
            :url   (item-path/->url item-key)
-           :ajax-map       {;;:params query
+           :ajax-map       {:params query
                             :keywords? true
                             :format (json-request-format)
                             :response-format :json}
@@ -59,7 +60,6 @@
                             :format (json-request-format)
                             :response-format :json}
            :success-event [:item/mdw.set-db item-key]}}))
-
 
 (reg-event-fx
  :item/server.pull

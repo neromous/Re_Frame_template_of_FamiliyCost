@@ -1,4 +1,4 @@
-(ns soul-talk.page.state-capital
+(ns soul-talk.modules.scp.page
   (:require
    [reagent.core :as r]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
@@ -24,11 +24,7 @@
                                        navigate!
                                        run-events
                                        run-events-admin]]
-   [soul-talk.page.drop-test :as dp-test]
-   ))
-
-
-
+   [soul-talk.page.drop-test :as dp-test]))
 
 (defn head [state  nav]
 
@@ -41,22 +37,14 @@
            :style {:text-align "left"}}
      nav]
     [>Col  {:xs 24 :sm 24 :md 2 :lg 2}
-     "您好, 用户"
-     ]
+     "您好, 用户"]
 
     [>Col  {:xs 24 :sm 24 :md 2 :lg 2}
      [>Select {:style {:width 120}
-               :placeholder "账号管理"
-               }
-      [:> js/antd.Select.Option {:value "1"}  "登录" ]
-      [:> js/antd.Select.Option {:value "2"}  "设置" ]
-      [:> js/antd.Select.Option {:value "3"}  "登出" ]
-      
-      ]
-     ]
-
-
-    ]])
+               :placeholder "账号管理"}
+      [:> js/antd.Select.Option {:value "1"}  "登录"]
+      [:> js/antd.Select.Option {:value "2"}  "设置"]
+      [:> js/antd.Select.Option {:value "3"}  "登出"]]]]])
 
 (defn nav [state]
   [:> js/antd.Menu {:className         "home-nav"
@@ -65,13 +53,11 @@
                     :defaultSelectKeys ["home"]
                     :selectedKeys      []}
 
-   [:> js/antd.Menu.Item {:key "index"} "首页" ]
-   [:> js/antd.Menu.Item {:key "todo"}  "待办列表" ]
-   [:> js/antd.Menu.Item {:key "organization-info"}  "企业信息模块" ]
-   [:> js/antd.Menu.Item  {:key "capital-info"}  "资本运营分析模块" ]
-   [:> js/antd.Menu.Item {:key "organization-relation"}  "企业关联信息" ]
-
-   ])
+   [:> js/antd.Menu.Item {:key "index"} "首页"]
+   [:> js/antd.Menu.Item {:key "todo"}  "待办列表"]
+   [:> js/antd.Menu.Item {:key "organization-info"}  "企业信息模块"]
+   [:> js/antd.Menu.Item  {:key "capital-info"}  "资本运营分析模块"]
+   [:> js/antd.Menu.Item {:key "organization-relation"}  "企业关联信息"]])
 
 (defn side-bar [state]
   [>Sider {:className "sidebar"}
@@ -425,7 +411,7 @@
 
        [>Row {:gutter 24}
         [>Col {:span 14}
-         [:div {:style   {:width 700  :height 400}}
+         [:div {:style   {:width 650  :height 400}}
           [:h2 "本市国资企业分布"]
           [:> (.-Map js/reactMap)    {:amapkey "14496d2c07234db4cb989b9c2549fe08"}
 

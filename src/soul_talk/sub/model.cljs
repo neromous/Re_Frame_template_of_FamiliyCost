@@ -1,4 +1,4 @@
-(ns soul-talk.sub.resource
+(ns soul-talk.sub.model
   (:require [soul-talk.db :refer [model-register]]
             [re-frame.core :refer [inject-cofx
                                    dispatch
@@ -37,8 +37,7 @@
    (let [meta-path (path/->meta-path model-key)
          table-columns (get-in db meta-path)]
      (-> table-columns
-         vals
-         ))))
+         vals))))
 
 (reg-sub
  :metadata/views.table-columns
@@ -53,29 +52,3 @@
                         :title (or (:view_title x)
                                    (:column_comment x)
                                    (:column_name x))})))))))
-
-
-
-;; (reg-sub
-;;  :model/filter
-;;  (fn [db [_ model-key filter-fns]]
-;;    (let [data-path (path/->data-path model-key)]
-;;      (->>  (get-in db data-path)
-;;            (filter (comp  filter-fns))))))
-
-;; (reg-sub
-;;  :model/unique
-;;  (fn [db [_ model-key field-key]]
-;;    (let [model (get model-register model-key)
-;;          data-path (get model :data-path)]
-;;      (->>  (get-in db data-path)
-;;            (map (fn [x] (get x field-key)))
-;;            set))))
-
-
-
-
-
-
-
-

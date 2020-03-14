@@ -2,33 +2,35 @@
   (:require
    [reagent.core :as r]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
-   [soul-talk.page.home-page :as home-page]
-   [soul-talk.page.product-track :as product-track]
-   [soul-talk.page.product-detail :as product-detail]
-   [soul-talk.page.price-index  :as price-index]
-   [soul-talk.page.state-capital  :as state-capital]
-
+   [soul-talk.modules.index.page :as index]
+   [soul-talk.modules.kpn.prices :as prices]
+   [soul-talk.modules.kpn.single-order :as single-order]
+   [soul-talk.modules.kpn.global-order :as global-order]
+   [soul-talk.modules.relations.page :as relations]
+   ;;[soul-talk.page.state-capital  :as state-capital]
+   [soul-talk.modules.scp.page :as scp]
    ))
 
-(defmulti pages  (fn [global-state & _]
-                   (get global-state :active-page)))
+(defn default-page []
+  [:p "没有这一页"])
 
-(defmethod pages :default [_ _]
-  [(fn []  [:p "没有这一页"])])
-
-(defmethod pages :home-page [state _] [home-page/home-page state])
-(defmethod pages :product-track [state _] [product-track/home-page state])
-
-(defmethod pages :product-detail [state _] [product-detail/home-page state])
-(defmethod pages :price-index [state _] [price-index/home-page state])
-(defmethod pages :state-capital-index [state _] [state-capital/home-page state])
+(defn pages [page-name page-state]
+  (case page-name
+    :home-page [index/home-page page-state]
+    :product-track [global-order/home-page page-state]
+    :product-detail [single-order/home-page page-state]
+    :price-index [prices/home-page page-state]
+    :state-capital-index [scp/home-page page-state]
+    :relations [relations/home-page page-state]
+    [default-page]))
 
 (defn main-page []
   (r/with-let [ready? (subscribe [:initialised?])
-               view-state (subscribe [:get-view])]
+               page-name (subscribe [:active-page])
+               page-state (subscribe [:get-view])]
     (when @ready?
       (fn []
         [:div
-         [pages  @view-state nil]]))))
+         [pages @page-name  @page-state]]))))
 
 

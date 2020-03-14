@@ -26,16 +26,8 @@
                                        run-events
                                        run-events-admin]]))
 
-
 (defn sample-1 []
   (r/as-element
    [:> js/ReactBeautifulDnd.DragDropContext
-    {:onDragEnd #(println "ddd") }
-     [:p "这里可以拖拽"]
-
-
-    ]
-
-   )
-
-  )
+    {:onDragEnd #(println "ddd")}
+    [:p "这里可以拖拽"]]))
