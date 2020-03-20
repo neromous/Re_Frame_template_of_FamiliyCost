@@ -8,7 +8,7 @@
                           subscribe
                           reg-sub]]
    [reagent.core :as r]
-   [soul-talk.sub.funcs.path :as path]
+   [soul-talk.util.page-path :as path]
    [soul-talk.util.query-filter :as query-filter]))
 
 ;; 设置当前页

@@ -6,4 +6,5 @@
    soul-talk.modules.kpn.model
    ;;relation
    soul-talk.modules.relations.sub
+   soul-talk.modules.mi.sub
    ))

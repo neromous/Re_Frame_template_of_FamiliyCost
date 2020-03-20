@@ -1,4 +1,7 @@
-(ns soul-talk.components.antd)
+(ns soul-talk.components.antd
+  (:refer-clojure :exclude [list]))
+
+(def card js/antd.Card)
 
 (def input js/antd.Input)
 

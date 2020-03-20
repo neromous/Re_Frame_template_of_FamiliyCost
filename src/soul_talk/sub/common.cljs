@@ -5,5 +5,5 @@
                                     reg-event-db
                                     reg-event-fx
                                     subscribe reg-sub]]
-             [soul-talk.util.db :as udb]))
+             ))
 

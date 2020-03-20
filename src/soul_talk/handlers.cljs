@@ -8,15 +8,16 @@
    soul-talk.effects
    soul-talk.handler.page-state
    soul-talk.handler.errors
-   soul-talk.handler.model
    soul-talk.handler.auth
    soul-talk.handler.users
    soul-talk.handler.files
-   soul-talk.handler.server
    soul-talk.handler.common
-   soul-talk.handler.middleware))
+   soul-talk.handler.middleware
+   soul-talk.handler.common.datomic))
 
 ;; 初始化
+
+
 (reg-event-fx
  :initialize-db
  [(inject-cofx :local-store storage/login-user-key)

@@ -7,6 +7,7 @@
    [soul-talk.modules.kpn.single-order :as single-order]
    [soul-talk.modules.kpn.global-order :as global-order]
    [soul-talk.modules.relations.page :as relations]
+   [soul-talk.modules.mi.pages.company :as company ]
    ;;[soul-talk.page.state-capital  :as state-capital]
    [soul-talk.modules.scp.page :as scp]
    ))
@@ -22,6 +23,7 @@
     :price-index [prices/home-page page-state]
     :state-capital-index [scp/home-page page-state]
     :relations [relations/home-page page-state]
+    :kpn.company [company/index-page page-state]
     [default-page]))
 
 (defn main-page []

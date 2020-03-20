@@ -1,5 +1,15 @@
 (ns soul-talk.util.data-formatter)
 
+(defn parse-float
+  [x]
+  (js/parseFloat  x)  )
+
+
+(defn parse-int
+  [x]
+  (js/parseInt  x)  )
+
+
 (defn to-keyword [x]
   (if (keyword? x)
     x

@@ -7,7 +7,6 @@
                                     subscribe reg-sub]]
              [soul-talk.utils :as utils]
              [soul-talk.util.query-filter :as query-filter]
-             [soul-talk.sub.funcs.item-path :as item-path]
              [soul-talk.util.data-formatter :as formatter]))
 
 (reg-sub

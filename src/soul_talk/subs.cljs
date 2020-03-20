@@ -1,10 +1,9 @@
 (ns soul-talk.subs
   (:require [re-frame.core :refer [reg-sub]]
             soul-talk.sub.common
-            soul-talk.sub.model
             soul-talk.sub.page-state
             soul-talk.sub.datomic
-            soul-talk.sub.item))
+            ))
 
 
 ;; 获取当时全部数据

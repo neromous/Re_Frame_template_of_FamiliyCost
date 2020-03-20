@@ -6,7 +6,7 @@
                           reg-event-db
                           reg-event-fx
                           subscribe reg-sub]]
-   [soul-talk.sub.funcs.path :as path]
+   [soul-talk.util.page-path :as path]
    [soul-talk.util.query-filter :as query-filter]))
 
 (reg-sub

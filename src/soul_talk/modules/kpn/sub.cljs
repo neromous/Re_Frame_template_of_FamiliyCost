@@ -7,9 +7,8 @@
                                     subscribe reg-sub]]
              [soul-talk.utils :as utils]
              [soul-talk.util.query-filter :as query-filter]
-             [soul-talk.sub.funcs.item-path :as item-path]
              [soul-talk.util.data-formatter :as formatter]
-             [soul-talk.sub.funcs.product-series :as product-series]))
+             ))
 
 ;;========================================================
 ;; 全局数据初始化

@@ -6,7 +6,6 @@
                                                  run-events-admin
                                                  logged-in?
                                                  navigate!]]
-             [soul-talk.util.db :as udb]
              [ajax.edn :refer [edn-request-format
                                edn-response-format]]
              [ajax.core :refer [POST

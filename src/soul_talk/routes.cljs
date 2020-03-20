@@ -67,6 +67,10 @@
     [:model/server.pull :tb_relation]
     [:item/server.get :relations]]))
 
+(defroute  "/kpn/company" []
+  (run-events
+   [[:set-active-page :kpn.company]]))
+
 (defroute "*" [])
 
 (secretary/set-config! :prefix "#")
