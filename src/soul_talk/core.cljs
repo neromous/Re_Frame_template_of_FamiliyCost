@@ -8,7 +8,6 @@
             soul-talk.ajax
             soul-talk.subs
             soul-talk.coeffects
-            soul-talk.register
             soul-talk.routes
             soul-talk.local-storage
             soul-talk.views

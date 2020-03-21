@@ -13,48 +13,63 @@
                                        logged-in?
                                        navigate!]]
    [soul-talk.util.reframe-helper :refer
-    [sub> act> dsub dget dset to-columns fix-key fix-value]]
+    [sub> act>  to-columns fix-key fix-value] :as rh]
    [soul-talk.util.query-filter :as query-filter]))
 
-(act> :d/datalog   {:query '[:find (pull ?e [*])
-                             :where
-                             [?e :org/eid]]})
 
-(act> :d/datalog   {:query '[:find (pull ?e [*])
-                             :where
-                             [?e :material/eid]]})
+;; (first (rh/dsub> {:query '[:find (pull ?e [*])
+;;                            :where
+;;                            [?e :task/eid]]}))
 
-(act> :d/datalog   {:query '[:find (pull ?e [*])
-                             :where
-                             [?e :org/id.customer]]})
+;; (first @(sub> :task.all))
 
-(act> :d/datalog   {:query '[:find (pull ?e [*])
-                             :where
-                             [?e :org/id.provider]]})
-
-(act> :d/datalog   {:query '[:find (pull ?e [*])
-                             :where
-                             [?e :human/eid]]})
-
-(act> :d/datalog   {:query '[:find (pull ?e [*])
-                             :where
-                             [?e :order/eid]]})
-
-(act> :d/datalog   {:query '[:find (pull ?e [*])
-                             :where
-                             [?e :task/eid]]})
-
-(act> :d/datalog   {:query '[:find (pull ?e [*])
-                             :where
-                             [?e :process/eid]]})
-
-(act> :d/datalog   {:query '[:find (pull ?e [*])
-                             :where
-                             [?e :process/eid]]})
+;; (first @(sub> :order.columns))
 
 
+(sub> :order.eid.task 1)
+(sub> :select :process/eid 1)
+(sub> :order.eid.process 1)
 
+;; (first @(sub> :select-many :order/eid   ))
+;; (sub>  :q '[:find (pull ?e [*]) .
+;;             :in $ ?id  ?id1
+;;             :where
+;;             [?e :order/eid ?id]]   1 2)
 
+;; (sub>  :pull-many [1 2])
 
+;; (act> :d/datalog   {:query '[:find (pull ?e [*])
+;;                              :where
+;;                              [?e :org/eid]]})
 
+;; (act> :d/datalog   {:query '[:find (pull ?e [*])
+;;                              :where
+;;                              [?e :material/eid]]})
 
+;; (act> :d/datalog   {:query '[:find (pull ?e [*])
+;;                              :where
+;;                              [?e :org/id.customer]]})
+
+;; (act> :d/datalog   {:query '[:find (pull ?e [*])
+;;                              :where
+;;                              [?e :org/id.provider]]})
+
+;; (act> :d/datalog   {:query '[:find (pull ?e [*])
+;;                              :where
+;;                              [?e :human/eid]]})
+
+;; (act> :d/datalog   {:query '[:find (pull ?e [*])
+;;                              :where
+;;                              [?e :order/eid]]})
+
+;; (act> :d/datalog   {:query '[:find (pull ?e [* {:task/ref.order [*]}])
+;;                              :where
+;;                              [?e :task/eid]]})
+
+;; (act> :d/datalog   {:query '[:find (pull ?e [*  {:process/ref.task [*] }  ])
+;;                              :where
+;;                              [?e :process/eid]]})
+
+;; (act> :d/datalog   {:query '[:find (pull ?e [*])
+;;                              :where
+;;                              [?e :process/eid]]})

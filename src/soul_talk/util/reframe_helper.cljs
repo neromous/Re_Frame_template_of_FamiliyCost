@@ -2,22 +2,24 @@
   (:require
    [reagent.core :as r]
    [soul-talk.util.date-utils :as du]
+   [datascript.core :as d]
+   [soul-talk.db :refer  [conn]]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]))
 
-(defn sub> [event-id & args]
+(defn sub>
+  "封装subscribe 用起来更方便, 这个是原子 需要deref"
+  [event-id & args]
   (subscribe (into [] (cons event-id args))))
 
-(defn act> [event-id & args]
+(defn act>
+  "封装dispatch 用起来更方便  "
+  [event-id & args]
   (dispatch (into [] (cons event-id args))))
 
-(defn dsub [sub-path]
-  (subscribe [:d/get sub-path]))
-
-(defn dget [sub-path form]
-  (dispatch [:d/datalog sub-path  form]))
-
-(defn dset [sub-path form]
-  (dispatch [:d/transact sub-path  form]))
+(defn dsub>
+  "简化的 datascript 查询 这个不是原子,不要放在r/with-let里做单次定义 "
+  [{:keys [query args] :as body}]
+  (apply  d/q query  (deref conn) args))
 
 (def to-columns
   (map (fn [[k v]]
@@ -63,11 +65,12 @@
 
              {} item))
 
-(def remove-db_id
-  (map remove-db_id*))
+(def remove-db_id (map remove-db_id*))
 
 (defn- remove-db_id*-test []
   (remove-db_id* {:haha "dasd"  :db/id 323
                   :da "dfasd"
                   :aaaa {:db/id  "dasd"  :ll 'asd}
                   :hahaha [{:haha "dfasd" :db/id 22} {} {:db/id 454}]}))
+
+

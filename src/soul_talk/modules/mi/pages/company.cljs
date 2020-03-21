@@ -1,16 +1,20 @@
 (ns soul-talk.modules.mi.pages.company
+
   (:require
    [reagent.core :as r]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
    [soul-talk.components.antd :as h]
 
+   [re-posh.core :as rd]
+   [datascript.core :as d]
+   [soul-talk.db :refer  [db]]
    [soul-talk.util.data-formatter :refer [parse-float
                                           parse-int
                                           round-number]]
    [soul-talk.db :refer  [unique-id]]
    [soul-talk.util.reframe-helper :refer
-    [sub> act>   dsub dget dset field->float&2 to-columns fix-key fix-value
-     field->moment field->date2str]]))
+    [sub> act> field->float&2 to-columns fix-key fix-value
+     field->moment field->date2str] :as rh]))
 
 (def task->table
   (map (fn [x]
@@ -28,7 +32,7 @@
    :count  (count   (map :order/eid dataset))})
 
 (defn sell-order-table []
-  (r/with-let  [order  (sub> :d/get :order.all)]
+  (r/with-let  [order  (sub> :select :order/eid  )]
     (let [order->table
           (map (fn [x]
                  (-> x
@@ -60,16 +64,39 @@
                                       ["yarn_weight" "重量"]
                                       ["tax_price" "单价"]
                                       ["tax_money" "价格"]])}])))
+(defn sell-order-static []
+  (r/with-let [order  (sub> :order.all)]
+    (let [status   (data-static @order)]
+      [:> js/antd.Card
+       [:> js/antd.Descriptions  {:column 1  :size "small"}
+        [:> js/antd.Descriptions.Item {:label "订单总数"}  (:count status)]
+        [:> js/antd.Descriptions.Item {:label "订单总价"}  (round-number
+                                                        (:weight status))]
+        [:> js/antd.Descriptions.Item {:label "订单总重"} (round-number
+                                                       (:money status))]]])))
+
+(defn series-table []
+  (r/with-let [order  (sub> :order.all)]
+    [:> h/card
+     [:> h/row {:gutter 16}
+      [:> h/col {:span 6}
+       [sell-order-static]]
+      [:> h/col {:span 18}
+       [sell-order-table]]]]))
+
 (defn task-table []
-  (r/with-let  [order  (sub> :d/get :order.task)]
-    (let [task->table (map (fn [x]
-                             (-> x
-                                 (assoc  :workshop (get-in x [:task/ref.workshop
-                                                              :org/name]))
-                                 (assoc  :material_name (get-in x [:task/ref.material
-                                                                   :material/name]))
+  (r/with-let  [order (rh/sub> :task.all)]
+
+    (let [order @order
+          task->table
+          (map (fn [x]
+                 (-> x
+                     (assoc  :workshop (get-in x [:task/ref.workshop
+                                                  :org/name]))
+                     (assoc  :material_name (get-in x [:task/ref.material
+                                                       :material/name]))
                      ;;
-                                 )))]
+                     )))]
       [:> js/antd.Table
        {:size "small"
         :pagination {:defaultPageSize  5}
@@ -77,7 +104,7 @@
                            (comp
                             task->table
                             (field->float&2 :task/plan_weight))
-                           @order)
+                           order)
         :columns (into [] to-columns [["eid" "id"]
                                       ["dyelot_number" "缸号"]
                                       ["workshop" "生产车间"]
@@ -134,28 +161,8 @@
                                       ["quantity" "量"]
                                       ["proportion" "百分比"]])}])))
 
-(defn sell-order-static []
-  (r/with-let [order  (dsub :order.all)]
-    (let [status   (data-static @order)]
-      [:> js/antd.Card
-       [:> js/antd.Descriptions  {:column 1  :size "small"}
-        [:> js/antd.Descriptions.Item {:label "订单总数"}  (:count status)]
-        [:> js/antd.Descriptions.Item {:label "订单总价"}  (round-number
-                                                        (:weight status))]
-        [:> js/antd.Descriptions.Item {:label "订单总重"} (round-number
-                                                       (:money status))]]])))
-
-(defn series-table []
-  (r/with-let [order  (dsub :order.all)]
-    [:> h/card
-     [:> h/row {:gutter 16}
-      [:> h/col {:span 6}
-       [sell-order-static]]
-      [:> h/col {:span 18}
-       [sell-order-table]]]]))
-
 (defn single-order []
-  (r/with-let [cache  (sub> :d/get :order.single)
+  (r/with-let [cache  (sub> :order.eid 1)
                tasks  (sub> :d/get :order.task)
                processes (sub> :d/get :order.process)
                material (sub> :d/get  :order.material&craft)
@@ -187,15 +194,18 @@
         [:> js/antd.Descriptions.Item {:label "总消耗工序"} (count @consum)]]])))
 
 (defn index-page [page-state]
-  (r/with-let [sell-order  (dsub :order.single)
-               task  (dsub :order.task)
-               process (dsub :order.process)
-               material (dsub :order.material&craft)
-               consume  (dsub :order.human&machine)]
+  (r/with-let [act db]
     [:div
      [series-table]
-     [single-order]
-     [resource-human-table]
-     [resource-machine-table]
-     [task-table]]))
+     ;[single-order]
+     ;[resource-human-table]
+     ;[resource-machine-table]
+     [task-table]
+     [:p (str @(sub> :d/test 1))]
+
+     ]))
+
+
+
+
 

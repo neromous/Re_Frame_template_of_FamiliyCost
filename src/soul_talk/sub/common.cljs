@@ -4,6 +4,5 @@
                                     dispatch-sync
                                     reg-event-db
                                     reg-event-fx
-                                    subscribe reg-sub]]
-             ))
+                                    subscribe reg-sub]]))
 
