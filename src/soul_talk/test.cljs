@@ -16,19 +16,74 @@
     [sub> act>  to-columns fix-key fix-value] :as rh]
    [soul-talk.util.query-filter :as query-filter]))
 
+;; (dispatch  [:d/datalog   {:query '[:find (sum ?weight)
+;;                                    :with ?e
+;;                                    :where
+;;                                    [?com :org/eid 3]
+;;                                    [?num :order/ref.order_company ?com]
+;;                                    [?e :order/ref.order_number ?num]
+;;                                    [?e :order/yarn_weight ?weight]]}])
+
+;; (run-events
+;;  [[:d/datalog   {:query '[:find (pull ?e [*])
+;;                           :where
+;;                           [?e :org/eid]]}]
+
+;;   [:d/datalog   {:query '[:find (pull ?e [*])
+;;                           :where
+;;                           [?e :material/eid]]}]
+;;   [:d/datalog   {:query '[:find (pull ?e [*])
+;;                           :where
+;;                           [?e :org/id.customer]]}]
+
+;;   [:d/datalog   {:query '[:find (pull ?e [*])
+;;                           :where
+;;                           [?e :org/id.provider]]}]
+
+;;   [:d/datalog   {:query '[:find (pull ?e [*])
+;;                           :where
+;;                           [?e :human/eid]]}]
+
+;;   [:d/datalog   {:query '[:find (pull ?e [*])
+;;                           :where
+;;                           [?e :order/eid]]}]
+
+;;   [:d/datalog   {:query '[:find (pull ?e [* {:task/ref.order [*]}])
+;;                           :where
+;;                           [?e :task/eid]]}]
+
+;;   [:d/datalog   {:query '[:find (pull ?e [*  {:process/ref.task
+;;                                               [:task/eid]}])
+;;                           :where
+;;                           [?e :process/eid]]}]
+
+;;   [:d/datalog   {:query '[:find (pull ?e [*])
+;;                           :where
+;;                           [?e :process/eid]]}]
+
+;;   [:d/datalog   {:query '[:find (pull ?e [* {:cost/ref.for-what
+;;                                              [:task/eid]}])
+;;                           :where
+;;                           [?e :cost/id.material]]}]
+
+;;   [:d/datalog   {:query '[:find (pull ?e [* {:cost/ref.for-what
+;;                                              [:task/eid]}])
+;;                           :where
+;;                           [?e :cost/id.craft]]}]])
+
 
 ;; (first (rh/dsub> {:query '[:find (pull ?e [*])
 ;;                            :where
 ;;                            [?e :task/eid]]}))
-
 ;; (first @(sub> :task.all))
-
 ;; (first @(sub> :order.columns))
 
 
-(sub> :order.eid.task 1)
-(sub> :select :process/eid 1)
-(sub> :order.eid.process 1)
+(sub> :select :cost/id.material 1)
+
+
+;; (first @(sub> :order.eid.material 1))
+
 
 ;; (first @(sub> :select-many :order/eid   ))
 ;; (sub>  :q '[:find (pull ?e [*]) .
@@ -66,10 +121,26 @@
 ;;                              :where
 ;;                              [?e :task/eid]]})
 
-;; (act> :d/datalog   {:query '[:find (pull ?e [*  {:process/ref.task [*] }  ])
+;; (act> :d/datalog   {:query '[:find (pull ?e [*  {:process/ref.task
+;;                                                  [:task/eid]}])
 ;;                              :where
 ;;                              [?e :process/eid]]})
 
 ;; (act> :d/datalog   {:query '[:find (pull ?e [*])
 ;;                              :where
 ;;                              [?e :process/eid]]})
+
+;; (act> :d/datalog   {:query '[:find (pull ?e [* {:cost/ref.for-what
+;;                                                 [:task/eid]}])
+
+;;                              :where
+;;                              [?e :cost/id.material]]})
+
+;; (act> :d/datalog   {:query '[:find (pull ?e [* {:cost/ref.for-what
+;;                                                 [:task/eid]}])
+
+;;                              :where
+;;                              [?e :cost/id.craft]]})
+
+
+(println @(sub>  :order.eid.craft 60))

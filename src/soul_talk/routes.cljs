@@ -18,11 +18,58 @@
            [goog.History EventType]))
 
 (defn init! []
-  (run-events [;;[:item/server.pull :sell-order {:limit 10000}]
-               ;;[:item/server.pull :product-track {:limit 10000}]
-               ;;[:item/server.pull :relations {:limit 10000}]
-               ]))
-;;(init!)
+(run-events
+ [[:d/datalog   {:query '[:find (pull ?e [*
+                                          {:org/ref.belong-to [:org/eid] } ])
+                          :where
+                          [?e :org/eid]]}]
+
+  [:d/datalog   {:query '[:find (pull ?e [*])
+                          :where
+                          [?e :material/eid]]}]
+  [:d/datalog   {:query '[:find (pull ?e [*])
+                          :where
+                          [?e :org/id.customer]]}]
+
+  [:d/datalog   {:query '[:find (pull ?e [*])
+                          :where
+                          [?e :org/id.provider]]}]
+
+  [:d/datalog   {:query '[:find (pull ?e [*])
+                          :where
+                          [?e :human/eid]]}]
+
+  [:d/datalog   {:query '[:find (pull ?e [*])
+                          :where
+                          [?e :order/eid]]}]
+
+  [:d/datalog   {:query '[:find (pull ?e [* {:task/ref.order [*]}])
+                          :where
+                          [?e :task/eid]]}]
+
+  [:d/datalog   {:query '[:find (pull ?e [*  {:process/ref.task
+                                              [:task/eid]}])
+                          :where
+                          [?e :process/eid]]}]
+
+  [:d/datalog   {:query '[:find (pull ?e [*])
+                          :where
+                          [?e :process/eid]]}]
+
+  [:d/datalog   {:query '[:find (pull ?e [* {:cost/ref.for-what
+                                             [:task/eid]}])
+                          :where
+                          [?e :cost/id.material]]}]
+
+  [:d/datalog   {:query '[:find (pull ?e [* {:cost/ref.for-what
+                                             [:task/eid]}])
+                          :where
+                          [?e :cost/id.craft]]}]])
+  )
+
+
+
+;(init!)
 
 (defroute  "/" []
   (run-events
@@ -67,7 +114,7 @@
     [:model/server.pull :tb_relation]
     [:item/server.get :relations]]))
 
-(defroute  "/kpn/company" []
+(defroute  "/kpn/company/:order_eid" [order_eid]
   (run-events
    [[:set-active-page :kpn.company]]))
 

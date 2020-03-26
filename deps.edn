@@ -24,6 +24,8 @@
            re-frisk {:mvn/version "0.5.4.1"}
            datascript {:mvn/version  "0.18.10"}
            re-posh  {:mvn/version "0.3.1" }
+           cljsjs/leaflet {:mvn/version  "1.5.1-0"}
+           
            }
 
  :paths   ["src" "src-cljc" "resources" "target"  "env/dev"]

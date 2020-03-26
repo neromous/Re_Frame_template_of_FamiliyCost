@@ -13,7 +13,7 @@
    soul-talk.handler.files
    soul-talk.handler.common
    soul-talk.handler.middleware
-   soul-talk.handler.common.datomic))
+   soul-talk.handler.datomic))
 
 ;; 初始化
 

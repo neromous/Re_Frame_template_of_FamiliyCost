@@ -34,6 +34,11 @@
     (accountant/navigate! url)))
 
 (reg-fx
+ :navigate
+ (fn [url]
+   (accountant/navigate! url)))
+
+(reg-fx
   :reload-page
   (fn [_]
     (accountant/dispatch-current!)))
@@ -57,5 +62,6 @@
   :clean-auth-token
   (fn []
     (storage/remove-item! storage/auth-token-key)))
+
 
 

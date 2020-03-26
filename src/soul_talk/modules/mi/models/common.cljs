@@ -1,46 +1,8 @@
 (ns soul-talk.modules.mi.models.common
   (:require
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
-   [re-posh.core :as rd]
    [soul-talk.util.reframe-helper :refer
     [sub> act>  to-columns fix-key fix-value]]))
-
-(rd/reg-query-sub
- :company.all.ids
- '[:find ?e
-   :where
-   [?e :org/eid]])
-
-(rd/reg-query-sub
- :company.by-id
- '[:find ?e
-   :in $ ?id
-   :where
-   [?e :org/eid ?id]])
-
-(rd/reg-sub
- :company.all
- :<- [:company.all.ids]
- (fn [ids _]
-   {:type :pull-many
-    :pattern '[*]
-    :ids (reduce into []  ids)}))
-
-(rd/reg-query-sub
- :material.all.ids
- '[:find ?e
-   :where
-   [?e :material/eid]])
-
-(rd/reg-sub
- :material.all
- :<- [:material.all.ids]
- (fn [ids _]
-   {:type :pull-many
-    :pattern '[*]
-    :ids (reduce into []  ids)}))
-
-
 
 
 ;; (defn interface [id]
